@@ -41,7 +41,7 @@
   --hover: #f4f4f5;
   --line: #e4e4e7;
   --line-strong: #d4d4d8;
-  --muted: #71717a;
+  --muted: #6b6b6b;
   --ink: #0a0a0a;
   --accent: #0a0a0a;
   --accent-ink: #ffffff;
@@ -90,54 +90,61 @@
   }
 }
 
-* {
-  border-color: var(--line);
-}
+/*
+ * Keep element resets in the base layer. Unlayered element rules beat Tailwind's
+ * utilities regardless of specificity, which made `text-canvas` on primary
+ * buttons resolve to the inherited black and hid the label on a black surface.
+ */
+@layer base {
+  * {
+    border-color: var(--line);
+  }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
 
-body {
-  margin: 0;
-  background: var(--canvas);
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.55;
-  font-feature-settings: "cv11", "ss01";
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.55;
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
 
-::selection {
-  background: var(--ink);
-  color: var(--canvas);
-}
+  ::selection {
+    background: var(--ink);
+    color: var(--canvas);
+  }
 
-button,
-input,
-textarea,
-select {
-  font: inherit;
-  color: inherit;
-}
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
 
-a {
-  color: inherit;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-}
+  a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-}
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
 
-hr {
-  border: 0;
-  border-top: 1px solid var(--line);
+  hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

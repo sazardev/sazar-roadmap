@@ -70,7 +70,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
     getRecentActivity(env, user.id, 6),
     getDailyPlan(env, user.id),
     listGoals(env, user.id),
-    getDueCards(env, user.id, { limit: 3 }),
+    getDueCards(env, user.id, { limit: 3, includeNew: false }),
     status.tasks ? getTasksToday(env) : Promise.resolve(null),
     status.learn ? getReading(env) : Promise.resolve([]),
     status.news ? getTopNews(env, 3) : Promise.resolve([]),
