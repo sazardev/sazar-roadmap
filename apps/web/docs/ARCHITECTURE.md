@@ -99,7 +99,7 @@ Content is ordered by progression, not alphabetically. `scripts/build-content.ts
 - `sort_order`: the first occurrence of the roadmap in the upstream `readme.md`, which is the
   editorial order of the fork. Slugs not present there fall back to the title.
 
-Guided paths are ordered beginner first (Frontend, Backend), then intermediate (AI Engineer,
+Guided paths are ordered beginner first (Frontend, Backend, Go), then intermediate (AI Engineer,
 Cloudflare). The content library is rendered in three groups: start from zero, build depth and
 specialize.
 

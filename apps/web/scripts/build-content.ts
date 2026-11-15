@@ -589,7 +589,7 @@ function buildCatalogRoadmap(roadmap: RoadmapSource, sortOrder: number): SeedRoa
     slug: roadmap.slug,
     title: roadmap.title,
     tagline: "Community roadmap, preview edition.",
-    description: `A preview of the ${roadmap.title} roadmap from this fork. ${roadmap.topics.size} source topics are available; the full path can be imported later.`,
+    description: `A preview of the ${roadmap.title} roadmap from this fork. ${roadmap.topics.size} source topics are available; a guided curriculum has not been written yet.`,
     level: roadmapLevel(roadmap.slug),
     estimatedHours: stage.estimatedHours,
     icon: "library",

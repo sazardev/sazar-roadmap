@@ -9,7 +9,7 @@ Live: <https://roadmap.sazardev.stream> (private, shared session).
 
 ## What it does
 
-- **Four guided paths** — Frontend, Backend, AI Engineer and Cloudflare — with curated stages,
+- **Five guided paths** — Frontend, Backend, Go, AI Engineer and Cloudflare — with curated stages,
   key concepts, practice prompts and pitfalls. Each path renders as a connected stage rail and a
   section-by-section flow of topic nodes.
 - **Two reference libraries** — DevOps and Full Stack — plus a preview of every other roadmap in
@@ -92,7 +92,7 @@ and [docs/DEPLOY.md](docs/DEPLOY.md) for the production runbook.
 `scripts/build-content.ts` reads the roadmap content in this repository and the curated curricula
 in `app/content/curricula/`, then produces an idempotent SQL seed:
 
-- 4 guided curricula: Frontend, Backend, AI Engineer, Cloudflare.
+- 5 guided curricula: Frontend, Backend, Go, AI Engineer, Cloudflare.
 - 2 full reference libraries: DevOps, Full Stack.
 - 92 catalog roadmaps with a 16-topic preview each.
 - One recall flashcard per guided/reference topic, plus resources extracted from the fork.

@@ -149,6 +149,7 @@ export async function listRoadmaps(
      WHERE (? = '' OR lower(r.title) LIKE ? OR lower(r.description) LIKE ?)
        AND (? IS NULL OR r.status = ?)
      ORDER BY CASE r.status WHEN 'guided' THEN 0 WHEN 'reference' THEN 1 ELSE 2 END,
+              CASE r.level WHEN 'beginner' THEN 0 WHEN 'intermediate' THEN 1 ELSE 2 END,
               r.sort_order, r.title`,
     [userId, userId, q, `%${q}%`, `%${q}%`, status, status],
   );
