@@ -1,0 +1,2 @@
+# apps/web owns its formatting through Biome (see apps/web/biome.json).
+apps/web

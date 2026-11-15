@@ -1,0 +1,5 @@
+# Local development. Never commit real values.
+# With DEV_NO_AUTH=1 the app accepts local requests without a session; it is ignored on
+# every non-loopback hostname.
+DEV_NO_AUTH=1
+INTEGRATION_KEY=

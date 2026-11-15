@@ -1,0 +1,61 @@
+{
+  "name": "@sazardev/roadmap",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Sazar Roadmap: a private learning operating system on Cloudflare Workers",
+  "scripts": {
+    "dev": "react-router dev",
+    "build": "react-router build",
+    "preview": "pnpm build && vite preview",
+    "deploy": "pnpm build:prod && wrangler deploy -c build/server/wrangler.prod.json",
+    "typegen": "wrangler types && react-router typegen",
+    "typecheck": "pnpm typegen && tsc -p tsconfig.cloudflare.json --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "check": "pnpm typecheck && biome check . && vitest run",
+    "format": "biome check --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "content:build": "tsx scripts/build-content.ts",
+    "db:migrate:local": "wrangler d1 migrations apply sazardev-roadmap --local",
+    "db:migrate:remote": "wrangler d1 migrations apply sazardev-roadmap --remote -c wrangler.prod.jsonc",
+    "db:seed:local": "pnpm content:build && wrangler d1 execute sazardev-roadmap --local --file=.generated/seed.sql",
+    "db:seed:remote": "pnpm content:build && wrangler d1 execute sazardev-roadmap --remote -c wrangler.prod.jsonc --file=.generated/seed.sql",
+    "db:reindex:local": "wrangler d1 execute sazardev-roadmap --local --command \"INSERT INTO topics_fts(topics_fts) VALUES('rebuild'); INSERT INTO resources_fts(resources_fts) VALUES('rebuild');\"",
+    "cf-typegen": "wrangler types",
+    "build:prod": "pnpm build && tsx scripts/build-production.ts"
+  },
+  "dependencies": {
+    "@fontsource/geist-mono": "^5.3.0",
+    "@fontsource/geist-sans": "^5.3.0",
+    "drizzle-orm": "^0.45.4",
+    "isbot": "^5.1.32",
+    "lucide-react": "^0.577.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^7.18.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.2",
+    "@cloudflare/vite-plugin": "^1.69.1",
+    "@cloudflare/workers-types": "^5.20261115.1",
+    "@react-router/dev": "^7.18.5",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitest/coverage-v8": "^5.1.0",
+    "drizzle-kit": "^0.31.11",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.19.4",
+    "typescript": "^6.0.3",
+    "vite": "^7.3.8",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.162.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

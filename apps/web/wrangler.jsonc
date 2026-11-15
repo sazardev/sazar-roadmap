@@ -1,0 +1,44 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sazardev-roadmap",
+  "main": "./workers/app.ts",
+  "compatibility_date": "2026-11-15",
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "workers_dev": false,
+  "preview_urls": false,
+  "ai": {
+    "binding": "AI"
+  },
+  "vectorize": [
+    {
+      "binding": "VECTORIZE",
+      "index_name": "sazardev-roadmap"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sazardev-roadmap",
+      "database_id": "3d68c2fc-8c95-460a-bb8a-b98f23765aeb",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "ENVIRONMENT": "development",
+    "PUBLIC_URL": "http://localhost:5173",
+    "AUTH_URL": "https://auth.sazardev.stream",
+    "AUTH_AUD": "sazardev-apps",
+    "AUTH_MODE": "session",
+    "NOTES_URL": "https://notes.sazardev.stream",
+    "TASKS_URL": "https://tasks.sazardev.stream",
+    "LEARN_URL": "https://learn.sazardev.stream",
+    "NEWS_URL": "https://news.sazardev.stream",
+    "ENGLISH_URL": "https://english.sazardev.stream",
+    "AI_MODEL": "@cf/meta/llama-4-scout-17b-16e-instruct",
+    "AI_EMBEDDING_MODEL": "@cf/baai/bge-m3",
+    "AI_GATEWAY_ID": ""
+  }
+}

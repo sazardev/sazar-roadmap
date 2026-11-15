@@ -1,0 +1,27 @@
+import { index, layout, type RouteConfig, route } from "@react-router/dev/routes";
+
+export default [
+  route("auth/login", "routes/auth.login.tsx"),
+  route("logout", "routes/logout.tsx"),
+  route("onboarding", "routes/onboarding.tsx"),
+  route("api/health", "routes/api.health.tsx"),
+  route("api/search", "routes/api.search.tsx"),
+  route("api/reindex", "routes/api.reindex.tsx"),
+  route("internal/today", "routes/internal.today.tsx"),
+  route("internal/search", "routes/internal.search.tsx"),
+  layout("routes/app-shell.tsx", [
+    index("routes/dashboard.tsx"),
+    route("roadmaps", "routes/roadmaps.tsx"),
+    route("roadmaps/:slug", "routes/roadmap.tsx"),
+    route("roadmaps/:slug/:topicSlug", "routes/topic.tsx"),
+    route("coach", "routes/coach.tsx"),
+    route("practice", "routes/practice.tsx"),
+    route("flashcards", "routes/flashcards.tsx"),
+    route("goals", "routes/goals.tsx"),
+    route("resources", "routes/resources.tsx"),
+    route("people", "routes/people.tsx"),
+    route("notes", "routes/notes.tsx"),
+    route("search", "routes/search.tsx"),
+    route("settings", "routes/settings.tsx"),
+  ]),
+] satisfies RouteConfig;

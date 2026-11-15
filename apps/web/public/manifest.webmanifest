@@ -1,0 +1,17 @@
+{
+  "name": "Sazar Roadmap",
+  "short_name": "Roadmap",
+  "description": "A private learning operating system: guided roadmaps, deliberate practice, spaced review and an AI coach.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
