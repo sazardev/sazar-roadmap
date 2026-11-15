@@ -87,11 +87,12 @@ invalid syntax falls back to parameterized `LIKE` queries.
 
 ## Roadmap flow and ordering
 
-The roadmap detail page renders a `PathMap`: a horizontal, connected rail of stages (a metro line)
-followed by one section per stage. Inside a stage, every topic is a node on a vertical line with its
-status, minutes, resources and a link to the topic page. The next topic is highlighted and the stage
-that contains it is marked "You are here". Large reference shelves and the extended library collapse
-into a compact two-column shelf instead of producing hundreds of nodes.
+The roadmap detail page renders a `RoadmapMap`: one column per guided stage, connected left to
+right, with compact topic nodes that show only title, status and duration. Clicking a node opens a
+`TopicDrawer` over the map with the summary, status actions, resources and a link to the full topic
+page. The next topic is highlighted, and the percentage counts only the guided stages, not the
+extended reference library. Reference roadmaps and large extended shelves are collapsible indexes,
+not fake sequences.
 
 Content is ordered by progression, not alphabetically. `scripts/build-content.ts` assigns:
 

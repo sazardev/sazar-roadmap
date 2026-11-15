@@ -157,6 +157,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
   const todayPercent = percent(todayMinutes, dailyGoalMinutes);
   const planDone = plan?.completedMinutes ?? 0;
   const planTarget = plan?.targetMinutes ?? dailyGoalMinutes;
+  const hasIntegrations = Object.values(integrations.status).some(Boolean);
 
   return (
     <div className="space-y-8">
@@ -456,106 +457,108 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         </Card>
       </div>
 
-      <section aria-labelledby="apps-heading" className="space-y-3">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 id="apps-heading" className="text-lg font-semibold tracking-tight">
-              From your other apps
-            </h2>
-            <p className="text-sm text-muted">
-              The rest of the sazardev workspace, read-only unless you take an action.
-            </p>
+      {hasIntegrations ? (
+        <section aria-labelledby="apps-heading" className="space-y-3">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 id="apps-heading" className="text-lg font-semibold tracking-tight">
+                From your other apps
+              </h2>
+              <p className="text-sm text-muted">
+                The rest of the sazardev workspace, read-only unless you take an action.
+              </p>
+            </div>
+            <Link to="/settings" className="text-xs text-muted underline">
+              Integrations
+            </Link>
           </div>
-          <Link to="/settings" className="text-xs text-muted underline">
-            Integrations
-          </Link>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <IntegrationCard
-            icon={<Check size={15} />}
-            title="Tasks"
-            available={integrations.status.tasks}
-            href="https://tasks.sazardev.stream"
-            empty="No tasks are due today."
-          >
-            {integrations.tasks ? (
-              <div className="space-y-2">
-                <p className="text-sm">
-                  <span className="font-medium">{integrations.tasks.today}</span> due today ·{" "}
-                  <span className="font-medium text-danger">{integrations.tasks.overdue}</span>{" "}
-                  overdue
-                </p>
-                {integrations.tasks.tasks.slice(0, 3).map((task) => (
-                  <p key={task.id} className="truncate text-xs text-muted">
-                    {task.title}
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <IntegrationCard
+              icon={<Check size={15} />}
+              title="Tasks"
+              available={integrations.status.tasks}
+              href="https://tasks.sazardev.stream"
+              empty="No tasks are due today."
+            >
+              {integrations.tasks ? (
+                <div className="space-y-2">
+                  <p className="text-sm">
+                    <span className="font-medium">{integrations.tasks.today}</span> due today ·{" "}
+                    <span className="font-medium text-danger">{integrations.tasks.overdue}</span>{" "}
+                    overdue
                   </p>
-                ))}
-              </div>
-            ) : null}
-          </IntegrationCard>
+                  {integrations.tasks.tasks.slice(0, 3).map((task) => (
+                    <p key={task.id} className="truncate text-xs text-muted">
+                      {task.title}
+                    </p>
+                  ))}
+                </div>
+              ) : null}
+            </IntegrationCard>
 
-          <IntegrationCard
-            icon={<BookOpen size={15} />}
-            title="Learn"
-            available={integrations.status.learn}
-            href="https://learn.sazardev.stream"
-            empty="No reading in progress."
-          >
-            {integrations.reading.length > 0 ? (
-              <div className="space-y-2">
-                {integrations.reading.slice(0, 3).map((item) => (
-                  <div key={item.id} className="space-y-1">
-                    <p className="truncate text-xs font-medium">{item.title}</p>
-                    <ProgressBar value={Math.round(item.progress * 100)} max={100} />
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </IntegrationCard>
+            <IntegrationCard
+              icon={<BookOpen size={15} />}
+              title="Learn"
+              available={integrations.status.learn}
+              href="https://learn.sazardev.stream"
+              empty="No reading in progress."
+            >
+              {integrations.reading.length > 0 ? (
+                <div className="space-y-2">
+                  {integrations.reading.slice(0, 3).map((item) => (
+                    <div key={item.id} className="space-y-1">
+                      <p className="truncate text-xs font-medium">{item.title}</p>
+                      <ProgressBar value={Math.round(item.progress * 100)} max={100} />
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </IntegrationCard>
 
-          <IntegrationCard
-            icon={<CalendarDays size={15} />}
-            title="News"
-            available={integrations.status.news}
-            href="https://news.sazardev.stream"
-            empty="No stories today."
-          >
-            {integrations.news.length > 0 ? (
-              <div className="space-y-2">
-                {integrations.news.slice(0, 3).map((item) => (
-                  <a
-                    key={item.id}
-                    href={item.link}
-                    className="block truncate text-xs text-muted underline"
-                  >
-                    {item.title}
-                  </a>
-                ))}
-              </div>
-            ) : null}
-          </IntegrationCard>
+            <IntegrationCard
+              icon={<CalendarDays size={15} />}
+              title="News"
+              available={integrations.status.news}
+              href="https://news.sazardev.stream"
+              empty="No stories today."
+            >
+              {integrations.news.length > 0 ? (
+                <div className="space-y-2">
+                  {integrations.news.slice(0, 3).map((item) => (
+                    <a
+                      key={item.id}
+                      href={item.link}
+                      className="block truncate text-xs text-muted underline"
+                    >
+                      {item.title}
+                    </a>
+                  ))}
+                </div>
+              ) : null}
+            </IntegrationCard>
 
-          <IntegrationCard
-            icon={<GraduationCap size={15} />}
-            title="English"
-            available={integrations.status.english}
-            href="https://english.sazardev.stream"
-            empty="No English session today."
-          >
-            {integrations.english ? (
-              <div className="space-y-1.5 text-xs">
-                <p className="text-sm font-medium">{integrations.english.focus}</p>
-                <p className="text-muted">
-                  Day {integrations.english.day} · {integrations.english.streak}-day streak
-                </p>
-                <p className="text-muted">
-                  {integrations.english.due} cards due · {integrations.english.reviews} reviews
-                </p>
-              </div>
-            ) : null}
-          </IntegrationCard>
-        </div>
-      </section>
+            <IntegrationCard
+              icon={<GraduationCap size={15} />}
+              title="English"
+              available={integrations.status.english}
+              href="https://english.sazardev.stream"
+              empty="No English session today."
+            >
+              {integrations.english ? (
+                <div className="space-y-1.5 text-xs">
+                  <p className="text-sm font-medium">{integrations.english.focus}</p>
+                  <p className="text-muted">
+                    Day {integrations.english.day} · {integrations.english.streak}-day streak
+                  </p>
+                  <p className="text-muted">
+                    {integrations.english.due} cards due · {integrations.english.reviews} reviews
+                  </p>
+                </div>
+              ) : null}
+            </IntegrationCard>
+          </div>
+        </section>
+      ) : null}
 
       <Card>
         <CardHeader title="Recent activity" description="A quiet log of what actually happened." />

@@ -216,9 +216,10 @@ export async function getRoadmapDetail(
             coalesce(p.minutes_spent, 0) AS minutesSpent,
             (SELECT count(*) FROM resources res WHERE res.topic_id = t.id) AS resourceCount
      FROM topics t
+     JOIN roadmap_stages s ON s.id = t.stage_id
      LEFT JOIN user_topic_progress p ON p.topic_id = t.id AND p.user_id = ?
      WHERE t.roadmap_id = ?
-     ORDER BY t.sort_order`,
+     ORDER BY s.sort_order, t.sort_order`,
     [userId, roadmap.id],
   );
 
