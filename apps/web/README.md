@@ -10,9 +10,12 @@ Live: <https://roadmap.sazardev.stream> (private, shared session).
 ## What it does
 
 - **Four guided paths** — Frontend, Backend, AI Engineer and Cloudflare — with curated stages,
-  key concepts, practice prompts and pitfalls.
+  key concepts, practice prompts and pitfalls. Each path renders as a connected stage rail and a
+  section-by-section flow of topic nodes.
 - **Two reference libraries** — DevOps and Full Stack — plus a preview of every other roadmap in
-  the fork: 98 roadmaps, 2,162 topics and 5,485 resources in D1.
+  the fork: 98 roadmaps, 2,162 topics and 5,485 resources in D1. The library is grouped by
+  progression (start from zero, build depth, specialize) and keeps the upstream editorial order,
+  not an alphabetical list.
 - **Progress that means something** — `learning`, `practiced` and `mastered` are separate states;
   sessions, minutes, confidence and activity are recorded.
 - **Deliberate practice** — a prompt, a blank page, a model answer and a self-check.

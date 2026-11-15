@@ -36,6 +36,14 @@ pnpm db:seed:remote
 idempotent for content: `INSERT ... ON CONFLICT DO UPDATE`, so user progress is preserved. It does
 not delete stale content rows.
 
+To update only roadmap metadata (level and progression order) without touching the 2,000 topics:
+
+```bash
+pnpm content:build
+npx wrangler d1 execute sazardev-roadmap --remote -c wrangler.prod.jsonc \
+  --file=.generated/roadmaps.sql
+```
+
 Verify:
 
 ```bash

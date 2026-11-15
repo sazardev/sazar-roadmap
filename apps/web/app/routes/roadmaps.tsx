@@ -32,13 +32,38 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
   const guided = roadmaps.filter((roadmap) => roadmap.status === "guided");
   const reference = roadmaps.filter((roadmap) => roadmap.status === "reference");
   const catalog = roadmaps.filter((roadmap) => roadmap.status === "catalog");
+  const catalogGroups = [
+    {
+      level: "beginner",
+      title: "Start from zero",
+      description:
+        "Foundations, first languages and beginner variants. Begin here if the guided paths feel too fast.",
+    },
+    {
+      level: "intermediate",
+      title: "Build depth",
+      description:
+        "Role paths, frameworks, data, cloud and delivery. Pick the one closest to the work you want to do.",
+    },
+    {
+      level: "advanced",
+      title: "Specialize",
+      description:
+        "Architecture, security, platform depth and senior roles. These assume comfort with the intermediate layer.",
+    },
+  ]
+    .map((group) => ({
+      ...group,
+      items: catalog.filter((roadmap) => roadmap.level === group.level),
+    }))
+    .filter((group) => group.items.length > 0);
 
   return (
     <div className="space-y-8">
       <PageHeader
         eyebrow="Learning paths"
         title="Roadmaps"
-        description="Four curated paths, two full reference libraries and a preview of every community roadmap in the fork. Progress is private and survives content updates."
+        description="Curated paths, full reference libraries and every community roadmap in the fork, ordered by progression instead of alphabetically. Progress is private and survives content updates."
         actions={
           <LinkButton to="/coach?mode=plan" variant="secondary" icon={<Sparkles size={15} />}>
             Ask for a study plan
@@ -168,7 +193,8 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
             <div>
               <h2 className="text-lg font-semibold tracking-tight">Content library</h2>
               <p className="text-sm text-muted">
-                {catalog.length} community roadmaps with a 16-topic preview each.
+                {catalog.length} community roadmaps with a 16-topic preview each, ordered from
+                beginner to advanced.
               </p>
             </div>
             <span className="rounded-full border border-line px-3 py-1 text-xs text-muted group-open:hidden">
@@ -178,9 +204,30 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
               Hide
             </span>
           </summary>
-          <div className="grid gap-3 border-t border-line p-4 sm:grid-cols-2 xl:grid-cols-3">
-            {catalog.map((roadmap) => (
-              <CatalogCard key={roadmap.id} roadmap={roadmap} />
+          <div className="space-y-6 border-t border-line p-4">
+            {catalogGroups.map((group) => (
+              <section
+                key={group.level}
+                className="space-y-3"
+                aria-labelledby={`catalog-${group.level}`}
+              >
+                <div className="flex flex-wrap items-end justify-between gap-2">
+                  <div>
+                    <h3 id={`catalog-${group.level}`} className="text-sm font-semibold">
+                      {group.title}
+                    </h3>
+                    <p className="max-w-2xl text-xs leading-relaxed text-muted">
+                      {group.description}
+                    </p>
+                  </div>
+                  <Badge tone="outline">{group.items.length}</Badge>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {group.items.map((roadmap) => (
+                    <CatalogCard key={roadmap.id} roadmap={roadmap} />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         </details>

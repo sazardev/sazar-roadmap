@@ -85,6 +85,24 @@ profile.
 them in sync. Search sanitizes user input into prefix terms (`react* AND hooks*`) before `MATCH`;
 invalid syntax falls back to parameterized `LIKE` queries.
 
+## Roadmap flow and ordering
+
+The roadmap detail page renders a `PathMap`: a horizontal, connected rail of stages (a metro line)
+followed by one section per stage. Inside a stage, every topic is a node on a vertical line with its
+status, minutes, resources and a link to the topic page. The next topic is highlighted and the stage
+that contains it is marked "You are here". Large reference shelves and the extended library collapse
+into a compact two-column shelf instead of producing hundreds of nodes.
+
+Content is ordered by progression, not alphabetically. `scripts/build-content.ts` assigns:
+
+- `level`: beginner, intermediate or advanced, with explicit sets for beginner and advanced paths.
+- `sort_order`: the first occurrence of the roadmap in the upstream `readme.md`, which is the
+  editorial order of the fork. Slugs not present there fall back to the title.
+
+Guided paths are ordered beginner first (Frontend, Backend), then intermediate (AI Engineer,
+Cloudflare). The content library is rendered in three groups: start from zero, build depth and
+specialize.
+
 ## Spaced review
 
 `features/flashcards/algorithm.ts` is a deliberately small SM-2 variant:

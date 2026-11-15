@@ -118,6 +118,52 @@ const ROADMAP_TITLE_OVERRIDES: Record<string, string> = {
   vue: "Vue",
 };
 
+/**
+ * A deliberate progression, not an alphabetical list. Beginner paths come first,
+ * advanced paths last, and within a level we keep the upstream readme order.
+ */
+const BEGINNER_ROADMAPS = new Set([
+  "frontend-beginner",
+  "backend-beginner",
+  "devops-beginner",
+  "git-github-beginner",
+  "html",
+  "css",
+  "javascript",
+  "typescript",
+  "git-github",
+  "python",
+  "sql",
+  "shell-bash",
+]);
+
+const ADVANCED_ROADMAPS = new Set([
+  "software-architect",
+  "software-design-architecture",
+  "system-design",
+  "cyber-security",
+  "devsecops",
+  "mlops",
+  "inference-engineering",
+  "ai-red-teaming",
+  "ai-agents",
+  "ai-product-builder",
+  "kubernetes",
+  "blockchain",
+  "rust",
+  "scala",
+  "engineering-manager",
+  "forward-deployed-engineer",
+  "machine-learning",
+  "data-engineer",
+]);
+
+function roadmapLevel(slug: string): "beginner" | "intermediate" | "advanced" {
+  if (BEGINNER_ROADMAPS.has(slug)) return "beginner";
+  if (ADVANCED_ROADMAPS.has(slug)) return "advanced";
+  return "intermediate";
+}
+
 const RESOURCE_KIND: Record<string, string> = {
   official: "docs",
   article: "article",
@@ -149,6 +195,21 @@ function parseReadmeTitles(): Map<string, string> {
     }
   }
   return titles;
+}
+
+function parseReadmeOrder(): Map<string, number> {
+  const order = new Map<string, number>();
+  const source = readFileSync(resolve(repoRoot, "readme.md"), "utf8");
+  const pattern = /https:\/\/roadmap\.sh\/([a-z0-9-]+)/gi;
+  let index = 0;
+  for (const match of source.matchAll(pattern)) {
+    const slug = match[1];
+    if (!slug || ["best-practices", "questions", "get-started"].includes(slug)) continue;
+    if (order.has(slug)) continue;
+    order.set(slug, index);
+    index += 1;
+  }
+  return order;
 }
 
 function providerFromUrl(url: string): string | null {
@@ -384,7 +445,11 @@ function createTopic(
   };
 }
 
-function buildGuidedRoadmap(roadmap: RoadmapSource, curriculum: Curriculum): SeedRoadmap {
+function buildGuidedRoadmap(
+  roadmap: RoadmapSource,
+  curriculum: Curriculum,
+  sortOrder: number,
+): SeedRoadmap {
   const stages: SeedStage[] = [];
   const used = new Set<string>();
 
@@ -444,7 +509,7 @@ function buildGuidedRoadmap(roadmap: RoadmapSource, curriculum: Curriculum): See
     level: curriculum.level,
     estimatedHours: curriculum.estimatedHours,
     icon: curriculum.icon,
-    sortOrder: curricula.findIndex((item) => item.slug === curriculum.slug),
+    sortOrder,
     status: "guided",
     contentStatus: "full",
     sourceTopicCount: roadmap.topics.size,
@@ -475,7 +540,7 @@ function buildReferenceRoadmap(roadmap: RoadmapSource, sortOrder: number): SeedR
     title: roadmap.title,
     tagline: "Reference library from the community roadmap.",
     description: `The complete set of ${roadmap.title} topics available in this fork, kept as a searchable reference. A guided ordering will be added as the path is curated.`,
-    level: "intermediate",
+    level: roadmapLevel(roadmap.slug),
     estimatedHours: stage.estimatedHours,
     icon: "library",
     sortOrder,
@@ -525,7 +590,7 @@ function buildCatalogRoadmap(roadmap: RoadmapSource, sortOrder: number): SeedRoa
     title: roadmap.title,
     tagline: "Community roadmap, preview edition.",
     description: `A preview of the ${roadmap.title} roadmap from this fork. ${roadmap.topics.size} source topics are available; the full path can be imported later.`,
-    level: "intermediate",
+    level: roadmapLevel(roadmap.slug),
     estimatedHours: stage.estimatedHours,
     icon: "library",
     sortOrder,
@@ -603,9 +668,10 @@ function generateSeed(roadmaps: SeedRoadmap[]): string {
 
 function main(): void {
   const sources = loadRoadmaps();
+  const readmeOrder = parseReadmeOrder();
   const curriculaBySlug = new Map(curricula.map((curriculum) => [curriculum.slug, curriculum]));
   const roadmaps: SeedRoadmap[] = [];
-  let sortOrder = 0;
+  const orderOf = (slug: string): number => readmeOrder.get(slug) ?? 1000;
 
   for (const curriculum of curricula) {
     const source = sources.get(curriculum.slug);
@@ -613,29 +679,32 @@ function main(): void {
       console.warn(`No content folder for guided roadmap ${curriculum.slug}`);
       continue;
     }
-    roadmaps.push(buildGuidedRoadmap(source, curriculum));
+    roadmaps.push(buildGuidedRoadmap(source, curriculum, orderOf(curriculum.slug)));
   }
 
   for (const slug of ["devops", "full-stack"]) {
     const source = sources.get(slug);
     if (source) {
-      sortOrder += 1;
-      roadmaps.push(buildReferenceRoadmap(source, sortOrder));
+      roadmaps.push(buildReferenceRoadmap(source, orderOf(slug)));
     }
   }
 
   const guidedSlugs = new Set(roadmaps.map((roadmap) => roadmap.slug));
   const catalog = [...sources.values()]
     .filter((source) => !guidedSlugs.has(source.slug) && !curriculaBySlug.has(source.slug))
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => orderOf(a.slug) - orderOf(b.slug) || a.title.localeCompare(b.title));
   for (const source of catalog) {
-    sortOrder += 1;
-    roadmaps.push(buildCatalogRoadmap(source, sortOrder));
+    roadmaps.push(buildCatalogRoadmap(source, orderOf(source.slug)));
   }
 
   const seed = generateSeed(roadmaps);
   mkdirSync(outputDir, { recursive: true });
   writeFileSync(resolve(outputDir, "seed.sql"), seed, "utf8");
+  const roadmapSeed = seed
+    .split("\n")
+    .filter((line) => line.startsWith("INSERT INTO roadmaps "))
+    .join("\n");
+  writeFileSync(resolve(outputDir, "roadmaps.sql"), `${roadmapSeed}\n`, "utf8");
 
   const topicCount = roadmaps.reduce(
     (total, roadmap) =>
