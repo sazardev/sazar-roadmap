@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, LogOut, Search, Settings } from "lucide-react";
+import { LogOut, Search, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { titleCase } from "~/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
@@ -19,18 +19,15 @@ const sectionTitles: Record<string, string> = {
   settings: "Settings",
 };
 
-function breadcrumb(pathname: string): string[] {
-  const parts = pathname.split("/").filter(Boolean);
-  if (parts.length === 0) return ["Dashboard"];
-  const [first, second] = parts;
-  const section = sectionTitles[first ?? ""] ?? titleCase(first ?? "");
-  if (parts.length === 1) return [section];
-  return [section, titleCase(second ?? "")];
+function sectionTitle(pathname: string): string {
+  const first = pathname.split("/").filter(Boolean)[0];
+  if (!first) return "Dashboard";
+  return sectionTitles[first] ?? titleCase(first);
 }
 
 export function Topbar({ name, email, theme }: { name: string; email: string; theme: string }) {
   const location = useLocation();
-  const crumbs = breadcrumb(location.pathname);
+  const section = sectionTitle(location.pathname);
   const initials =
     name
       .split(/\s+/)
@@ -42,38 +39,10 @@ export function Topbar({ name, email, theme }: { name: string; email: string; th
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-canvas/88 backdrop-blur supports-[backdrop-filter]:bg-canvas/75">
       <div className="flex h-14 items-center gap-3 px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1.5 text-[13px]">
-          <Link
-            to="/"
-            className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-muted sm:inline"
-          >
-            Roadmap
-          </Link>
-          {crumbs.map((crumb, index) => (
-            <span
-              key={crumbs.slice(0, index + 1).join("/")}
-              className="flex min-w-0 items-center gap-1.5"
-            >
-              {index === 0 && crumbs.length > 1 ? (
-                <ChevronRight size={12} className="hidden shrink-0 text-muted sm:inline" />
-              ) : null}
-              {index === 0 && crumbs.length === 1 ? (
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted sm:hidden">
-                  Roadmap
-                </span>
-              ) : null}
-              <span
-                className={
-                  index === crumbs.length - 1
-                    ? "truncate font-medium text-ink"
-                    : "truncate text-muted"
-                }
-                aria-current={index === crumbs.length - 1 ? "page" : undefined}
-              >
-                {crumb}
-              </span>
-            </span>
-          ))}
+        <nav aria-label="Current section" className="flex min-w-0 items-center lg:hidden">
+          <span className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+            {section}
+          </span>
         </nav>
 
         <div className="ml-auto flex items-center gap-1.5">

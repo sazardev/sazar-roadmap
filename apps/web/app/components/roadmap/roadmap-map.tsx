@@ -1,10 +1,10 @@
-import { ArrowRight, Clock3, Map as MapIcon } from "lucide-react";
+import { ArrowRight, Map as MapIcon } from "lucide-react";
 import { Link } from "react-router";
 import { TopicStatusIcon } from "~/components/status";
 import { ProgressBar } from "~/components/ui/progress";
 import type { TopicStatus } from "~/features/progress/progress.server";
 import type { RoadmapStage, RoadmapTopic } from "~/features/roadmaps/roadmaps.server";
-import { cn, percent } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 
 const legend: Array<{ label: string; status: TopicStatus }> = [
   { label: "Not started", status: "not_started" },
@@ -38,7 +38,7 @@ function StageColumn({
             {stage.title}
           </h3>
           <p className="text-[10px] text-muted">
-            {completed}/{stage.topics.length} · {stage.estimatedHours}h
+            {completed}/{stage.topics.length}
           </p>
         </div>
       </header>
@@ -86,12 +86,7 @@ function TopicNode({
         <span className="shrink-0 rounded-full bg-ink px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-wide text-canvas">
           Next
         </span>
-      ) : (
-        <span className="inline-flex shrink-0 items-center gap-0.5 text-[9px] text-muted">
-          <Clock3 size={9} />
-          {topic.estimatedMinutes}m
-        </span>
-      )}
+      ) : null}
       <ArrowRight
         size={10}
         className="shrink-0 text-muted opacity-0 transition-opacity group-hover:opacity-100"
@@ -110,15 +105,6 @@ export function RoadmapMap({
   nextTopicId?: string | undefined;
 }) {
   const visibleStages = stages.filter((stage) => stage.slug !== "extended-library");
-  const improved = visibleStages.length > 0;
-  const total = visibleStages.reduce((sum, stage) => sum + stage.topics.length, 0);
-  const completed = visibleStages.reduce(
-    (sum, stage) =>
-      sum +
-      stage.topics.filter((topic) => topic.status === "practiced" || topic.status === "mastered")
-        .length,
-    0,
-  );
 
   return (
     <section className="space-y-3" aria-labelledby="path-map-heading">
@@ -129,15 +115,11 @@ export function RoadmapMap({
             <h2 id="path-map-heading" className="text-sm font-semibold">
               Path map
             </h2>
-            <span className="text-xs text-muted">
-              {improved ? `${percent(completed, total)}% of this path` : "No stages yet"}
-            </span>
           </div>
           <p className="mt-1 text-xs text-muted">
-            Click a topic to open its resources and mark progress. Follow the columns from left to
-            right.{" "}
+            Click a topic to open it.{" "}
             <span className="hidden lg:inline">
-              Scroll horizontally to see all {visibleStages.length} stages.
+              Scroll sideways for all {visibleStages.length} stages.
             </span>
           </p>
         </div>
@@ -151,7 +133,10 @@ export function RoadmapMap({
         </div>
       </div>
 
-      <div className="min-w-0 lg:overflow-x-auto lg:pb-3">
+      <section
+        className="scrollbar-thin min-w-0 lg:overflow-x-auto lg:pb-3"
+        aria-label="Roadmap stages"
+      >
         <div className="grid gap-5 lg:flex lg:w-max lg:items-start">
           {visibleStages.map((stage, index) => (
             <div key={stage.id} className="flex min-w-0 items-start gap-1 lg:shrink-0">
@@ -170,7 +155,7 @@ export function RoadmapMap({
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </section>
   );
 }

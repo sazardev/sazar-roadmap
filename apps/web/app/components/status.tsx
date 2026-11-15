@@ -1,4 +1,4 @@
-import { Award, Check, CircleDashed, Clock3, type LucideIcon, Play } from "lucide-react";
+import { Award, Check, Circle, Clock3, type LucideIcon, Play } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import type { TopicStatus } from "~/features/progress/progress.server";
 import { cn } from "~/lib/utils";
@@ -7,7 +7,7 @@ const meta: Record<
   TopicStatus,
   { label: string; icon: LucideIcon; tone: "neutral" | "warning" | "success" | "solid" }
 > = {
-  not_started: { label: "Not started", icon: CircleDashed, tone: "neutral" },
+  not_started: { label: "Not started", icon: Circle, tone: "neutral" },
   learning: { label: "Learning", icon: Clock3, tone: "warning" },
   practiced: { label: "Practiced", icon: Check, tone: "success" },
   mastered: { label: "Mastered", icon: Award, tone: "solid" },

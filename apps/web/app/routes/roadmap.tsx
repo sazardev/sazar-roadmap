@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, BookOpen, Clock3, Layers, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Clock3, Layers, Sparkles } from "lucide-react";
 import { Link, redirect } from "react-router";
 import { RoadmapMap } from "~/components/roadmap/roadmap-map";
 import { TopicDrawer } from "~/components/roadmap/topic-drawer";
@@ -6,7 +6,7 @@ import { TopicIndex } from "~/components/roadmap/topic-index";
 import { roadmapIcon } from "~/components/shell/icons";
 import { Badge } from "~/components/ui/badge";
 import { LinkButton } from "~/components/ui/button";
-import { ProgressBar, ProgressRing } from "~/components/ui/progress";
+import { ProgressBar } from "~/components/ui/progress";
 import { PageHeader } from "~/components/ui/surfaces";
 import { parseTopicStatus, setTopicStatus } from "~/features/progress/progress.server";
 import { getRoadmapDetail, getTopicDetail } from "~/features/roadmaps/roadmaps.server";
@@ -78,9 +78,6 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
   const progress = percent(coreCompleted, coreTopics.length);
   const sampleTopics = coreTopics;
   const extended = stages.find((stage) => stage.slug === "extended-library");
-  const activeStage = stages.find((stage) =>
-    stage.topics.some((topic) => topic.id === nextTopic?.id),
-  );
   const coachHref = nextTopic ? `/coach?topic=${nextTopic.id}` : "/coach";
   const nextHref = nextTopic
     ? `/roadmaps/${roadmap.slug}?topic=${nextTopic.slug}`
@@ -94,14 +91,6 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2 text-xs text-muted">
-        <Link to="/roadmaps" className="inline-flex items-center gap-1 underline">
-          <ArrowLeft size={12} /> All roadmaps
-        </Link>
-        <span>/</span>
-        <span>{roadmap.title}</span>
-      </div>
-
       <PageHeader
         eyebrow={
           <span className="inline-flex items-center gap-2">
@@ -135,7 +124,6 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
       />
 
       <div className="flex flex-wrap items-center gap-4 border-y border-line py-3">
-        <ProgressRing value={progress} size={48} stroke={3} label={`${progress}%`} />
         <div className="min-w-40 flex-1">
           <div className="flex items-baseline justify-between gap-3 text-xs">
             <span className="font-medium">{progressLabel}</span>
@@ -146,11 +134,6 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
           <ProgressBar value={coreCompleted} max={coreTopics.length || 1} className="mt-1.5" />
         </div>
         <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted">
-          {isGuided ? (
-            <span className="inline-flex items-center gap-1">
-              <Layers size={11} /> {coreStages.length} stages
-            </span>
-          ) : null}
           <span className="inline-flex items-center gap-1">
             <BookOpen size={11} />{" "}
             {isPreview ? `${coreTopics.length} sample` : `${coreTopics.length} topics`}
@@ -168,23 +151,6 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
           </Badge>
         </div>
       </div>
-
-      {isGuided && nextTopic ? (
-        <div className="flex flex-wrap items-center gap-3 rounded-md border border-ink bg-surface px-4 py-3">
-          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted">
-            Next step
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] uppercase tracking-[0.12em] text-muted">
-              {activeStage?.title ?? "Next"}
-            </p>
-            <p className="truncate text-sm font-semibold">{nextTopic.title}</p>
-          </div>
-          <LinkButton to={nextHref} size="sm" icon={<ArrowRight size={13} />}>
-            Open step
-          </LinkButton>
-        </div>
-      ) : null}
 
       {isPreview ? (
         <>
