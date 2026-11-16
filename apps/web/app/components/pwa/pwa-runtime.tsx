@@ -91,6 +91,8 @@ export function PwaRuntime() {
         setInstallDismissed(true);
         window.localStorage.setItem(DISMISS_KEY, String(Date.now()));
       }
+    } catch {
+      setInstallDismissed(true);
     } finally {
       setInstallBusy(false);
     }
@@ -162,8 +164,7 @@ export function PwaRuntime() {
       ) : null}
 
       {showInstall ? (
-        <div
-          role="dialog"
+        <section
           aria-label="Install Sazar Roadmap"
           className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom)+0.75rem)] left-1/2 z-50 flex w-[calc(100vw-1.5rem)] max-w-md -translate-x-1/2 items-start gap-3 rounded-lg border border-line bg-raised p-4 shadow-float md:bottom-6 md:left-auto md:right-6 md:w-96 md:translate-x-0"
         >
@@ -201,7 +202,7 @@ export function PwaRuntime() {
           >
             <X size={15} />
           </button>
-        </div>
+        </section>
       ) : null}
     </>
   );

@@ -22,7 +22,9 @@
   worker, an offline fallback page, automatic caching of visited pages and a path-level “Save
   offline” action.
 - Added an offline banner, install prompt, update prompt and **Settings → Offline and install** with
-  saved-page counts, storage usage and cache clearing. Signing out clears saved pages.
+  saved-page counts, storage usage and cache clearing. Signing out clears saved pages. Practice
+  answers and note bodies are kept as local drafts while offline and restored when the page opens
+  again.
 - Moved the tablet breakpoint to `lg`, added safe-area padding and a labelled icon rail, constrained
   fixed prompts to the visual viewport and fixed horizontal overflow in dashboard cards.
 - Inline code in topic prose now renders as code instead of literal backticks, including flashcards

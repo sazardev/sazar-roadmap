@@ -1,5 +1,6 @@
 import { ArrowUpRight, ExternalLink, FileText, Plus, Search, Trash2 } from "lucide-react";
 import { Form, Link, redirect, useNavigation } from "react-router";
+import { useOnlineStatus } from "~/components/pwa/use-pwa";
 import { Badge } from "~/components/ui/badge";
 import { Button, LinkButton } from "~/components/ui/button";
 import { Input, Select, Textarea } from "~/components/ui/field";
@@ -14,6 +15,7 @@ import {
 } from "~/features/notes/notes.server";
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
 import { getEnv } from "~/lib/db.server";
+import { useDraft } from "~/lib/use-draft";
 import { relativeDay } from "~/lib/utils";
 import type { Route } from "./+types/notes";
 
@@ -101,6 +103,8 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
   const navigation = useNavigation();
   const busy = navigation.state !== "idle";
   const editing = notes.find((note) => note.id === edit) ?? null;
+  const online = useOnlineStatus();
+  const draft = useDraft("sd:note:draft", "");
 
   return (
     <div className="space-y-7">
@@ -174,7 +178,13 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
             <summary className="flex min-h-16 cursor-pointer list-none items-center gap-2 px-5 py-4 text-base font-semibold [&::-webkit-details-marker]:hidden">
               <Plus size={17} /> New note
             </summary>
-            <Form method="post" className="space-y-3 border-t border-line/80 p-5 md:p-6">
+            <Form
+              method="post"
+              className="space-y-3 border-t border-line/80 p-5 md:p-6"
+              onSubmit={() => {
+                if (online) draft.clear();
+              }}
+            >
               <input type="hidden" name="intent" value="create" />
               {topic ? <input type="hidden" name="topicId" value={topic.id} /> : null}
               <Input
@@ -187,9 +197,21 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
                 name="body"
                 required
                 className="min-h-28"
+                value={draft.value}
+                onChange={(event) => draft.setValue(event.target.value)}
                 placeholder="What did you learn? What is still unclear?"
                 aria-label="Note body"
               />
+              {!online ? (
+                <p className="rounded-md border border-warning/25 bg-warning-soft px-3 py-2 text-xs leading-relaxed text-warning">
+                  You are offline. The note body is kept as a draft on this device; save it when the
+                  connection returns.
+                </p>
+              ) : draft.restored ? (
+                <p className="text-[11px] text-muted">
+                  Restored from a note draft saved on this device.
+                </p>
+              ) : null}
               {!topic ? (
                 <label className="block space-y-2">
                   <span className="text-sm font-medium">Attach to a topic (optional)</span>
@@ -203,7 +225,7 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
                   </Select>
                 </label>
               ) : null}
-              <Button type="submit" disabled={busy}>
+              <Button type="submit" disabled={busy || !online}>
                 Save note
               </Button>
             </Form>

@@ -79,10 +79,16 @@ export async function sendPwaMessage<T extends CacheStatus | CacheSaveResult | {
 ): Promise<T | null> {
   if (typeof window === "undefined") return null;
   if (!("serviceWorker" in navigator)) return null;
-  const registrations = await navigator.serviceWorker.getRegistrations();
-  if (registrations.length === 0) return null;
-  const registration = await navigator.serviceWorker.ready;
-  const worker = registration.active;
+
+  let worker: ServiceWorker | null = null;
+  try {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    if (registrations.length === 0) return null;
+    const registration = await navigator.serviceWorker.ready;
+    worker = registration.active;
+  } catch {
+    return null;
+  }
   if (!worker) return null;
 
   return new Promise<T | null>((resolve) => {
@@ -112,4 +118,17 @@ export async function promptInstall(): Promise<"accepted" | "dismissed" | "unava
 export async function clearOfflinePages(): Promise<boolean> {
   const result = await sendPwaMessage<{ ok: true }>({ type: "CLEAR_PAGES" }, 5000);
   return result?.ok === true;
+}
+
+export function clearLocalDrafts(): void {
+  if (typeof window === "undefined") return;
+  try {
+    for (const key of Object.keys(window.localStorage)) {
+      if (key.startsWith("sd:practice:") || key.startsWith("sd:note:")) {
+        window.localStorage.removeItem(key);
+      }
+    }
+  } catch {
+    // Private modes can reject storage access; sign-out still proceeds.
+  }
 }

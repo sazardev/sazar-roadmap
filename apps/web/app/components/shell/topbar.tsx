@@ -4,7 +4,7 @@ import { LogOut, Route, Search, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { Kbd } from "~/components/ui/badge";
 import type { Appearance } from "~/lib/appearance";
-import { clearOfflinePages } from "~/lib/pwa";
+import { clearLocalDrafts, clearOfflinePages } from "~/lib/pwa";
 import { cn, titleCase } from "~/lib/utils";
 import { AppearanceMenu } from "./appearance";
 import { ThemeToggle } from "./theme-toggle";
@@ -129,6 +129,7 @@ export function Topbar({
                 href="/logout"
                 onClick={(event) => {
                   event.preventDefault();
+                  clearLocalDrafts();
                   void clearOfflinePages().finally(() => {
                     window.location.href = "/logout";
                   });

@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Form, Link, redirect, useNavigation } from "react-router";
+import { SaveOfflineButton } from "~/components/pwa/save-offline-button";
 import { SelectionToNotes } from "~/components/selection-to-notes";
 import { Badge } from "~/components/ui/badge";
 import { Button, LinkButton } from "~/components/ui/button";
@@ -345,6 +346,13 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
                     ? "Practice this reference topic"
                     : "Start guided practice"}
               </LinkButton>
+              <SaveOfflineButton
+                urls={[
+                  `/roadmaps/${topic.roadmapSlug}/${topic.slug}`,
+                  `/practice?topic=${encodeURIComponent(topic.id)}`,
+                ]}
+                className="h-9 px-3 text-xs"
+              />
               <span className="text-sm text-muted">
                 {passed
                   ? "A topic is complete once the review passes."

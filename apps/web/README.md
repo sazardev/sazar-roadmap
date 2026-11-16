@@ -138,9 +138,10 @@ do not make the roadmap content public.
 - clears page caches on sign out and from **Settings → Offline and install**.
 
 Only same-origin GET navigations are cached. `/api/*`, `/internal/*`, `/auth/*` and `/logout` are
-never cached. Practice submissions, notes, reviews and coach calls still require a connection; the
-offline banner says so instead of failing silently. The page cache lives only on the device and is
-versioned with the build, so a deployment never serves a stale shell.
+never cached. Practice answers and note bodies are saved as local drafts while offline and restored on return;
+submission, reviews and coach calls still require a connection, and the offline banner says so
+instead of failing silently. The page cache lives only on the device and is versioned with the
+build, so a deployment never serves a stale shell.
 
 The service worker is disabled in `pnpm dev`. To test the production behavior, run `pnpm build`
 and `pnpm preview`, or deploy.

@@ -8,7 +8,9 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { useEffect } from "react";
 import { Form, Link, useActionData, useNavigation } from "react-router";
+import { useOnlineStatus } from "~/components/pwa/use-pwa";
 import { Badge } from "~/components/ui/badge";
 import { Button, LinkButton } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/field";
@@ -28,6 +30,7 @@ import { getTopicDetail } from "~/features/roadmaps/roadmaps.server";
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
 import { getEnv } from "~/lib/db.server";
 import { pageMeta } from "~/lib/meta";
+import { useDraft } from "~/lib/use-draft";
 import { relativeDay } from "~/lib/utils";
 import type { Route } from "./+types/practice";
 
@@ -251,6 +254,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-7 pb-10">
+      {passed ? <ClearDraftOnPass topicId={topic.id} /> : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           to={`/roadmaps/${topic.roadmapSlug}/${topic.slug}`}
@@ -354,42 +358,13 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
           </Link>
         </div>
       ) : aiEnabled ? (
-        <Form method="post" className="space-y-3">
-          <input type="hidden" name="topicId" value={topic.id} />
-          <label htmlFor="practice-response" className="text-sm font-medium">
-            {revise ? "Revise your answer" : "Your answer"}
-          </label>
-          <Textarea
-            key={formKey}
-            id="practice-response"
-            name="response"
-            defaultValue={defaultResponse}
-            className="min-h-64 text-base leading-relaxed"
-            placeholder="Explain the idea in your own words, sketch the design, or paste the code you wrote. Be specific about the decisions and trade-offs."
-            disabled={busy}
-            required
-            minLength={40}
-            maxLength={10000}
-          />
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-xs leading-relaxed text-muted">
-              The reviewer can take up to 30 seconds. Nothing is marked complete until it passes.
-            </p>
-            <Button
-              type="submit"
-              disabled={busy}
-              icon={busy ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
-            >
-              {busy ? "Reviewing..." : revise ? "Submit revision" : "Submit for review"}
-            </Button>
-          </div>
-          {busy ? (
-            <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-3 text-sm text-muted">
-              <Loader2 size={15} className="animate-spin" />
-              The reviewer is reading your answer. This can take up to 30 seconds.
-            </div>
-          ) : null}
-        </Form>
+        <PracticeForm
+          key={formKey}
+          topicId={topic.id}
+          defaultResponse={defaultResponse}
+          busy={busy}
+          revise={revise}
+        />
       ) : null}
 
       {alreadyPassed && !passed && !retry ? (
@@ -405,6 +380,81 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
       </div>
     </div>
   );
+}
+
+function PracticeForm({
+  topicId,
+  defaultResponse,
+  busy,
+  revise,
+}: {
+  topicId: string;
+  defaultResponse: string;
+  busy: boolean;
+  revise: boolean;
+}) {
+  const online = useOnlineStatus();
+  const { value, setValue, restored } = useDraft(`sd:practice:${topicId}`, defaultResponse);
+
+  return (
+    <Form method="post" className="space-y-3">
+      <input type="hidden" name="topicId" value={topicId} />
+      <label htmlFor="practice-response" className="text-sm font-medium">
+        {revise ? "Revise your answer" : "Your answer"}
+      </label>
+      <Textarea
+        id="practice-response"
+        name="response"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        className="min-h-64 text-base leading-relaxed"
+        placeholder="Explain the idea in your own words, sketch the design, or paste the code you wrote. Be specific about the decisions and trade-offs."
+        disabled={busy}
+        required
+        minLength={40}
+        maxLength={10000}
+      />
+      {!online ? (
+        <p className="rounded-md border border-warning/25 bg-warning-soft px-3 py-2 text-xs leading-relaxed text-warning">
+          You are offline. Your answer is kept as a draft on this device; submit it when the
+          connection returns.
+        </p>
+      ) : restored ? (
+        <p className="text-[11px] text-muted">
+          Restored from a draft saved on this device. It will update as you type.
+        </p>
+      ) : null}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-xs leading-relaxed text-muted">
+          The reviewer can take up to 30 seconds. Nothing is marked complete until it passes.
+        </p>
+        <Button
+          type="submit"
+          disabled={busy || !online}
+          icon={busy ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
+        >
+          {busy ? "Reviewing..." : revise ? "Submit revision" : "Submit for review"}
+        </Button>
+      </div>
+      {busy ? (
+        <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-3 text-sm text-muted">
+          <Loader2 size={15} className="animate-spin" />
+          The reviewer is reading your answer. This can take up to 30 seconds.
+        </div>
+      ) : null}
+    </Form>
+  );
+}
+
+function ClearDraftOnPass({ topicId }: { topicId: string }) {
+  useEffect(() => {
+    try {
+      window.localStorage.removeItem(`sd:practice:${topicId}`);
+    } catch {
+      // Draft cleanup is best-effort and must never break the page.
+    }
+  }, [topicId]);
+  return null;
 }
 
 function ReviewPanel({ attempt, passed }: { attempt: PracticeAttempt; passed: boolean }) {

@@ -34,8 +34,12 @@ export function OfflineSettings() {
     const next = await sendPwaMessage<CacheStatus>({ type: "GET_CACHE_STATUS" }, 5000);
     setStatus(next);
     if (typeof navigator !== "undefined" && navigator.storage?.estimate) {
-      const estimate = await navigator.storage.estimate();
-      setStorage({ usage: estimate.usage ?? 0, quota: estimate.quota ?? 0 });
+      try {
+        const estimate = await navigator.storage.estimate();
+        setStorage({ usage: estimate.usage ?? 0, quota: estimate.quota ?? 0 });
+      } catch {
+        setStorage(null);
+      }
     }
   }, []);
 
