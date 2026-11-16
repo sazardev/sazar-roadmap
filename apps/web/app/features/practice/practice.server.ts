@@ -1,4 +1,4 @@
-import type { NextTopic } from "~/features/progress/progress.server";
+import { invalidateLearningStats, type NextTopic } from "~/features/progress/progress.server";
 import { all, first } from "~/lib/sql.server";
 import { isoDate } from "~/lib/utils";
 import type { PracticeReview } from "./evaluate.server";
@@ -194,6 +194,7 @@ export async function completePractice(
   );
 
   await env.DB.batch(statements);
+  invalidateLearningStats(userId);
 
   return {
     id: attemptId,
@@ -266,6 +267,7 @@ export async function recordRevision(
       now,
     ),
   ]);
+  invalidateLearningStats(userId);
 
   return {
     id: attemptId,

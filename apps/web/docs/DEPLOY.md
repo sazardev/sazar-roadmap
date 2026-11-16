@@ -35,7 +35,12 @@ pnpm db:seed:remote
 `db:seed:remote` regenerates the seed and applies it with `wrangler d1 execute --remote`. The
 upserts carry a `WHERE` guard, so rows whose content did not change are not rewritten and D1 only
 bills real changes. FTS5 stays in sync through database triggers; the seed never rebuilds the
-index. User progress is preserved, and stale content rows are not deleted.
+index. User progress is preserved, and stale content rows are not deleted. Migration
+`0004_drop_topic_edges` removes the unused edge table.
+
+D1's free plan allows 100,000 rows written per day. If Cloudflare returns error `7500`, stop: wait
+until 00:00 UTC before retrying. Re-running the same import only burns the quota again. The seed is
+safe to run when the quota resets, and a no-change seed should write almost nothing.
 
 To update only roadmap metadata (level and progression order) without touching the 2,000 topics:
 

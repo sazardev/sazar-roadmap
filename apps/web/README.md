@@ -81,7 +81,6 @@ the three-step onboarding. `DEV_NO_AUTH` is ignored on every non-loopback hostna
 | Regenerate content seed                   | `pnpm content:build`                               |
 | Apply D1 migrations (local / remote)      | `pnpm db:migrate:local` / `pnpm db:migrate:remote` |
 | Seed D1 (local / remote)                  | `pnpm db:seed:local` / `pnpm db:seed:remote`       |
-| Rebuild FTS5 indexes (local only)         | `pnpm db:reindex:local`                            |
 
 ## Stack
 
@@ -101,6 +100,22 @@ the three-step onboarding. `DEV_NO_AUTH` is ignored on every non-loopback hostna
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the boundaries and the decisions behind them,
 and [docs/DEPLOY.md](docs/DEPLOY.md) for the production runbook.
+
+## Cloudflare budget
+
+D1 writes are the scarce free-tier resource. The content seed is incremental: every upsert carries a
+`WHERE` guard so unchanged rows are not rewritten. FTS5 is maintained by triggers, the seed never
+rebuilds the index, and the unused `topic_edges` table is gone. A full seed on unchanged content
+should write close to zero rows.
+
+If Cloudflare returns error `7500`, the daily write limit is exhausted. Stop and wait until 00:00 UTC;
+do not retry the same import. Practice reviews are limited to six attempts per topic per ten minutes;
+coach threads to eight user messages per ten minutes. Check usage with:
+
+```bash
+cd apps/web
+pnpm exec wrangler d1 info sazardev-roadmap -c wrangler.prod.jsonc
+```
 
 ## Content
 

@@ -113,27 +113,6 @@ export const topics = sqliteTable(
   ],
 );
 
-export const topicEdges = sqliteTable(
-  "topic_edges",
-  {
-    id: text("id").primaryKey(),
-    roadmapId: text("roadmap_id")
-      .notNull()
-      .references(() => roadmaps.id, { onDelete: "cascade" }),
-    fromTopicId: text("from_topic_id")
-      .notNull()
-      .references(() => topics.id, { onDelete: "cascade" }),
-    toTopicId: text("to_topic_id")
-      .notNull()
-      .references(() => topics.id, { onDelete: "cascade" }),
-    kind: text("kind").notNull().default("next"),
-  },
-  (table) => [
-    uniqueIndex("topic_edges_unique_idx").on(table.fromTopicId, table.toTopicId, table.kind),
-    index("topic_edges_roadmap_idx").on(table.roadmapId),
-  ],
-);
-
 export const resources = sqliteTable(
   "resources",
   {

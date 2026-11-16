@@ -721,7 +721,6 @@ function generateSeed(roadmaps: SeedRoadmap[]): string {
       );
     }
 
-    let edgeIndex = 0;
     for (const stage of roadmap.stages) {
       for (const topic of stage.topics) {
         lines.push(
@@ -863,16 +862,6 @@ function generateSeed(roadmaps: SeedRoadmap[]): string {
             ),
           );
         }
-      }
-
-      for (let index = 1; index < stage.topics.length; index += 1) {
-        const previous = stage.topics[index - 1];
-        const current = stage.topics[index];
-        if (!previous || !current) continue;
-        lines.push(
-          `INSERT INTO topic_edges (id, roadmap_id, from_topic_id, to_topic_id, kind) VALUES (${sql(`${roadmap.id}::edge::${stage.slug}::${edgeIndex}`)}, ${sql(roadmap.id)}, ${sql(previous.id)}, ${sql(current.id)}, 'next') ON CONFLICT(id) DO NOTHING;`,
-        );
-        edgeIndex += 1;
       }
     }
   }

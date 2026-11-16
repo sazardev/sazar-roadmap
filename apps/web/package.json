@@ -21,7 +21,6 @@
     "db:migrate:remote": "wrangler d1 migrations apply sazardev-roadmap --remote -c wrangler.prod.jsonc",
     "db:seed:local": "pnpm content:build && wrangler d1 execute sazardev-roadmap --local --file=.generated/seed.sql",
     "db:seed:remote": "pnpm content:build && wrangler d1 execute sazardev-roadmap --remote -c wrangler.prod.jsonc --file=.generated/seed.sql",
-    "db:reindex:local": "wrangler d1 execute sazardev-roadmap --local --command \"INSERT INTO topics_fts(topics_fts) VALUES('rebuild'); INSERT INTO resources_fts(resources_fts) VALUES('rebuild');\"",
     "cf-typegen": "wrangler types",
     "build:prod": "pnpm build && tsx scripts/build-production.ts",
     "content:audit": "tsx scripts/audit-content.ts"

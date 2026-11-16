@@ -66,16 +66,16 @@ will fall back to another app after authentication.
 
 ## Data model
 
-| Group       | Tables                                                                           |
-| ----------- | -------------------------------------------------------------------------------- |
-| Identity    | `profiles`, `user_settings`                                                      |
-| Content     | `roadmaps`, `roadmap_stages`, `topics`, `topic_edges`, `resources`, `flashcards` |
-| Learning    | `user_topic_progress`, `study_sessions`, `daily_plans`, `activity_events`        |
-| Review      | `flashcard_reviews`, `flashcard_attempts`                                        |
-| Planning    | `goals`, `goal_milestones`                                                       |
-| Coach       | `coach_threads`, `coach_messages`                                                |
-| Personal    | `notes`, `bookmarks`, `people`, `questions`                                      |
-| Integration | `integrations` (metadata only, never secrets)                                    |
+| Group       | Tables                                                                    |
+| ----------- | ------------------------------------------------------------------------- |
+| Identity    | `profiles`, `user_settings`                                               |
+| Content     | `roadmaps`, `roadmap_stages`, `topics`, `resources`, `flashcards`         |
+| Learning    | `user_topic_progress`, `study_sessions`, `daily_plans`, `activity_events` |
+| Review      | `flashcard_reviews`, `flashcard_attempts`                                 |
+| Planning    | `goals`, `goal_milestones`                                                |
+| Coach       | `coach_threads`, `coach_messages`                                         |
+| Personal    | `notes`, `bookmarks`, `people`, `questions`                               |
+| Integration | `integrations` (metadata only, never secrets)                             |
 
 Content is seeded, never edited through the UI. User data is per `user_id`; every query that returns
 user data filters by it. The app is designed for one owner but the schema is not hard-coded to one

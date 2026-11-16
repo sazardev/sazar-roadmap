@@ -1,3 +1,4 @@
+import { invalidateLearningStats } from "~/features/progress/progress.server";
 import { all, first } from "~/lib/sql.server";
 import { isoDate } from "~/lib/utils";
 
@@ -89,6 +90,7 @@ export async function createGoal(env: Env, userId: string, input: GoalInput): Pr
       now,
     )
     .run();
+  invalidateLearningStats(userId);
   return id;
 }
 
@@ -118,6 +120,7 @@ export async function updateGoalProgress(
     await env.DB.prepare("UPDATE goals SET status = ?, updated_at = ? WHERE id = ? AND user_id = ?")
       .bind(input.status, now, goalId, userId)
       .run();
+    invalidateLearningStats(userId);
   }
 }
 
@@ -171,6 +174,7 @@ export async function archiveGoal(env: Env, userId: string, goalId: string): Pro
 
 export async function deleteGoal(env: Env, userId: string, goalId: string): Promise<void> {
   await env.DB.prepare("DELETE FROM goals WHERE id = ? AND user_id = ?").bind(goalId, userId).run();
+  invalidateLearningStats(userId);
 }
 
 export async function getGoalById(env: Env, userId: string, goalId: string): Promise<Goal | null> {

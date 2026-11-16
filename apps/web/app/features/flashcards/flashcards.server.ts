@@ -1,3 +1,4 @@
+import { invalidateLearningStats } from "~/features/progress/progress.server";
 import { all, first } from "~/lib/sql.server";
 import { isoDate } from "~/lib/utils";
 import type { ReviewRating, ReviewState } from "./algorithm";
@@ -307,6 +308,8 @@ export async function reviewCard(
       `UPDATE daily_plans SET updated_at = ? WHERE user_id = ? AND plan_date = ?`,
     ).bind(now, userId, today),
   ]);
+
+  invalidateLearningStats(userId);
 
   return {
     rating,

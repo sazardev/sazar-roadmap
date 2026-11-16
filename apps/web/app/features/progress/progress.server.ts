@@ -45,7 +45,28 @@ export interface ActivityItem {
 
 const nowIso = (): string => new Date().toISOString();
 
+const STATS_TTL_MS = 15_000;
+const statsCache = new Map<string, { expiresAt: number; promise: Promise<LearningStats> }>();
+
+/** Clear cached stats after any action that changes progress, cards or goals. */
+export function invalidateLearningStats(userId: string): void {
+  statsCache.delete(userId);
+}
+
 export async function getLearningStats(env: Env, userId: string): Promise<LearningStats> {
+  const now = Date.now();
+  const cached = statsCache.get(userId);
+  if (cached && cached.expiresAt > now) return cached.promise;
+
+  const promise = computeLearningStats(env, userId).catch((error: unknown) => {
+    statsCache.delete(userId);
+    throw error;
+  });
+  statsCache.set(userId, { expiresAt: now + STATS_TTL_MS, promise });
+  return promise;
+}
+
+async function computeLearningStats(env: Env, userId: string): Promise<LearningStats> {
   const now = nowIso();
   const weekStart = startOfWeek().toISOString();
   const today = isoDate();
@@ -427,6 +448,7 @@ export async function recordStudy(
   );
 
   await env.DB.batch(statements);
+  invalidateLearningStats(userId);
   return { status: nextStatus, topicCompleted, minutes };
 }
 

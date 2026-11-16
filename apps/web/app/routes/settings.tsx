@@ -6,6 +6,7 @@ import { Button, LinkButton } from "~/components/ui/button";
 import { Checkbox, Input, Select } from "~/components/ui/field";
 import { Card, CardBody, CardHeader, PageHeader } from "~/components/ui/surfaces";
 import { integrationStatus } from "~/features/integrations/integrations.server";
+import { invalidateLearningStats } from "~/features/progress/progress.server";
 import { normalizeAppearance } from "~/lib/appearance";
 import { appearanceCookies, readAppearance } from "~/lib/appearance.server";
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
@@ -189,6 +190,7 @@ export async function action({ request, context }: Route.ActionArgs) {
       env.DB.prepare("DELETE FROM activity_events WHERE user_id = ?").bind(user.id),
       env.DB.prepare("DELETE FROM goals WHERE user_id = ?").bind(user.id),
     ]);
+    invalidateLearningStats(user.id);
     return redirect("/settings?notice=reset");
   }
 
