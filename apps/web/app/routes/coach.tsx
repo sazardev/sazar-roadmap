@@ -89,7 +89,7 @@ export async function action({ request, context }: Route.ActionArgs) {
       });
     }
     try {
-      const stats = await getLearningStats(env, user.id);
+      const stats = await getLearningStats(env, user.id, user.settings.weekStart);
       await sendCoachMessage(env, user.id, threadId, content, stats, user.name);
       return redirect(`/coach?thread=${threadId}`);
     } catch (error) {
@@ -196,7 +196,10 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
 
       {actionData?.error ? (
         <div className="mx-auto w-full max-w-3xl px-4 pt-3 sm:px-6">
-          <p className="rounded-lg border border-danger/25 bg-danger-soft px-3 py-2 text-xs text-danger">
+          <p
+            role="alert"
+            className="rounded-lg border border-danger/25 bg-danger-soft px-3 py-2 text-xs text-danger"
+          >
             {actionData.error}
           </p>
         </div>

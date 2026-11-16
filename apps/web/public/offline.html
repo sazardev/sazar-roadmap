@@ -281,6 +281,24 @@
           location.reload();
         });
 
+        document.getElementById("clear").addEventListener("click", () => {
+          if (!window.confirm("Remove all saved pages from this device?")) return;
+          if (!("caches" in window)) return;
+          caches
+            .keys()
+            .then((names) =>
+              Promise.all(
+                names
+                  .filter(
+                    (name) =>
+                      name.indexOf("sazar-pages-") === 0 || name.indexOf("sazar-images-") === 0,
+                  )
+                  .map((name) => caches.delete(name)),
+              ),
+            )
+            .then(() => location.reload());
+        });
+
         function label(path) {
           if (path === "/") return "Today";
           return path

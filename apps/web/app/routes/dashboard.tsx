@@ -30,7 +30,6 @@ import {
   ensureDailyPlan,
   getContinueTopics,
   getDailyPlan,
-  getNextTopic,
   getRecentActivity,
   getWeeklyActivity,
   parseStudyKind,
@@ -67,31 +66,21 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   );
   const greeting = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
 
-  const [
-    next,
-    continueTopics,
-    weekly,
-    activity,
-    plan,
-    goals,
-    dueCards,
-    tasks,
-    reading,
-    news,
-    english,
-  ] = await Promise.all([
-    getNextTopic(env, user.id),
-    getContinueTopics(env, user.id, 4),
-    getWeeklyActivity(env, user.id),
-    getRecentActivity(env, user.id, 6),
-    getDailyPlan(env, user.id),
-    listGoals(env, user.id),
-    getDueCards(env, user.id, { limit: 3, includeNew: false }),
-    status.tasks ? getTasksToday(env) : Promise.resolve(null),
-    status.learn ? getReading(env) : Promise.resolve([]),
-    status.news ? getTopNews(env, 3) : Promise.resolve([]),
-    status.english ? getEnglishToday(env) : Promise.resolve(null),
-  ]);
+  const [continueTopics, weekly, activity, plan, goals, dueCards, tasks, reading, news, english] =
+    await Promise.all([
+      getContinueTopics(env, user.id, 4),
+      getWeeklyActivity(env, user.id),
+      getRecentActivity(env, user.id, 6),
+      getDailyPlan(env, user.id),
+      listGoals(env, user.id),
+      getDueCards(env, user.id, { limit: 3, includeNew: false }),
+      status.tasks ? getTasksToday(env) : Promise.resolve(null),
+      status.learn ? getReading(env) : Promise.resolve([]),
+      status.news ? getTopNews(env, 3) : Promise.resolve([]),
+      status.english ? getEnglishToday(env) : Promise.resolve(null),
+    ]);
+
+  const next = continueTopics[0] ?? null;
 
   return {
     next,

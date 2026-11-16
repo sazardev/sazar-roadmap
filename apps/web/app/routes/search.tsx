@@ -29,7 +29,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
       <PageHeader
         eyebrow="Everything"
         title="Search"
-        description="Full-text search over 2,000 topics, 5,000 resources and your own notes. The command palette does the same thing from anywhere."
+        description="Full-text search across topics, resources and your own notes. The command palette does the same thing from anywhere."
       />
 
       <form
@@ -45,6 +45,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
             type="search"
             name="q"
             defaultValue={q}
+            aria-label="Search topics, resources and notes"
             placeholder="Search topics, resources and notes..."
             className="h-12 w-full rounded-md border border-transparent bg-surface/60 pl-11 pr-4 text-base outline-none placeholder:text-muted focus-visible:border-accent focus-visible:bg-raised focus-visible:ring-4 focus-visible:ring-accent/15"
           />

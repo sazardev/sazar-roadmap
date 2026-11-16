@@ -97,7 +97,11 @@ async function callInternal(
   if (binding && typeof (binding as Fetcher).fetch === "function") {
     try {
       return await (binding as Fetcher).fetch(
-        new Request(`https://${name.toLowerCase()}.internal${path}`, { ...init, headers }),
+        new Request(`https://${name.toLowerCase()}.internal${path}`, {
+          ...init,
+          headers,
+          signal: AbortSignal.timeout(3000),
+        }),
       );
     } catch {
       return null;

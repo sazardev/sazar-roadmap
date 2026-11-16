@@ -135,7 +135,7 @@ export async function completePractice(
          (user_id, topic_id, status, confidence, minutes_spent, last_studied_at, completed_at, updated_at)
        VALUES (?, ?, 'practiced', ?, 25, ?, ?, ?)
        ON CONFLICT(user_id, topic_id) DO UPDATE SET
-         status = 'practiced',
+         status = CASE WHEN user_topic_progress.status = 'mastered' THEN 'mastered' ELSE 'practiced' END,
          confidence = max(user_topic_progress.confidence, excluded.confidence),
          minutes_spent = user_topic_progress.minutes_spent + 25,
          last_studied_at = excluded.last_studied_at,

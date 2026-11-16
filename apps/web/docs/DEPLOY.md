@@ -42,7 +42,7 @@ D1's free plan allows 100,000 rows written per day. If Cloudflare returns error 
 until 00:00 UTC before retrying. Re-running the same import only burns the quota again. The seed is
 safe to run when the quota resets, and a no-change seed should write almost nothing.
 
-To update only roadmap metadata (level and progression order) without touching the 2,000 topics:
+To update only roadmap metadata (level and progression order) without touching the 3,293 topics:
 
 ```bash
 pnpm content:build
@@ -150,7 +150,8 @@ corresponding internal call. That change lives in the Notes repository, not here
 ## 10. Cost notes
 
 - Workers: static assets cached at the edge; SSR requests are small.
-- D1: the seed is about 16 MB and 58k rows written once. Normal use reads a few hundred rows per page.
+- D1: the seed is about 22.8 MB with 14,037 guarded upserts; a no-change seed writes almost nothing.
+  Normal use reads a few hundred rows per page.
 - Workers AI: the coach is the only model call. A per-thread rate limit and a 28-second timeout bound
   the cost; the deterministic fallback runs when the model is unavailable.
 - Vectorize: configured but not yet used by the request path. Add indexing only with a tracked

@@ -27,14 +27,26 @@ export function CoachComposer({
     node.style.height = `${Math.min(node.scrollHeight, 176)}px`;
   };
 
+  const clear = () => {
+    setValue("");
+    if (textareaRef.current) textareaRef.current.style.height = "";
+  };
+
   const submit = (event: FormEvent<HTMLFormElement>) => {
-    if (!canSend) event.preventDefault();
+    if (!canSend) {
+      event.preventDefault();
+      return;
+    }
+    clear();
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
       event.preventDefault();
-      if (canSend) event.currentTarget.form?.requestSubmit();
+      if (canSend) {
+        event.currentTarget.form?.requestSubmit();
+        clear();
+      }
     }
   };
 

@@ -17,7 +17,14 @@ export function CoachScroll({ children, dependency }: { children: ReactNode; dep
   }, [dependency]);
 
   return (
-    <div ref={ref} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+    <div
+      ref={ref}
+      role="log"
+      aria-label="Conversation"
+      aria-live="polite"
+      aria-relevant="additions"
+      className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+    >
       {children}
     </div>
   );

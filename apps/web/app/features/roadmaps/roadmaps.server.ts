@@ -230,10 +230,9 @@ export async function getRoadmapDetail(
     byStage.set(row.stageId, list);
   }
 
-  const stages: RoadmapStage[] = stageRows.map((stage) => ({
-    ...stage,
-    topics: byStage.get(stage.id) ?? [],
-  }));
+  const stages: RoadmapStage[] = stageRows
+    .map((stage) => ({ ...stage, topics: byStage.get(stage.id) ?? [] }))
+    .filter((stage) => stage.topics.length > 0);
 
   const nextTopic =
     topicRows.find((topic) => topic.status === "learning") ??

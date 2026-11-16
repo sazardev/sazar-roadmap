@@ -130,6 +130,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     )
       .bind(daily, weekly, weekStart, now, user.id)
       .run();
+    invalidateLearningStats(user.id);
     return redirect("/settings?notice=learning");
   }
 
@@ -186,6 +187,7 @@ export async function action({ request, context }: Route.ActionArgs) {
       env.DB.prepare("DELETE FROM study_sessions WHERE user_id = ?").bind(user.id),
       env.DB.prepare("DELETE FROM flashcard_reviews WHERE user_id = ?").bind(user.id),
       env.DB.prepare("DELETE FROM flashcard_attempts WHERE user_id = ?").bind(user.id),
+      env.DB.prepare("DELETE FROM practice_attempts WHERE user_id = ?").bind(user.id),
       env.DB.prepare("DELETE FROM daily_plans WHERE user_id = ?").bind(user.id),
       env.DB.prepare("DELETE FROM activity_events WHERE user_id = ?").bind(user.id),
       env.DB.prepare("DELETE FROM goals WHERE user_id = ?").bind(user.id),
@@ -275,7 +277,7 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
       ) : null}
 
       <nav
-        aria-label="Settings sections"
+        aria-label="Settings sections mobile"
         className="scrollbar-thin -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:hidden"
       >
         {settingsSections.map(([id, label]) => (

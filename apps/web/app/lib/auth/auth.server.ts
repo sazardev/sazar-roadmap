@@ -59,19 +59,29 @@ async function loadOrCreateProfile(
   const email = identity.email || `${identity.sub}@sazardev.stream`;
   const name = displayNameFromEmail(email);
 
-  await db
-    .insert(profiles)
-    .values({ id: identity.sub, email, displayName: name })
-    .onConflictDoNothing();
-  await db.insert(userSettings).values({ userId: identity.sub }).onConflictDoNothing();
-
-  const [profile] = await db.select().from(profiles).where(eq(profiles.id, identity.sub)).limit(1);
+  let [profile] = await db.select().from(profiles).where(eq(profiles.id, identity.sub)).limit(1);
+  if (!profile) {
+    await db
+      .insert(profiles)
+      .values({ id: identity.sub, email, displayName: name })
+      .onConflictDoNothing();
+    [profile] = await db.select().from(profiles).where(eq(profiles.id, identity.sub)).limit(1);
+  }
   if (!profile) return null;
-  const [settings] = await db
+
+  let [settings] = await db
     .select()
     .from(userSettings)
     .where(eq(userSettings.userId, identity.sub))
     .limit(1);
+  if (!settings) {
+    await db.insert(userSettings).values({ userId: identity.sub }).onConflictDoNothing();
+    [settings] = await db
+      .select()
+      .from(userSettings)
+      .where(eq(userSettings.userId, identity.sub))
+      .limit(1);
+  }
   if (!settings) return null;
 
   return {

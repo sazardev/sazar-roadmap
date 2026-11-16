@@ -40,8 +40,8 @@ honored on loopback hostnames and is never set in production.
 - `app/components/` — presentation only. Tokens come from `app/app.css`; no raw palette colors.
 - `app/lib/` — cross-cutting infrastructure: D1/Drizzle client, JWT/JWKS verification, security
   headers, SQL helpers, formatting.
-- `app/db/schema.ts` — Drizzle schema. `migrations/0001_initial.sql` is the executable source of
-  truth for D1, including FTS5 tables and triggers.
+- `app/db/schema.ts` — Drizzle schema. `migrations/` is the executable source of truth for D1,
+  including FTS5 tables and triggers.
 - `workers/app.ts` — Cloudflare entry. It passes `env` and `ctx` into React Router's load context.
 
 Dependency direction: `routes → features → lib → db/schema`. A feature never imports a route.
@@ -100,7 +100,7 @@ Content is ordered by progression, not alphabetically. `scripts/build-content.ts
 
 - `level`: beginner, intermediate or advanced, with explicit sets for beginner and advanced paths.
 - `sort_order`: the first occurrence of the roadmap in the upstream `readme.md`, which is the
-  editorial order of the fork. Slugs not present there fall back to the title.
+  editorial order of the fork. Slugs not present there sort after the listed roadmaps.
 
 Guided paths are ordered beginner first (Frontend, Backend, Go), then intermediate (AI Engineer,
 Cloudflare). The content library is rendered in three groups: start from zero, build depth and
@@ -115,7 +115,7 @@ A topic is never marked complete by a checkbox. The only path is:
    rubric: address the task, explain in your own words, include a concrete artifact, name a
    trade-off and be specific.
 3. The reviewer returns JSON: verdict, score, feedback, strengths, gaps and a next step.
-4. A pass requires `verdict = pass` **and** score ≥ 75. On pass, `completePractice` writes the
+4. A pass requires a score ≥ `PASS_SCORE` (65). On pass, `completePractice` writes the
    attempt, sets `practiced`, records a 25-minute practice session, updates goals and plans, and
    logs the activity. On revise, `recordRevision` keeps the topic in `learning` and stores the
    feedback for the next attempt.

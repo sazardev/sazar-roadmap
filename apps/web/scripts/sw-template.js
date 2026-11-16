@@ -6,7 +6,9 @@ const STATIC_CACHE = `sazar-static-${VERSION}`;
 const PAGE_CACHE = `sazar-pages-${VERSION}`;
 const IMAGE_CACHE = `sazar-images-${VERSION}`;
 const OFFLINE_URL = "/offline";
-const PAGE_LIMIT = 80;
+// Each saved page is a full SSR render (auth + stats + topic detail). Cap the batch
+// so a single tap cannot turn into ~1,400 D1 reads in a slow, sequential loop.
+const PAGE_LIMIT = 24;
 const NAVIGATION_TIMEOUT = 3500;
 
 const STATIC_PATHS = new Set(["/favicon.svg", "/apple-touch-icon.png", "/manifest.webmanifest"]);

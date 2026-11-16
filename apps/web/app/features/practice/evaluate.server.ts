@@ -130,6 +130,7 @@ async function runModel(
 ): Promise<string | null> {
   if (!env.AI) return null;
   const run = env.AI.run.bind(env.AI) as (model: string, inputs: unknown) => Promise<unknown>;
+  let timer: ReturnType<typeof setTimeout> | undefined;
   const output = await Promise.race([
     run(model, {
       messages,
@@ -137,9 +138,11 @@ async function runModel(
       temperature: 0.2,
     }),
     new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error("AI review timeout")), 30_000);
+      timer = setTimeout(() => reject(new Error("AI review timeout")), 30_000);
     }),
-  ]);
+  ]).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
   const record = output as {
     response?: unknown;
     result?: { response?: unknown };

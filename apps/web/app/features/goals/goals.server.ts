@@ -103,7 +103,13 @@ export async function updateGoalProgress(
   const now = new Date().toISOString();
   if (input.currentValue !== undefined) {
     await env.DB.prepare(
-      `UPDATE goals SET current_value = ?, status = CASE WHEN ? >= target_value THEN 'completed' ELSE status END, updated_at = ?
+      `UPDATE goals SET current_value = ?,
+         status = CASE
+           WHEN status = 'archived' THEN 'archived'
+           WHEN ? >= target_value THEN 'completed'
+           ELSE 'active'
+         END,
+         updated_at = ?
        WHERE id = ? AND user_id = ?`,
     )
       .bind(
@@ -114,6 +120,7 @@ export async function updateGoalProgress(
         userId,
       )
       .run();
+    invalidateLearningStats(userId);
     return;
   }
   if (input.status) {
@@ -170,6 +177,7 @@ export async function archiveGoal(env: Env, userId: string, goalId: string): Pro
   )
     .bind(new Date().toISOString(), goalId, userId)
     .run();
+  invalidateLearningStats(userId);
 }
 
 export async function deleteGoal(env: Env, userId: string, goalId: string): Promise<void> {

@@ -114,7 +114,7 @@ async function searchResources(env: Env, query: string, limit: number): Promise<
       env.DB,
       `SELECT res.id, res.title, res.url, res.kind, res.provider,
               t.title AS topic_title, r.slug AS roadmap_slug,
-              snippet(resources_fts, 1, '', '', '…', 20) AS snippet
+              snippet(resources_fts, 0, '', '', '…', 20) AS snippet
        FROM resources_fts
        JOIN resources res ON res.rowid = resources_fts.rowid
        LEFT JOIN topics t ON t.id = res.topic_id

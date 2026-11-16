@@ -158,6 +158,7 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
             type="search"
             name="q"
             defaultValue={q}
+            aria-label="Search your notes"
             placeholder="Search your notes..."
             className="h-12 w-full rounded-md border border-line bg-raised pl-11 pr-4 text-base shadow-sm outline-none placeholder:text-muted focus-visible:border-accent focus-visible:ring-4 focus-visible:ring-accent/15"
           />

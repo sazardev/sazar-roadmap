@@ -42,7 +42,13 @@ export function TopicStatusIcon({
           ? "text-warning"
           : "text-muted";
   return (
-    <Icon size={16} strokeWidth={1.9} className={cn(color, className)} aria-label={item.label} />
+    <Icon
+      size={16}
+      strokeWidth={1.9}
+      className={cn(color, className)}
+      role="img"
+      aria-label={item.label}
+    />
   );
 }
 

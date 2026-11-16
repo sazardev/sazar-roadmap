@@ -84,6 +84,7 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
             type="search"
             name="q"
             defaultValue={q}
+            aria-label="Search roadmaps"
             placeholder="Search roadmaps by title or description..."
             className="h-11 w-full rounded-md border border-transparent bg-surface/60 pl-10 pr-3 text-sm outline-none placeholder:text-muted focus-visible:border-accent focus-visible:bg-raised focus-visible:ring-4 focus-visible:ring-accent/15 sm:h-12 sm:pl-11 sm:pr-4 sm:text-base"
           />

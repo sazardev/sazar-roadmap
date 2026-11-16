@@ -53,12 +53,16 @@ export function invalidateLearningStats(userId: string): void {
   statsCache.delete(userId);
 }
 
-export async function getLearningStats(env: Env, userId: string): Promise<LearningStats> {
+export async function getLearningStats(
+  env: Env,
+  userId: string,
+  weekStartsOn = 1,
+): Promise<LearningStats> {
   const now = Date.now();
   const cached = statsCache.get(userId);
   if (cached && cached.expiresAt > now) return cached.promise;
 
-  const promise = computeLearningStats(env, userId).catch((error: unknown) => {
+  const promise = computeLearningStats(env, userId, weekStartsOn).catch((error: unknown) => {
     statsCache.delete(userId);
     throw error;
   });
@@ -66,9 +70,13 @@ export async function getLearningStats(env: Env, userId: string): Promise<Learni
   return promise;
 }
 
-async function computeLearningStats(env: Env, userId: string): Promise<LearningStats> {
+async function computeLearningStats(
+  env: Env,
+  userId: string,
+  weekStartsOn = 1,
+): Promise<LearningStats> {
   const now = nowIso();
-  const weekStart = startOfWeek().toISOString();
+  const weekStart = startOfWeek(new Date(), weekStartsOn).toISOString();
   const today = isoDate();
   const [totals, statusRows, cardRows, sessionRows, goalRow, dates] = await Promise.all([
     first<{ total: number }>(
@@ -375,7 +383,11 @@ export async function recordStudy(
       `INSERT INTO user_topic_progress (user_id, topic_id, status, confidence, minutes_spent, last_studied_at, completed_at, notes, updated_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(user_id, topic_id) DO UPDATE SET
-         status = excluded.status,
+         status = CASE
+           WHEN user_topic_progress.status IN ('practiced', 'mastered') THEN user_topic_progress.status
+           WHEN excluded.status = 'practiced' THEN 'practiced'
+           ELSE 'learning'
+         END,
          confidence = excluded.confidence,
          minutes_spent = user_topic_progress.minutes_spent + excluded.minutes_spent,
          last_studied_at = excluded.last_studied_at,

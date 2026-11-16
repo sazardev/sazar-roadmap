@@ -311,6 +311,7 @@ async function runModel(
 ): Promise<string | null> {
   if (!env.AI) return null;
   const run = env.AI.run.bind(env.AI) as (model: string, inputs: unknown) => Promise<unknown>;
+  let timer: ReturnType<typeof setTimeout> | undefined;
   const output = await Promise.race([
     run(env.AI_MODEL, {
       messages,
@@ -318,9 +319,11 @@ async function runModel(
       temperature: 0.35,
     }),
     new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error("AI timeout")), 28_000);
+      timer = setTimeout(() => reject(new Error("AI timeout")), 28_000);
     }),
-  ]);
+  ]).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
   const record = output as {
     response?: unknown;
     result?: { response?: unknown };
@@ -358,9 +361,10 @@ export async function sendCoachMessage(
 
   const recent = await first<{ count: number }>(
     env.DB,
-    `SELECT count(*) AS count FROM coach_messages
-     WHERE thread_id = ? AND role = 'user' AND created_at >= ?`,
-    [threadId, new Date(Date.now() - 10 * 60_000).toISOString()],
+    `SELECT count(*) AS count FROM coach_messages m
+     JOIN coach_threads t ON t.id = m.thread_id
+     WHERE t.user_id = ? AND m.role = 'user' AND m.created_at >= ?`,
+    [userId, new Date(Date.now() - 10 * 60_000).toISOString()],
   );
   if ((recent?.count ?? 0) >= 8) {
     throw new Response("You are sending messages too quickly. Wait a minute and try again.", {

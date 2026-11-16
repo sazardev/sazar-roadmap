@@ -77,8 +77,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
     detail,
     latestAttempt: await getLatestAttempt(env, user.id, topicId),
     nextTopic:
-      (await getNextPracticeTopic(env, user.id, topic.roadmapSlug, topicId)) ??
-      (await getNextTopic(env, user.id)),
+      (await getNextPracticeTopic(env, user.id, topic.roadmapSlug, topicId)) ?? queue[0] ?? null,
     retry,
     aiEnabled: user.settings.aiEnabled,
     aiModel: user.settings.aiModel ?? env.AI_MODEL,
@@ -343,7 +342,10 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
       ) : null}
 
       {error ? (
-        <div className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger">
+        <div
+          role="alert"
+          className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger"
+        >
           {error}
         </div>
       ) : null}
@@ -586,6 +588,7 @@ function ReviewPanel({
           ? "space-y-4 rounded-lg border border-success/30 bg-success-soft p-5 md:p-6"
           : "space-y-4 rounded-lg border border-warning/30 bg-warning-soft p-5 md:p-6"
       }
+      role="status"
       aria-live="polite"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">

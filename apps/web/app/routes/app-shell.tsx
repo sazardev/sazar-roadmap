@@ -9,7 +9,7 @@ import type { Route } from "./+types/app-shell";
 export async function loader({ request, context }: Route.LoaderArgs) {
   const user = await requireUser(context, request);
   if (!user.profile.onboardingCompletedAt) throw redirect("/onboarding");
-  const stats = await getLearningStats(getEnv(context), user.id);
+  const stats = await getLearningStats(getEnv(context), user.id, user.settings.weekStart);
   const appearance = readAppearance(request, {
     theme: user.settings.theme,
     accent: user.settings.accent,

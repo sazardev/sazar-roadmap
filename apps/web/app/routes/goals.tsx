@@ -31,7 +31,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const [goals, stats] = await Promise.all([
     listGoals(env, user.id),
-    getLearningStats(env, user.id),
+    getLearningStats(env, user.id, user.settings.weekStart),
   ]);
   return {
     goals,

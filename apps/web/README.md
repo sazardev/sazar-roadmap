@@ -16,7 +16,7 @@ Live: <https://roadmap.sazardev.stream> (private, shared session).
   compact column map; clicking a node opens the full reading page. The topic page is a narrow reading
   column with a discreet actions menu, and selecting text lets you save it to Notes.
 - **Two reference libraries** — DevOps and Full Stack — plus a preview of every other roadmap in
-  the fork: 98 roadmaps, 3,293 topics and 8,444 resources in D1. The library is grouped by
+  the fork: 98 roadmaps, 3,293 topics and 8,446 resources in D1. The library is grouped by
   progression (start from zero, build depth, specialize) and keeps the upstream editorial order,
   not an alphabetical list.
 - **Progress that means something** — a topic becomes `practice passed` only after the guided
@@ -131,13 +131,14 @@ in `app/content/curricula/`, then produces an idempotent SQL seed:
   Network Engineering (54), Distributed System Design (54), C (54), iOS (54), Android (48), C# and
   .NET (48), Software Architecture (48) follow, each with its own extended reference library.
 - 2 full reference libraries: DevOps, Full Stack.
-- 83 catalog roadmaps with a 16-topic preview each.
+- 83 catalog roadmaps with a preview of up to 16 topics each.
 - One recall flashcard per guided/reference topic, plus resources extracted from the fork.
 
 The editorial standard is documented in [docs/CONTENT.md](docs/CONTENT.md) and enforced by
 `pnpm content:audit`. The audit blocks thin summaries, missing rationale, fewer than three concepts,
-non-actionable practice, generic pitfalls, duplicate summaries within a path, out-of-range study
-time and topics without authoritative resources. Run it before `pnpm content:build`.
+non-actionable practice, generic pitfalls, duplicate summaries within a path and out-of-range study
+time. It warns when a curated topic has no matching source links. `pnpm db:seed:local` and
+`pnpm db:seed:remote` run the audit before rebuilding content.
 
 The app is a **personal-use copy** of the roadmap.sh fork. The upstream license does not allow
 republishing the content outside this private workspace. Keep the app behind the shared session and
