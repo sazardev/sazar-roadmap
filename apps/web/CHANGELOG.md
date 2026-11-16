@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.1 — 2026-11-16
+
+- Made the D1 content seed incremental: unchanged rows are no longer rewritten, so a repeated seed
+  costs close to zero writes instead of tens of thousands.
+- Removed the full FTS rebuild endpoint, its Settings action and the local reindex script. Search
+  indexes stay in sync through the existing triggers.
+- Dropped the unused `topic_edges` table, its indexes and its seed writes.
+- Added a 15-second cache for learning stats, invalidated on study, practice, review and goal
+  changes, to cut repeated D1 reads during navigation.
+- Documented the Cloudflare write budget and the non-destructive seed workflow.
+
 ## 0.5.0 — 2026-11-15
 
 - Rebuilt Coach as a fullscreen chat: compact thread header, scrollable message column, Enter-to-send
