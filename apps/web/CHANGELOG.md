@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.4.0 — 2026-11-15
+
+- Added eight guided paths: Network Engineering, Software Architecture, Distributed System Design,
+  C and Systems Programming, C# and .NET Engineering, Flutter and Dart, Android Engineering and iOS
+  Engineering. The app now has 13 guided paths and 638 curated topics, each with a dependency-ordered
+  stage map, a unique summary and rationale, evidence-producing practice, specific pitfalls and
+  authoritative resources. The generated seed contains 98 roadmaps, 3,293 topics and 8,444
+  resources.
+- Upgraded Frontend, Backend, AI Engineering and Cloudflare from outline-only topics to the same
+  editorial standard, with summaries, pitfalls and resource coverage for every topic.
+- Replaced the Go-only audit with a curriculum-wide quality gate: stage counts, guided-topic counts,
+  summary uniqueness, rationale length, concept precision, practice actionability, pitfall
+  specificity, study-time bounds and minimum authoritative resources.
+- Added `docs/CONTENT.md`, the editorial standard for summaries, practice prompts, pitfalls,
+  resources, stage descriptions and review.
+- Added roadmap icons for network, architecture, system design, C, C#/.NET, Flutter, Android and iOS.
+- Corrected the `dom` topic resources and added source-mapped resources where the upstream topic had
+  fewer than two links.
+- Made the app installable as a PWA with generated icons, a manifest, a build-fingerprinted service
+  worker, an offline fallback page, automatic caching of visited pages and a path-level “Save
+  offline” action.
+- Added an offline banner, install prompt, update prompt and **Settings → Offline and install** with
+  saved-page counts, storage usage and cache clearing. Signing out clears saved pages.
+- Moved the tablet breakpoint to `lg`, added safe-area padding and a labelled icon rail, constrained
+  fixed prompts to the visual viewport and fixed horizontal overflow in dashboard cards.
+- Inline code in topic prose now renders as code instead of literal backticks, including flashcards
+  and practice pages.
+- Rebuilt the shell tablet-first: a labelled icon rail from 768 px, the full sidebar from 1024 px
+  and a five-destination bottom bar on phones, all with 44 px targets.
+- Added appearance personalization: Iris, Ocean, Moss, Amber, Rose and Mono accents, light/dark/
+  system themes, comfortable/compact density, soft/sharp corners and standard/large text, stored in
+  SSR-readable cookies and `user_settings`.
+- Refreshed the dashboard, roadmap map, topic reading page, review deck, practice form, goals,
+  notes, resources, people, coach, search and settings surfaces with calmer cards, larger type and
+  clearer empty states.
+- Improved keyboard focus, landmark labels, accessible names and metadata; the dashboard now scores
+  100 on Lighthouse accessibility, best practices and SEO.
+
 ## 0.2.0 — 2026-11-16
 
 - Added the private Go Engineering guided path: 8 stages, 64 curated topics and 108 extended

@@ -13,9 +13,9 @@ import {
 import { Form, Link, redirect, useRouteLoaderData } from "react-router";
 import { TopicStatusBadge } from "~/components/status";
 import { Badge } from "~/components/ui/badge";
-import { LinkButton } from "~/components/ui/button";
+import { buttonClass, LinkButton } from "~/components/ui/button";
 import { ProgressBar, ProgressRing } from "~/components/ui/progress";
-import { Card, CardBody, CardHeader, EmptyState, PageHeader, Stat } from "~/components/ui/surfaces";
+import { Card, CardBody, CardHeader, EmptyState, PageHeader } from "~/components/ui/surfaces";
 import { WeeklyBars } from "~/components/weekly-bars";
 import { getDueCards } from "~/features/flashcards/flashcards.server";
 import { listGoals } from "~/features/goals/goals.server";
@@ -50,6 +50,22 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   const user = await requireUser(context, request);
   const env = getEnv(context);
   const status = integrationStatus(env);
+  const timezone = user.profile.timezone || "UTC";
+  const now = new Date();
+  const dateLabel = new Intl.DateTimeFormat("en", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZone: timezone,
+  }).format(now);
+  const hour = Number(
+    new Intl.DateTimeFormat("en", {
+      hour: "2-digit",
+      hourCycle: "h23",
+      timeZone: timezone,
+    }).format(now),
+  );
+  const greeting = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
 
   const [
     next,
@@ -87,6 +103,8 @@ export async function loader({ request, context }: Route.LoaderArgs) {
     dueCards,
     dailyGoalMinutes: user.settings.dailyGoalMinutes,
     weeklyGoalMinutes: user.settings.weeklyGoalMinutes,
+    dateLabel,
+    greeting,
     integrations: {
       status,
       tasks,
@@ -144,14 +162,11 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     goals,
     dueCards,
     dailyGoalMinutes,
+    dateLabel,
+    greeting,
     integrations,
   } = loaderData;
   const firstName = shell?.user.name.split(/\s+/)[0] ?? "there";
-  const dateLabel = new Date().toLocaleDateString("en", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
   const overall = stats ? percent(stats.completed, stats.totalTopics) : 0;
   const todayMinutes = stats?.minutesToday ?? 0;
   const todayPercent = percent(todayMinutes, dailyGoalMinutes);
@@ -160,70 +175,74 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
   const hasIntegrations = Object.values(integrations.status).some(Boolean);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-7 md:space-y-9">
       <PageHeader
         eyebrow={`${dateLabel} · Private workspace`}
-        title={`Good ${greeting()}, ${firstName}.`}
+        title={`Good ${greeting}, ${firstName}.`}
         description="A small, deliberate session beats a heroic one. Pick the next thing, do the work, then log what changed."
         actions={
           <>
             {next ? (
               <LinkButton
                 to={`/roadmaps/${next.roadmapSlug}/${next.slug}`}
-                icon={<ArrowRight size={15} />}
+                icon={<ArrowRight size={17} />}
               >
                 Continue {next.roadmapTitle}
               </LinkButton>
             ) : (
-              <LinkButton to="/roadmaps" icon={<ArrowRight size={15} />}>
+              <LinkButton to="/roadmaps" icon={<ArrowRight size={17} />}>
                 Choose a path
               </LinkButton>
             )}
-            <LinkButton to="/coach" variant="secondary" icon={<Sparkles size={15} />}>
+            <LinkButton to="/coach" variant="secondary" icon={<Sparkles size={17} />}>
               Ask the coach
             </LinkButton>
           </>
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
         <Card className="overflow-hidden">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-5 py-3">
-            <div className="flex items-center gap-2 text-xs text-muted">
-              <Target size={14} strokeWidth={1.8} />
-              <span className="font-medium text-ink">Today's focus</span>
+          <div className="accent-band flex flex-wrap items-center justify-between gap-3 border-b border-line/80 px-5 py-4 md:px-6">
+            <div className="flex items-center gap-2.5">
+              <span className="flex size-9 items-center justify-center rounded-full bg-accent text-accent-ink shadow-sm">
+                <Target size={17} strokeWidth={2} />
+              </span>
+              <span className="font-semibold">Today's focus</span>
               {plan ? (
                 <Badge tone="outline">Plan created</Badge>
               ) : (
                 <Badge tone="outline">Suggested</Badge>
               )}
             </div>
-            <span className="font-mono text-[10px] text-muted">
+            <span className="hidden font-mono text-xs text-muted sm:inline">
               {planDone}/{planTarget} min
             </span>
           </div>
           {next ? (
-            <CardBody className="space-y-5 p-5 sm:p-6">
-              <div className="space-y-2">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+            <CardBody className="space-y-6 p-5 md:p-7">
+              <div className="space-y-3">
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
                   {next.roadmapTitle} / {next.stageTitle}
                 </p>
-                <h2 className="text-2xl font-semibold leading-tight tracking-tight">
+                <h2 className="max-w-2xl text-2xl font-semibold leading-[1.15] tracking-[-0.02em] md:text-3xl">
                   {next.title}
                 </h2>
-                <p className="max-w-2xl text-sm leading-relaxed text-muted">{next.summary}</p>
-              </div>
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted">
-                <span className="inline-flex items-center gap-1.5">
-                  <Clock3 size={13} /> {next.estimatedMinutes} min
-                </span>
-                <TopicStatusBadge status={next.status} />
-                <span>{next.stageTitle}</span>
+                <p className="max-w-2xl text-base leading-relaxed text-muted">{next.summary}</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-line bg-surface/70 px-3 text-xs text-muted">
+                  <Clock3 size={14} /> {next.estimatedMinutes} min
+                </span>
+                <TopicStatusBadge status={next.status} />
+                <span className="inline-flex min-h-9 items-center rounded-full border border-line bg-surface/70 px-3 text-xs text-muted">
+                  {next.stageTitle}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2.5">
                 <LinkButton
                   to={`/roadmaps/${next.roadmapSlug}/${next.slug}`}
-                  icon={<ArrowRight size={15} />}
+                  icon={<ArrowRight size={16} />}
                 >
                   Open topic
                 </LinkButton>
@@ -232,23 +251,17 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                   <input type="hidden" name="topicId" value={next.id} />
                   <input type="hidden" name="minutes" value="15" />
                   <input type="hidden" name="kind" value="read" />
-                  <button
-                    type="submit"
-                    className="inline-flex h-10 items-center gap-2 rounded-sm border border-line px-4 text-sm font-medium transition-colors duration-fast hover:bg-hover"
-                  >
-                    <Check size={14} /> Log 15 minutes
+                  <button type="submit" className={buttonClass("secondary")}>
+                    <Check size={16} /> Log 15 minutes
                   </button>
                 </Form>
-                <Link
-                  to={`/coach?topic=${next.id}`}
-                  className="inline-flex h-10 items-center gap-2 rounded-sm px-3 text-sm text-muted transition-colors duration-fast hover:bg-hover hover:text-ink"
-                >
-                  <Sparkles size={14} /> Ask about this
+                <Link to={`/coach?topic=${next.id}`} className={buttonClass("ghost")}>
+                  <Sparkles size={16} /> Ask about this
                 </Link>
               </div>
             </CardBody>
           ) : (
-            <CardBody>
+            <CardBody className="p-5 md:p-7">
               <EmptyState
                 title="You have reached the end of the guided paths"
                 description="Review what you have learned, or import another roadmap from the content library."
@@ -262,84 +275,99 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
           )}
         </Card>
 
-        <Card>
+        <Card className="flex flex-col">
           <CardHeader
-            title="At a glance"
-            description="The smallest useful dashboard: time, streak, reviews and depth."
+            title="This session"
+            description="The shape of today's work: progress, time and the next review."
           />
-          <CardBody className="space-y-5">
+          <CardBody className="flex flex-1 flex-col gap-5">
             <div className="flex items-center gap-5">
               <ProgressRing
                 value={overall}
                 label={`${overall}% of guided topics completed`}
-                size={64}
+                size={78}
+                stroke={6}
               />
-              <div className="min-w-0 space-y-1">
-                <p className="text-sm font-medium">{overall}% of the guided path</p>
-                <p className="text-xs text-muted">
+              <div className="min-w-0 space-y-1.5">
+                <p className="text-base font-semibold leading-tight">
+                  {overall}% of the guided path
+                </p>
+                <p className="text-sm leading-relaxed text-muted">
                   {stats?.completed ?? 0} practiced or mastered of {stats?.totalTopics ?? 0} topics
                 </p>
-                <Link to="/roadmaps" className="inline-flex items-center gap-1 text-xs underline">
-                  See the map <ArrowUpRight size={11} />
+                <Link
+                  to="/roadmaps"
+                  className="inline-flex min-h-8 items-center gap-1 text-xs font-medium text-accent underline decoration-accent/30 underline-offset-4"
+                >
+                  See the map <ArrowUpRight size={13} />
                 </Link>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 border-t border-line pt-4">
-              <Stat
-                label="Today"
-                value={`${todayMinutes}m`}
-                hint={`${todayPercent}% of ${dailyGoalMinutes}m`}
-              />
-              <Stat
-                label="This week"
-                value={formatMinutes(stats?.minutesThisWeek ?? 0)}
-                hint={`${stats?.sessionsThisWeek ?? 0} sessions`}
-              />
-              <Stat
-                label="Streak"
-                value={
-                  <span className="inline-flex items-center gap-1.5">
-                    <Flame size={18} /> {stats?.streak ?? 0}
-                  </span>
-                }
-                hint="Consecutive days with a session"
-              />
-              <Stat
-                label="Due reviews"
-                value={stats?.dueReviews ?? 0}
-                hint={`${stats?.newCards ?? 0} new cards available`}
-              />
+
+            <div className="mt-auto space-y-3 border-t border-line/80 pt-4">
+              <ProgressBar value={planDone} max={planTarget} label="Today's plan" showValue />
+              <p className="text-sm leading-relaxed text-muted">
+                {planDone >= planTarget
+                  ? "Today's plan is complete. Keep the streak with a short review."
+                  : `${Math.max(planTarget - planDone, 0)} minutes left in today's plan.`}
+              </p>
+              {!plan ? (
+                <Form method="post">
+                  <input type="hidden" name="intent" value="plan" />
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-10 items-center rounded-sm text-sm text-muted underline decoration-line underline-offset-4 transition-colors hover:text-accent"
+                  >
+                    Turn this suggestion into today's plan
+                  </button>
+                </Form>
+              ) : null}
             </div>
-            <ProgressBar value={planDone} max={planTarget} label="Today's plan" showValue />
-            {!plan ? (
-              <Form method="post">
-                <input type="hidden" name="intent" value="plan" />
-                <button
-                  type="submit"
-                  className="text-xs text-muted underline decoration-line underline-offset-4 hover:text-ink"
-                >
-                  Turn this suggestion into today's plan
-                </button>
-              </Form>
-            ) : null}
           </CardBody>
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+        <Metric
+          icon={<Clock3 size={16} />}
+          label="Today"
+          value={`${todayMinutes}m`}
+          hint={`${todayPercent}% of ${dailyGoalMinutes}m`}
+        />
+        <Metric
+          icon={<CalendarDays size={16} />}
+          label="This week"
+          value={formatMinutes(stats?.minutesThisWeek ?? 0)}
+          hint={`${stats?.sessionsThisWeek ?? 0} sessions`}
+        />
+        <Metric
+          icon={<Flame size={16} />}
+          label="Streak"
+          value={`${stats?.streak ?? 0}d`}
+          hint="Consecutive days"
+        />
+        <Metric
+          icon={<GraduationCap size={16} />}
+          label="Due reviews"
+          value={String(stats?.dueReviews ?? 0)}
+          hint={`${stats?.newCards ?? 0} new cards`}
+        />
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader
             title="This week"
             description={`Minutes logged against a ${dailyGoalMinutes}-minute daily floor.`}
             action={
-              <Link to="/goals" className="text-xs text-muted underline">
+              <LinkButton to="/goals" variant="ghost" size="sm">
                 Goals
-              </Link>
+              </LinkButton>
             }
           />
           <CardBody>
             <WeeklyBars days={weekly} goalMinutes={dailyGoalMinutes} />
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-xs text-muted">
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line/80 pt-4 text-sm text-muted">
               <span>
                 {formatMinutes(weekly.reduce((total, day) => total + day.minutes, 0))} logged in 7
                 days
@@ -354,9 +382,9 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             title="Due reviews"
             description="Retrieval is where knowledge becomes durable."
             action={
-              <Link to="/flashcards" className="text-xs text-muted underline">
+              <LinkButton to="/flashcards" variant="ghost" size="sm">
                 Open deck
-              </Link>
+              </LinkButton>
             }
           />
           <CardBody>
@@ -367,20 +395,22 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                   to="/flashcards"
                   variant="secondary"
                   size="sm"
-                  icon={<GraduationCap size={14} />}
+                  icon={<GraduationCap size={15} />}
                 >
                   Study ahead
                 </LinkButton>
               </div>
             ) : (
-              <ul className="space-y-3">
+              <ul className="space-y-1">
                 {dueCards.map((card) => (
-                  <li
-                    key={card.id}
-                    className="space-y-1 border-b border-line pb-3 last:border-0 last:pb-0"
-                  >
-                    <p className="line-clamp-2 text-sm font-medium">{card.front}</p>
-                    <p className="truncate text-[11px] text-muted">{card.topicTitle}</p>
+                  <li key={card.id}>
+                    <Link
+                      to={`/flashcards?topic=${card.topicId}`}
+                      className="-mx-2 block min-h-14 space-y-1 rounded-md border-b border-line/70 px-2 py-2.5 transition-colors duration-fast last:border-0 hover:bg-hover"
+                    >
+                      <p className="line-clamp-2 text-sm font-medium leading-snug">{card.front}</p>
+                      <p className="truncate text-xs text-muted">{card.topicTitle}</p>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -389,18 +419,18 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <Card>
           <CardHeader
             title="Continue the path"
             description="Next topics in your guided and reference roadmaps."
             action={
-              <Link to="/roadmaps" className="text-xs text-muted underline">
+              <LinkButton to="/roadmaps" variant="ghost" size="sm">
                 All roadmaps
-              </Link>
+              </LinkButton>
             }
           />
-          <CardBody className="divide-y divide-line p-0">
+          <CardBody className="divide-y divide-line/70 p-0">
             {continueTopics.length === 0 ? (
               <div className="p-5 text-sm text-muted">Nothing queued. Add another roadmap.</div>
             ) : (
@@ -408,19 +438,21 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                 <Link
                   key={topic.id}
                   to={`/roadmaps/${topic.roadmapSlug}/${topic.slug}`}
-                  className="flex items-center gap-4 px-5 py-3 transition-colors duration-fast hover:bg-hover"
+                  className="group flex min-h-[4.5rem] items-center gap-3 px-5 py-3 transition-colors duration-fast hover:bg-hover md:px-6"
                 >
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[10px] uppercase tracking-[0.14em] text-muted">
+                    <span className="block text-[11px] uppercase tracking-[0.14em] text-muted">
                       {topic.roadmapTitle} / {topic.stageTitle}
                     </span>
-                    <span className="mt-0.5 block truncate text-sm font-medium">{topic.title}</span>
+                    <span className="mt-1 block truncate text-base font-medium">{topic.title}</span>
                   </span>
-                  <span className="hidden text-[11px] text-muted sm:block">
+                  <span className="hidden text-xs text-muted sm:block">
                     {topic.estimatedMinutes} min
                   </span>
                   <TopicStatusBadge status={topic.status} />
-                  <ArrowRight size={14} className="shrink-0 text-muted" />
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface/60 text-muted transition-colors group-hover:border-accent/30 group-hover:bg-accent-soft group-hover:text-accent">
+                    <ArrowRight size={15} />
+                  </span>
                 </Link>
               ))
             )}
@@ -432,9 +464,9 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             title="Goals"
             description="Targets that move the path forward."
             action={
-              <Link to="/goals" className="text-xs text-muted underline">
+              <LinkButton to="/goals" variant="ghost" size="sm">
                 Manage
-              </Link>
+              </LinkButton>
             }
           />
           <CardBody className="space-y-5">
@@ -442,10 +474,10 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
               <p className="text-sm text-muted">No active goals. Create one from the Goals page.</p>
             ) : (
               goals.map((goal) => (
-                <div key={goal.id} className="space-y-2">
+                <div key={goal.id} className="space-y-2.5">
                   <div className="flex items-baseline justify-between gap-3">
                     <p className="truncate text-sm font-medium">{goal.title}</p>
-                    <span className="shrink-0 font-mono text-[10px] text-muted">
+                    <span className="shrink-0 font-mono text-[11px] text-muted">
                       {goal.currentValue}/{goal.targetValue}
                     </span>
                   </div>
@@ -458,23 +490,23 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
       </div>
 
       {hasIntegrations ? (
-        <section aria-labelledby="apps-heading" className="space-y-3">
+        <section aria-labelledby="apps-heading" className="space-y-4">
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 id="apps-heading" className="text-lg font-semibold tracking-tight">
+            <div className="space-y-1">
+              <h2 id="apps-heading" className="text-xl font-semibold tracking-tight">
                 From your other apps
               </h2>
               <p className="text-sm text-muted">
                 The rest of the sazardev workspace, read-only unless you take an action.
               </p>
             </div>
-            <Link to="/settings" className="text-xs text-muted underline">
+            <LinkButton to="/settings" variant="ghost" size="sm">
               Integrations
-            </Link>
+            </LinkButton>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
             <IntegrationCard
-              icon={<Check size={15} />}
+              icon={<Check size={17} />}
               title="Tasks"
               available={integrations.status.tasks}
               href="https://tasks.sazardev.stream"
@@ -483,8 +515,8 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
               {integrations.tasks ? (
                 <div className="space-y-2">
                   <p className="text-sm">
-                    <span className="font-medium">{integrations.tasks.today}</span> due today ·{" "}
-                    <span className="font-medium text-danger">{integrations.tasks.overdue}</span>{" "}
+                    <span className="font-semibold">{integrations.tasks.today}</span> due today ·{" "}
+                    <span className="font-semibold text-danger">{integrations.tasks.overdue}</span>{" "}
                     overdue
                   </p>
                   {integrations.tasks.tasks.slice(0, 3).map((task) => (
@@ -497,16 +529,16 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             </IntegrationCard>
 
             <IntegrationCard
-              icon={<BookOpen size={15} />}
+              icon={<BookOpen size={17} />}
               title="Learn"
               available={integrations.status.learn}
               href="https://learn.sazardev.stream"
               empty="No reading in progress."
             >
               {integrations.reading.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {integrations.reading.slice(0, 3).map((item) => (
-                    <div key={item.id} className="space-y-1">
+                    <div key={item.id} className="space-y-1.5">
                       <p className="truncate text-xs font-medium">{item.title}</p>
                       <ProgressBar value={Math.round(item.progress * 100)} max={100} />
                     </div>
@@ -516,7 +548,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             </IntegrationCard>
 
             <IntegrationCard
-              icon={<CalendarDays size={15} />}
+              icon={<CalendarDays size={17} />}
               title="News"
               available={integrations.status.news}
               href="https://news.sazardev.stream"
@@ -528,7 +560,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                     <a
                       key={item.id}
                       href={item.link}
-                      className="block truncate text-xs text-muted underline"
+                      className="block min-h-8 truncate text-xs text-muted underline decoration-line underline-offset-4 hover:text-ink"
                     >
                       {item.title}
                     </a>
@@ -538,7 +570,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             </IntegrationCard>
 
             <IntegrationCard
-              icon={<GraduationCap size={15} />}
+              icon={<GraduationCap size={17} />}
               title="English"
               available={integrations.status.english}
               href="https://english.sazardev.stream"
@@ -568,7 +600,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
               No activity yet. Log your first session above.
             </div>
           ) : (
-            <ul className="divide-y divide-line">
+            <ul className="divide-y divide-line/70">
               {activity.map((item) => {
                 const metadata = item.metadata;
                 const label = activityLabels[item.kind] ?? item.kind.replace(/_/g, " ");
@@ -581,13 +613,18 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         ? metadata.card
                         : (item.entityType ?? "item");
                 return (
-                  <li key={item.id} className="flex items-center gap-3 px-5 py-3 text-sm">
-                    <span className="size-1.5 shrink-0 rounded-full bg-line-strong" />
+                  <li
+                    key={item.id}
+                    className="flex min-h-14 items-center gap-3 px-5 py-3 text-sm md:px-6"
+                  >
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface text-muted">
+                      <span className="size-2 rounded-full bg-accent" />
+                    </span>
                     <span className="min-w-0 flex-1">
                       <span className="font-medium">{title}</span>{" "}
                       <span className="text-muted">{label}</span>
                     </span>
-                    <span className="shrink-0 text-[11px] text-muted">
+                    <span className="shrink-0 text-xs text-muted">
                       {relativeDay(item.createdAt)}
                     </span>
                   </li>
@@ -601,11 +638,29 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
   );
 }
 
-function greeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return "morning";
-  if (hour < 18) return "afternoon";
-  return "evening";
+function Metric({
+  icon,
+  label,
+  value,
+  hint,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  hint: string;
+}) {
+  return (
+    <div className="rounded-lg border border-line bg-raised p-4 shadow-card md:p-5">
+      <div className="flex items-center gap-2.5">
+        <span className="flex size-9 items-center justify-center rounded-full bg-accent-soft text-accent">
+          {icon}
+        </span>
+        <span className="text-sm font-medium text-muted">{label}</span>
+      </div>
+      <p className="mt-3 text-3xl font-semibold leading-none tracking-tight">{value}</p>
+      <p className="mt-2 text-xs leading-snug text-muted">{hint}</p>
+    </div>
+  );
 }
 
 function IntegrationCard({
@@ -627,24 +682,32 @@ function IntegrationCard({
     <Card>
       <CardHeader
         title={
-          <span className="inline-flex items-center gap-2">
-            {icon}
+          <span className="inline-flex items-center gap-2.5">
+            <span className="flex size-8 items-center justify-center rounded-full bg-accent-soft text-accent">
+              {icon}
+            </span>
             {title}
           </span>
         }
         action={
-          <a href={href} className="text-muted hover:text-ink" aria-label={`Open ${title}`}>
-            <ArrowUpRight size={14} />
+          <a
+            href={href}
+            className="flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-hover hover:text-ink"
+            aria-label={`Open ${title}`}
+          >
+            <ArrowUpRight size={16} />
           </a>
         }
       />
-      <CardBody className="min-h-24 text-sm">
+      <CardBody className="min-h-28 text-sm">
         {!available ? (
-          <p className="text-xs text-muted">Not connected. Add the integration key in Settings.</p>
+          <p className="text-xs leading-relaxed text-muted">
+            Not connected. Add the integration key in Settings.
+          </p>
         ) : children ? (
           children
         ) : (
-          <p className="text-xs text-muted">{empty}</p>
+          <p className="text-xs leading-relaxed text-muted">{empty}</p>
         )}
       </CardBody>
     </Card>

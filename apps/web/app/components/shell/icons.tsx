@@ -1,21 +1,28 @@
 import {
+  Apple,
+  Blocks,
   BookOpen,
+  Braces,
   Brain,
   CalendarDays,
   Cloud,
   Code2,
+  Cpu,
   FileText,
   GraduationCap,
   LayoutDashboard,
   Library,
   type LucideIcon,
   Map as MapIcon,
+  Network,
   Route,
   Server,
   Settings,
+  Smartphone,
   Sparkles,
   Target,
   Users,
+  Waypoints,
 } from "lucide-react";
 
 const roadmapIcons: Record<string, LucideIcon> = {
@@ -31,6 +38,13 @@ const roadmapIcons: Record<string, LucideIcon> = {
   brain: Brain,
   target: Target,
   users: Users,
+  network: Network,
+  blocks: Blocks,
+  waypoints: Waypoints,
+  cpu: Cpu,
+  braces: Braces,
+  smartphone: Smartphone,
+  apple: Apple,
 };
 
 export function roadmapIcon(name: string): LucideIcon {

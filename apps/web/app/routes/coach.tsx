@@ -2,7 +2,7 @@ import { ArrowRight, BookOpen, MessageSquarePlus, Sparkles, Trash2 } from "lucid
 import { Form, Link, redirect, useActionData, useNavigation } from "react-router";
 import { MarkdownText } from "~/components/markdown";
 import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
+import { Button, LinkButton } from "~/components/ui/button";
 import { Card, CardBody, CardHeader, EmptyState, PageHeader } from "~/components/ui/surfaces";
 import {
   createThread,
@@ -171,48 +171,52 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
       />
 
       {topic ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line bg-surface px-4 py-3 text-sm">
-          <div className="flex items-center gap-2">
-            <BookOpen size={14} className="text-muted" />
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-raised px-5 py-4 text-sm shadow-card">
+          <div className="flex items-center gap-2.5">
+            <span className="flex size-9 items-center justify-center rounded-full bg-accent-soft text-accent">
+              <BookOpen size={17} />
+            </span>
             <span className="text-muted">Context:</span>
             <Link
               to={`/roadmaps/${topic.roadmapSlug}/${topic.slug}`}
-              className="font-medium underline decoration-line underline-offset-4"
+              className="font-medium text-accent underline decoration-accent/30 underline-offset-4"
             >
               {topic.title}
             </Link>
           </div>
-          <Link to="/coach" className="text-xs text-muted underline">
+          <LinkButton to="/coach" variant="ghost" size="sm">
             Clear context
-          </Link>
+          </LinkButton>
         </div>
       ) : null}
 
       {actionData?.error ? (
-        <div className="rounded-sm border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+        <div className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger">
           {actionData.error}
         </div>
       ) : null}
 
-      <div className="grid gap-5 lg:grid-cols-[250px_minmax(0,1fr)]">
-        <aside className="space-y-3">
+      <div className="grid items-start gap-5 md:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)]">
+        <aside className="space-y-4">
           <Card>
             <CardHeader title="Sessions" description={`${threads.length} saved`} />
-            <CardBody className="p-1.5">
+            <CardBody className="p-2">
               {threads.length === 0 ? (
-                <p className="px-3 py-4 text-xs text-muted">No sessions yet.</p>
+                <p className="px-3 py-4 text-sm text-muted">No sessions yet.</p>
               ) : (
-                <ul className="space-y-0.5">
+                <ul className="space-y-1">
                   {threads.map((thread) => (
                     <li key={thread.id}>
                       <Link
                         to={`/coach?thread=${thread.id}`}
-                        className={`block rounded-sm px-2.5 py-2 transition-colors duration-fast ${
-                          active?.thread.id === thread.id ? "bg-hover" : "hover:bg-hover"
+                        className={`block min-h-14 rounded-md px-3 py-2.5 transition-colors duration-fast ${
+                          active?.thread.id === thread.id
+                            ? "bg-accent-soft text-accent"
+                            : "hover:bg-hover"
                         }`}
                       >
-                        <span className="line-clamp-1 text-xs font-medium">{thread.title}</span>
-                        <span className="mt-0.5 flex items-center gap-2 text-[10px] text-muted">
+                        <span className="line-clamp-1 text-sm font-medium">{thread.title}</span>
+                        <span className="mt-1 flex items-center gap-2 text-xs text-muted">
                           <span>{relativeDay(thread.updatedAt)}</span>
                           <span>·</span>
                           <span>{thread.messageCount} messages</span>
@@ -227,7 +231,7 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
 
           <Card>
             <CardHeader title="How to use it" />
-            <CardBody className="space-y-2 text-xs leading-relaxed text-muted">
+            <CardBody className="space-y-2.5 text-sm leading-relaxed text-muted">
               <p>
                 Ask for an explanation, a quiz or a plan. The coach retrieves the most relevant
                 topics and cites them.
@@ -240,7 +244,7 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
           </Card>
         </aside>
 
-        <Card className="flex min-h-[65vh] flex-col">
+        <Card className="flex min-h-[70vh] flex-col">
           <CardHeader
             title={active?.thread.title ?? "New session"}
             description={
@@ -256,9 +260,9 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
                   <button
                     type="submit"
                     aria-label="Delete session"
-                    className="inline-flex size-8 items-center justify-center rounded-sm text-muted hover:bg-hover hover:text-danger"
+                    className="inline-flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-danger-soft hover:text-danger"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={16} />
                   </button>
                 </Form>
               ) : null
@@ -271,9 +275,9 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
                 <EmptyState
                   title="What do you want to understand?"
                   description="The coach works best with a topic in context and a specific question. Pick a starting point below or write your own."
-                  icon={<Sparkles size={22} />}
+                  icon={<Sparkles size={24} />}
                 />
-                <div className="grid gap-2 sm:grid-cols-2">
+                <div className="grid gap-2.5 sm:grid-cols-2">
                   {starterPrompts.map((prompt) => (
                     <Form method="post" key={prompt.label}>
                       <input type="hidden" name="intent" value="send" />
@@ -283,10 +287,10 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
                       <button
                         type="submit"
                         disabled={busy}
-                        className="flex w-full items-center justify-between gap-3 rounded-sm border border-line px-3 py-2.5 text-left text-xs transition-colors duration-fast hover:bg-hover disabled:opacity-50"
+                        className="flex min-h-14 w-full items-center justify-between gap-3 rounded-md border border-line bg-raised px-4 py-3 text-left text-sm font-medium shadow-sm transition-colors duration-fast hover:bg-hover disabled:opacity-50"
                       >
                         {prompt.label}
-                        <ArrowRight size={13} className="text-muted" />
+                        <ArrowRight size={15} className="text-muted" />
                       </button>
                     </Form>
                   ))}
@@ -295,23 +299,23 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
             ) : (
               <div className="flex-1 space-y-6">
                 {messages.map((message) => (
-                  <article key={message.id} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="flex size-6 items-center justify-center rounded-full border border-line bg-surface text-[10px] font-medium">
-                        {message.role === "user" ? "You" : <Sparkles size={12} />}
+                  <article key={message.id} className="space-y-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex size-8 items-center justify-center rounded-full border border-line bg-surface text-[11px] font-medium">
+                        {message.role === "user" ? "You" : <Sparkles size={14} />}
                       </span>
-                      <span className="text-xs font-medium">
+                      <span className="text-sm font-medium">
                         {message.role === "user" ? "You" : "Coach"}
                       </span>
-                      <span className="text-[10px] text-muted">
-                        {relativeDay(message.createdAt)}
-                      </span>
+                      <span className="text-xs text-muted">{relativeDay(message.createdAt)}</span>
                       {message.model ? (
                         <Badge tone="outline">{shortModel(message.model)}</Badge>
                       ) : null}
                     </div>
                     <div
-                      className={message.role === "user" ? "pl-8 text-sm leading-relaxed" : "pl-8"}
+                      className={
+                        message.role === "user" ? "pl-10 text-base leading-relaxed" : "pl-10"
+                      }
                     >
                       {message.role === "user" ? (
                         <p className="whitespace-pre-wrap">{message.content}</p>
@@ -320,7 +324,7 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
                       )}
                     </div>
                     {message.role === "assistant" && message.citations.length > 0 ? (
-                      <div className="flex flex-wrap gap-1.5 pl-8">
+                      <div className="flex flex-wrap gap-1.5 pl-10">
                         {message.citations.map((id) => {
                           const source = citationMap[id];
                           if (!source) return null;
@@ -328,7 +332,7 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
                             <Link
                               key={id}
                               to={`/roadmaps/${source.roadmapSlug}/${source.slug}`}
-                              className="rounded-full border border-line px-2 py-0.5 text-[10px] text-muted hover:bg-hover hover:text-ink"
+                              className="rounded-full border border-line bg-raised px-2.5 py-1 text-xs text-muted transition-colors hover:bg-hover hover:text-ink"
                             >
                               {source.title}
                             </Link>
@@ -339,8 +343,8 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
                   </article>
                 ))}
                 {busy ? (
-                  <div className="flex items-center gap-2 pl-8 text-xs text-muted">
-                    <span className="size-1.5 animate-pulse rounded-full bg-ink" />
+                  <div className="flex items-center gap-2 pl-10 text-sm text-muted">
+                    <span className="size-1.5 animate-pulse rounded-full bg-accent" />
                     Thinking through the path...
                   </div>
                 ) : null}
@@ -349,7 +353,7 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
 
             <Form
               method="post"
-              className="sticky bottom-0 space-y-2 border-t border-line bg-canvas pt-4"
+              className="sticky bottom-0 space-y-2.5 border-t border-line bg-canvas/95 pt-4 backdrop-blur"
             >
               <input type="hidden" name="intent" value="send" />
               {active ? <input type="hidden" name="threadId" value={active.thread.id} /> : null}
@@ -363,14 +367,14 @@ export default function CoachPage({ loaderData }: Route.ComponentProps) {
                 name="content"
                 rows={3}
                 placeholder="Ask a question, request a quiz or describe what you are building..."
-                className="block w-full resize-y rounded-sm border border-line bg-canvas px-3 py-2.5 text-sm leading-relaxed outline-none placeholder:text-muted focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-focus/40"
+                className="block w-full resize-y rounded-lg border border-line bg-raised px-4 py-3 text-base leading-relaxed shadow-sm outline-none placeholder:text-muted focus-visible:border-accent focus-visible:ring-4 focus-visible:ring-accent/15 disabled:opacity-60"
                 disabled={busy}
               />
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-[10px] text-muted">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs leading-relaxed text-muted">
                   Answers are grounded in retrieved topics and should be verified.
                 </p>
-                <Button type="submit" size="sm" disabled={busy} icon={<ArrowRight size={13} />}>
+                <Button type="submit" disabled={busy} icon={<ArrowRight size={15} />}>
                   {busy ? "Sending..." : "Send"}
                 </Button>
               </div>

@@ -62,6 +62,14 @@ export function ThemeToggle({
     setTheme(initial);
   }, [initial]);
 
+  useEffect(() => {
+    if (theme !== "system" || typeof window === "undefined") return;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => applyTheme("system");
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, [theme]);
+
   const next: Theme = theme === "system" ? "light" : theme === "light" ? "dark" : "system";
   const Icon = theme === "system" ? Monitor : theme === "dark" ? Moon : Sun;
   const label = `Theme: ${theme}. Switch to ${next}.`;
@@ -76,9 +84,9 @@ export function ThemeToggle({
           setTheme(next);
           applyTheme(next);
         }}
-        className="inline-flex size-10 items-center justify-center rounded-sm text-muted transition-colors duration-fast hover:bg-hover hover:text-ink"
+        className="inline-flex size-11 items-center justify-center rounded-full text-muted transition-colors duration-fast hover:bg-hover hover:text-ink"
       >
-        <Icon size={16} strokeWidth={1.8} />
+        <Icon size={18} strokeWidth={1.8} />
       </button>
     );
   }
@@ -92,10 +100,10 @@ export function ThemeToggle({
         applyTheme(next);
       }}
       className={cn(
-        "inline-flex h-8 items-center gap-2 rounded-full border border-line px-3 text-[11px] text-muted transition-colors duration-fast hover:bg-hover hover:text-ink",
+        "inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-raised px-3.5 text-xs text-muted shadow-sm transition-colors duration-fast hover:bg-hover hover:text-ink",
       )}
     >
-      <Icon size={13} strokeWidth={1.8} />
+      <Icon size={14} strokeWidth={1.8} />
       <span className="capitalize">{theme}</span>
     </button>
   );

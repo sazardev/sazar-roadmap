@@ -9,12 +9,14 @@ Live: <https://roadmap.sazardev.stream> (private, shared session).
 
 ## What it does
 
-- **Five guided paths** — Frontend, Backend, Go, AI Engineer and Cloudflare — with curated stages,
-  key concepts, practice prompts and pitfalls. Each path renders as a compact column map; clicking a node opens the full topic
-  page. The topic page is a narrow reading column with a discreet actions menu, and selecting text
-  lets you save it to Notes.
+- **Thirteen guided paths** — Frontend, Backend, Go, AI Engineer, Cloudflare, Flutter and Dart,
+  Android, iOS, C, C# and .NET, Network Engineering, Software Architecture and Distributed System
+  Design. Each path has a curated order, a specific summary and rationale per topic, key concepts,
+  an evidence-producing practice prompt, real pitfalls and authoritative resources. It renders as a
+  compact column map; clicking a node opens the full reading page. The topic page is a narrow reading
+  column with a discreet actions menu, and selecting text lets you save it to Notes.
 - **Two reference libraries** — DevOps and Full Stack — plus a preview of every other roadmap in
-  the fork: 98 roadmaps, 2,162 topics and 5,485 resources in D1. The library is grouped by
+  the fork: 98 roadmaps, 3,293 topics and 8,444 resources in D1. The library is grouped by
   progression (start from zero, build depth, specialize) and keeps the upstream editorial order,
   not an alphabetical list.
 - **Progress that means something** — a topic becomes `practice passed` only after the guided
@@ -34,8 +36,14 @@ Live: <https://roadmap.sazardev.stream> (private, shared session).
 - **The rest of the workspace** — Tasks, Learn, News and English are read on the dashboard through
   private service bindings; missing keys hide a section instead of breaking the page.
 - **Command palette** — `Ctrl/Cmd+K` searches topics, resources and notes and runs navigation.
-- **Monochrome design** — light/dark/system, Geist Sans/Mono, keyboard-first flows and a responsive
-  shell with a desktop sidebar and mobile bottom navigation.
+- **Tablet and mobile first** — a full sidebar on desktop, a labelled icon rail on tablets, a
+  five-item bottom bar on phones, safe-area padding, large tap targets and one-column reading pages.
+- **Installable PWA with offline-first reading** — a manifest, generated service worker, precached
+  app shell, automatic caching of visited pages, a one-tap “Save offline” action for a whole path,
+  an offline library page and an install/update prompt. Saved pages remain readable on a plane or a
+  train; writes resume when the connection returns. Signing out clears the page cache.
+- **Clean monochrome design** — light/dark/system, Geist Sans/Mono, keyboard-first flows and a
+  responsive shell with a desktop sidebar and mobile bottom navigation.
 
 ## Quick start
 
@@ -66,6 +74,7 @@ the three-step onboarding. `DEV_NO_AUTH` is ignored on every non-loopback hostna
 | Lint and format                           | `pnpm exec biome check .` / `pnpm format`          |
 | Unit tests                                | `pnpm test`                                        |
 | Coverage                                  | `pnpm coverage`                                    |
+| Audit curriculum quality                  | `pnpm content:audit`                               |
 | Regenerate content seed                   | `pnpm content:build`                               |
 | Apply D1 migrations (local / remote)      | `pnpm db:migrate:local` / `pnpm db:migrate:remote` |
 | Seed D1 (local / remote)                  | `pnpm db:seed:local` / `pnpm db:seed:remote`       |
@@ -95,16 +104,46 @@ and [docs/DEPLOY.md](docs/DEPLOY.md) for the production runbook.
 `scripts/build-content.ts` reads the roadmap content in this repository and the curated curricula
 in `app/content/curricula/`, then produces an idempotent SQL seed:
 
-- 5 guided curricula: Frontend, Backend, Go, AI Engineer, Cloudflare.
-- Go Engineering is the deepest path: 8 stages, 64 curated topics and 108 extended reference
-  topics, with a content audit (`pnpm content:audit`) that blocks generic filler and thin topics.
+- 13 guided curricula: Frontend, Backend, Go, AI Engineer, Cloudflare, Flutter and Dart, Android,
+  iOS, C, C# and .NET, Network Engineering, Software Architecture and Distributed System Design.
+- 638 curated topics across the guided stages, each with a unique summary, a reason to care, three
+  or more precise concepts, an evidence-producing practice prompt, specific pitfalls and
+  authoritative resources.
+- Go Engineering is the deepest language path at 9 stages and 72 topics. Flutter and Dart (60),
+  Network Engineering (54), Distributed System Design (54), C (54), iOS (54), Android (48), C# and
+  .NET (48), Software Architecture (48) follow, each with its own extended reference library.
 - 2 full reference libraries: DevOps, Full Stack.
-- 92 catalog roadmaps with a 16-topic preview each.
+- 83 catalog roadmaps with a 16-topic preview each.
 - One recall flashcard per guided/reference topic, plus resources extracted from the fork.
+
+The editorial standard is documented in [docs/CONTENT.md](docs/CONTENT.md) and enforced by
+`pnpm content:audit`. The audit blocks thin summaries, missing rationale, fewer than three concepts,
+non-actionable practice, generic pitfalls, duplicate summaries within a path, out-of-range study
+time and topics without authoritative resources. Run it before `pnpm content:build`.
 
 The app is a **personal-use copy** of the roadmap.sh fork. The upstream license does not allow
 republishing the content outside this private workspace. Keep the app behind the shared session and
 do not make the roadmap content public.
+
+## PWA and offline
+
+`pnpm build` runs `scripts/build-service-worker.ts`, fingerprints the emitted client assets and writes
+`build/client/sw.js`. The service worker:
+
+- precaches the app shell, fonts, icons, manifest and offline page;
+- serves hashed static assets cache-first;
+- uses network-first navigations with a 3.5 s timeout, then a cached page, then `offline.html`;
+- keeps visited pages in a versioned page cache capped at 80 entries;
+- accepts `CACHE_URLS` messages from the roadmap-level **Save offline** action;
+- clears page caches on sign out and from **Settings → Offline and install**.
+
+Only same-origin GET navigations are cached. `/api/*`, `/internal/*`, `/auth/*` and `/logout` are
+never cached. Practice submissions, notes, reviews and coach calls still require a connection; the
+offline banner says so instead of failing silently. The page cache lives only on the device and is
+versioned with the build, so a deployment never serves a stale shell.
+
+The service worker is disabled in `pnpm dev`. To test the production behavior, run `pnpm build`
+and `pnpm preview`, or deploy.
 
 ## Repository boundaries
 

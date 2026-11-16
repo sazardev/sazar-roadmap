@@ -27,22 +27,22 @@ function StageColumn({
     (topic) => topic.status === "practiced" || topic.status === "mastered",
   ).length;
   return (
-    <section className="w-full min-w-0 lg:w-[236px] lg:shrink-0">
-      <header className="mb-2 flex items-start gap-2">
-        <span className="flex size-6 shrink-0 items-center justify-center rounded-full border border-line font-mono text-[10px] text-muted">
+    <section className="min-w-0 rounded-lg border border-line/80 bg-surface/35 p-3.5 md:w-[280px] md:shrink-0">
+      <header className="mb-3 flex items-start gap-3 px-0.5">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-raised font-mono text-[11px] text-muted shadow-sm ring-1 ring-line">
           {String(index + 1).padStart(2, "0")}
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-xs font-semibold" title={stage.description}>
+          <h3 className="text-sm font-semibold leading-snug" title={stage.description}>
             {stage.title}
           </h3>
-          <p className="text-[10px] text-muted">
-            {completed}/{stage.topics.length}
+          <p className="mt-0.5 text-xs text-muted">
+            {completed}/{stage.topics.length} complete
           </p>
         </div>
       </header>
-      <ProgressBar value={completed} max={stage.topics.length || 1} className="mb-2.5" />
-      <ol className="space-y-1.5 border-l border-line pl-3">
+      <ProgressBar value={completed} max={stage.topics.length || 1} className="mb-3" />
+      <ol className="space-y-1.5">
         {stage.topics.map((topic) => (
           <li key={topic.id}>
             <TopicNode topic={topic} roadmapSlug={roadmapSlug} next={topic.id === nextTopicId} />
@@ -69,26 +69,26 @@ function TopicNode({
       aria-current={next ? "step" : undefined}
       title={topic.summary}
       className={cn(
-        "group flex items-center gap-2 rounded-sm border px-2 py-1.5 text-xs transition-colors duration-fast",
+        "group flex min-h-14 items-center gap-2.5 rounded-md border px-3 py-2.5 text-sm transition-[border-color,background-color,box-shadow,transform] duration-fast active:scale-[0.995]",
         next
-          ? "border-ink bg-canvas ring-1 ring-ink"
+          ? "border-accent bg-accent-soft shadow-sm ring-2 ring-accent/15"
           : completed
-            ? "border-line bg-surface hover:bg-hover"
-            : "border-line bg-canvas hover:bg-surface",
+            ? "border-line bg-surface/60 hover:border-line-strong hover:bg-hover"
+            : "border-line bg-raised hover:border-line-strong hover:bg-hover",
       )}
     >
-      <TopicStatusIcon status={topic.status} className="size-3.5 shrink-0" />
+      <TopicStatusIcon status={topic.status} className="size-4 shrink-0" />
       <span className="min-w-0 flex-1">
-        <span className="line-clamp-2 font-medium">{topic.title}</span>
+        {next ? (
+          <span className="mb-1 inline-flex rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-accent-ink">
+            Next
+          </span>
+        ) : null}
+        <span className="line-clamp-2 font-medium leading-snug">{topic.title}</span>
       </span>
-      {next ? (
-        <span className="shrink-0 rounded-full bg-ink px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-wide text-canvas">
-          Next
-        </span>
-      ) : null}
       <ArrowRight
-        size={10}
-        className="shrink-0 text-muted opacity-0 transition-opacity group-hover:opacity-100"
+        size={14}
+        className="shrink-0 text-muted transition-transform duration-fast group-hover:translate-x-0.5 group-hover:text-accent"
       />
     </Link>
   );
@@ -106,26 +106,31 @@ export function RoadmapMap({
   const visibleStages = stages.filter((stage) => stage.slug !== "extended-library");
 
   return (
-    <section className="space-y-3" aria-labelledby="path-map-heading">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <MapIcon size={15} className="text-muted" />
-            <h2 id="path-map-heading" className="text-sm font-semibold">
+    <section className="space-y-4" aria-labelledby="path-map-heading">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2.5">
+            <span className="flex size-9 items-center justify-center rounded-full bg-accent-soft text-accent">
+              <MapIcon size={18} strokeWidth={1.9} />
+            </span>
+            <h2 id="path-map-heading" className="text-xl font-semibold tracking-tight">
               Path map
             </h2>
           </div>
-          <p className="mt-1 text-xs text-muted">
-            Click a topic to open it.{" "}
-            <span className="hidden lg:inline">
+          <p className="text-sm text-muted">
+            Tap a topic to open it.{" "}
+            <span className="hidden md:inline">
               Scroll sideways for all {visibleStages.length} stages.
             </span>
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 text-[10px] text-muted">
+        <div className="flex flex-wrap items-center gap-2">
           {legend.map((item) => (
-            <span key={item.label} className="inline-flex items-center gap-1.5">
-              <TopicStatusIcon status={item.status} className="size-3" />
+            <span
+              key={item.label}
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-line bg-raised px-3 text-xs text-muted shadow-sm"
+            >
+              <TopicStatusIcon status={item.status} className="size-3.5" />
               {item.label}
             </span>
           ))}
@@ -133,12 +138,12 @@ export function RoadmapMap({
       </div>
 
       <section
-        className="scrollbar-thin min-w-0 lg:overflow-x-auto lg:pb-3"
+        className="stage-scroller -mx-4 min-w-0 overflow-x-auto px-4 pb-3 md:mx-0 md:px-0"
         aria-label="Roadmap stages"
       >
-        <div className="grid gap-5 lg:flex lg:w-max lg:items-start">
+        <div className="grid gap-4 md:flex md:w-max md:items-start md:gap-3">
           {visibleStages.map((stage, index) => (
-            <div key={stage.id} className="flex min-w-0 items-start gap-1 lg:shrink-0">
+            <div key={stage.id} className="flex min-w-0 items-start md:shrink-0">
               <StageColumn
                 stage={stage}
                 index={index}
@@ -146,9 +151,11 @@ export function RoadmapMap({
                 nextTopicId={nextTopicId}
               />
               {index < visibleStages.length - 1 ? (
-                <span aria-hidden="true" className="mt-7 hidden w-6 shrink-0 items-center lg:flex">
-                  <span className="h-px flex-1 bg-line-strong" />
-                  <ArrowRight size={10} className="text-muted" />
+                <span aria-hidden="true" className="mt-12 hidden shrink-0 items-center md:flex">
+                  <span className="h-px w-4 bg-line-strong" />
+                  <span className="flex size-6 items-center justify-center rounded-full border border-line bg-raised text-muted shadow-sm">
+                    <ArrowRight size={11} />
+                  </span>
                 </span>
               ) : null}
             </div>

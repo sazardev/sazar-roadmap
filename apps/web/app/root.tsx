@@ -8,18 +8,21 @@ import {
   useRouteLoaderData,
 } from "react-router";
 import type { Route } from "./+types/root";
+import { readAppearance } from "./lib/appearance.server";
 import { readCookie } from "./lib/auth/session.server";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+  { rel: "icon", href: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+  { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
   { rel: "manifest", href: "/manifest.webmanifest" },
 ];
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const theme = readCookie(request.headers.get("cookie"), "sd_theme");
   return {
-    theme: theme === "light" || theme === "dark" ? theme : "system",
+    appearance: readAppearance(request),
+    reducedMotion: readCookie(request.headers.get("cookie"), "sd_motion") === "reduce",
   };
 }
 
@@ -32,17 +35,30 @@ export function meta() {
         "A private learning operating system: guided roadmaps, deliberate practice, spaced review and an AI coach.",
     },
     { name: "robots", content: "noindex, nofollow" },
-    { name: "theme-color", content: "#0a0a0a" },
+    { name: "theme-color", content: "#f6f5f1", media: "(prefers-color-scheme: light)" },
+    { name: "theme-color", content: "#11110f", media: "(prefers-color-scheme: dark)" },
+    { name: "mobile-web-app-capable", content: "yes" },
+    { name: "apple-mobile-web-app-capable", content: "yes" },
+    { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+    { name: "apple-mobile-web-app-title", content: "Roadmap" },
   ];
 }
 
-const themeScript = `(function(){try{var c=document.cookie.match(/(?:^|; )sd_theme=(light|dark|system)/);var t=c?c[1]:'system';if(t==='system'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}catch(e){}})();`;
+const themeScript = `(function(){try{var c=document.cookie.match(/(?:^|; )sd_theme=(light|dark|system)/);var t=c?c[1]:'system';if(t==='system'){document.documentElement.removeAttribute('data-theme');}else{document.documentElement.dataset.theme=t;}}catch(e){}})();`;
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData<typeof loader>("root");
-  const theme = data?.theme ?? "system";
+  const appearance = data?.appearance;
   return (
-    <html lang="en" data-theme={theme === "system" ? undefined : theme}>
+    <html
+      lang="en"
+      data-theme={appearance && appearance.theme !== "system" ? appearance.theme : undefined}
+      data-accent={appearance?.accent ?? "iris"}
+      data-density={appearance?.density ?? "comfortable"}
+      data-corners={appearance?.corners ?? "soft"}
+      data-text={appearance?.textSize ?? "standard"}
+      data-motion={data?.reducedMotion ? "reduce" : undefined}
+    >
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

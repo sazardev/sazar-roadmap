@@ -90,30 +90,30 @@ export default function ResourcesPage({ loaderData }: Route.ComponentProps) {
 
       <Form
         method="get"
-        className="grid gap-3 rounded-md border border-line bg-surface p-3 sm:grid-cols-[minmax(0,1fr)_160px_200px_auto] sm:items-end"
+        className="grid gap-3 rounded-lg border border-line bg-raised p-3 shadow-card sm:grid-cols-2 sm:items-end xl:grid-cols-[minmax(0,1fr)_170px_220px_auto]"
       >
-        <label className="space-y-1.5">
-          <span className="text-xs text-muted">Search</span>
+        <label className="space-y-2 sm:col-span-2 xl:col-span-1">
+          <span className="text-sm font-medium">Search</span>
           <div className="relative">
             <Search
-              size={14}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+              size={18}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
             />
             <input
               type="search"
               name="q"
               defaultValue={filters.q}
               placeholder="Title, provider or topic..."
-              className="h-10 w-full rounded-sm border border-line bg-canvas pl-8 pr-3 text-sm outline-none placeholder:text-muted focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-focus/40"
+              className="h-12 w-full rounded-md border border-line bg-surface/50 pl-10 pr-3.5 text-base outline-none placeholder:text-muted focus-visible:border-accent focus-visible:bg-raised focus-visible:ring-4 focus-visible:ring-accent/15"
             />
           </div>
         </label>
-        <label className="space-y-1.5">
-          <span className="text-xs text-muted">Kind</span>
+        <label className="space-y-2">
+          <span className="text-sm font-medium">Kind</span>
           <select
             name="kind"
             defaultValue={selectedKind}
-            className="h-10 w-full rounded-sm border border-line bg-canvas px-3 text-sm"
+            className="h-12 w-full rounded-md border border-line bg-surface/50 px-3.5 text-base focus-visible:border-accent focus-visible:ring-4 focus-visible:ring-accent/15"
           >
             <option value="">All kinds</option>
             {RESOURCE_KINDS.map((kind) => (
@@ -123,12 +123,12 @@ export default function ResourcesPage({ loaderData }: Route.ComponentProps) {
             ))}
           </select>
         </label>
-        <label className="space-y-1.5">
-          <span className="text-xs text-muted">Roadmap</span>
+        <label className="space-y-2">
+          <span className="text-sm font-medium">Roadmap</span>
           <select
             name="roadmap"
             defaultValue={selectedRoadmap}
-            className="h-10 w-full rounded-sm border border-line bg-canvas px-3 text-sm"
+            className="h-12 w-full rounded-md border border-line bg-surface/50 px-3.5 text-base focus-visible:border-accent focus-visible:ring-4 focus-visible:ring-accent/15"
           >
             <option value="">All roadmaps</option>
             {roadmaps.map((roadmap) => (
@@ -139,13 +139,18 @@ export default function ResourcesPage({ loaderData }: Route.ComponentProps) {
           </select>
         </label>
         <input type="hidden" name="saved" value={filters.saved ? "1" : "0"} />
-        <Button type="submit" disabled={busy} icon={<Filter size={14} />}>
+        <Button
+          type="submit"
+          disabled={busy}
+          icon={<Filter size={16} />}
+          className="h-12 sm:col-span-2 xl:col-span-1"
+        >
           Apply
         </Button>
       </Form>
 
       {filters.q || filters.kind !== "all" || filters.roadmap !== "all" || filters.saved ? (
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+        <div className="flex flex-wrap items-center gap-2 text-sm">
           <span className="text-muted">{total.toLocaleString()} results</span>
           {filters.q ? (
             <FilterChip label={`Search: ${filters.q}`} href={buildHref({ q: null, page: null })} />
@@ -193,26 +198,23 @@ export default function ResourcesPage({ loaderData }: Route.ComponentProps) {
       )}
 
       {pages > 1 ? (
-        <nav aria-label="Pagination" className="flex items-center justify-between gap-3 text-xs">
+        <nav
+          aria-label="Pagination"
+          className="flex flex-wrap items-center justify-between gap-3 text-sm"
+        >
           <span className="text-muted">
             Page {page} of {pages} · {total.toLocaleString()} resources
           </span>
           <div className="flex items-center gap-2">
             {page > 1 ? (
-              <Link
-                to={buildHref({ page: String(page - 1) })}
-                className="rounded-sm border border-line px-3 py-1.5 hover:bg-hover"
-              >
+              <LinkButton to={buildHref({ page: String(page - 1) })} variant="secondary" size="sm">
                 Previous
-              </Link>
+              </LinkButton>
             ) : null}
             {page < pages ? (
-              <Link
-                to={buildHref({ page: String(page + 1) })}
-                className="rounded-sm border border-line px-3 py-1.5 hover:bg-hover"
-              >
+              <LinkButton to={buildHref({ page: String(page + 1) })} variant="secondary" size="sm">
                 Next
-              </Link>
+              </LinkButton>
             ) : null}
           </div>
         </nav>
@@ -231,21 +233,21 @@ function ResourceRow({
   returnTo: string;
 }) {
   return (
-    <li className="flex items-start gap-3 px-4 py-3.5 sm:px-5">
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-sm border border-line bg-surface text-muted">
-        <BookOpen size={15} strokeWidth={1.8} />
+    <li className="flex min-h-20 items-start gap-4 px-4 py-4 sm:px-5">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-muted">
+        <BookOpen size={18} strokeWidth={1.8} />
       </span>
-      <div className="min-w-0 flex-1 space-y-1">
+      <div className="min-w-0 flex-1 space-y-1.5">
         <a
           href={resource.url}
           target="_blank"
           rel="noreferrer noopener"
-          className="inline-flex items-center gap-1.5 text-sm font-medium underline decoration-line underline-offset-4 hover:decoration-ink"
+          className="inline-flex items-center gap-1.5 text-base font-medium underline decoration-line underline-offset-4 hover:decoration-accent"
         >
           <span className="line-clamp-1">{resource.title}</span>
-          <ExternalLink size={11} className="shrink-0 text-muted" />
+          <ExternalLink size={12} className="shrink-0 text-muted" />
         </a>
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
           <span>{resource.provider ?? resource.kind}</span>
           <span>·</span>
           <Badge tone="outline">{resource.kind}</Badge>
@@ -284,9 +286,9 @@ function ResourceRow({
           aria-label={
             resource.bookmarked ? `Remove bookmark ${resource.title}` : `Bookmark ${resource.title}`
           }
-          className="inline-flex size-8 items-center justify-center rounded-sm text-muted hover:bg-hover hover:text-ink disabled:opacity-50"
+          className="inline-flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-hover hover:text-accent disabled:opacity-50"
         >
-          {resource.bookmarked ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
+          {resource.bookmarked ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
         </button>
       </Form>
     </li>
@@ -297,7 +299,7 @@ function FilterChip({ label, href }: { label: string; href: string }) {
   return (
     <Link
       to={href}
-      className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-2.5 py-1 text-muted hover:bg-hover hover:text-ink"
+      className="inline-flex min-h-9 items-center gap-1 rounded-full border border-line bg-surface/60 px-3 text-muted transition-colors hover:bg-hover hover:text-ink"
     >
       {label} <span aria-hidden="true">×</span>
     </Link>

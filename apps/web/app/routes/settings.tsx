@@ -1,12 +1,15 @@
 import { AlertTriangle, Check, Database, RefreshCw, Sparkles } from "lucide-react";
 import { Form, Link, redirect, useNavigation } from "react-router";
+import { OfflineSettings } from "~/components/pwa/offline-settings";
+import { AppearanceForm } from "~/components/shell/appearance";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Checkbox, Input, Select } from "~/components/ui/field";
 import { Card, CardBody, CardHeader, PageHeader } from "~/components/ui/surfaces";
 import { integrationStatus } from "~/features/integrations/integrations.server";
+import { normalizeAppearance } from "~/lib/appearance";
+import { appearanceCookies, readAppearance } from "~/lib/appearance.server";
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
-import { readCookie } from "~/lib/auth/session.server";
 import { getEnv } from "~/lib/db.server";
 import type { Route } from "./+types/settings";
 
@@ -55,11 +58,13 @@ export async function loader({ request, context }: Route.LoaderArgs) {
       progress: number;
     }>();
 
-  const cookieTheme = readCookie(request.headers.get("cookie"), "sd_theme");
-  const theme =
-    cookieTheme === "light" || cookieTheme === "dark" || cookieTheme === "system"
-      ? cookieTheme
-      : user.settings.theme;
+  const appearance = readAppearance(request, {
+    theme: user.settings.theme,
+    accent: user.settings.accent,
+    density: user.settings.density,
+    corners: user.settings.corners,
+    textSize: user.settings.textSize,
+  });
   return {
     user: {
       name: user.name,
@@ -67,7 +72,8 @@ export async function loader({ request, context }: Route.LoaderArgs) {
       timezone: user.profile.timezone,
       locale: user.profile.locale,
     },
-    settings: { ...user.settings, theme },
+    settings: { ...user.settings, theme: appearance.theme },
+    appearance,
     integrations: integrationStatus(env),
     counts: counts ?? {
       roadmaps: 0,
@@ -128,22 +134,34 @@ export async function action({ request, context }: Route.ActionArgs) {
   }
 
   if (intent === "appearance") {
-    const theme = String(form.get("theme") ?? "system");
-    const density = String(form.get("density") ?? "comfortable");
+    const appearance = normalizeAppearance({
+      theme: String(form.get("theme") ?? ""),
+      accent: String(form.get("accent") ?? ""),
+      density: String(form.get("density") ?? ""),
+      corners: String(form.get("corners") ?? ""),
+      textSize: String(form.get("textSize") ?? ""),
+    });
     const reducedMotion = form.get("reducedMotion") === "on" ? 1 : 0;
-    const safeTheme = ["system", "light", "dark"].includes(theme) ? theme : "system";
-    const safeDensity = density === "compact" ? "compact" : "comfortable";
     await env.DB.prepare(
-      `UPDATE user_settings SET theme = ?, density = ?, reduced_motion = ?, updated_at = ?
+      `UPDATE user_settings
+       SET theme = ?, density = ?, accent = ?, corners = ?, text_size = ?, reduced_motion = ?, updated_at = ?
        WHERE user_id = ?`,
     )
-      .bind(safeTheme, safeDensity, reducedMotion, now, user.id)
+      .bind(
+        appearance.theme,
+        appearance.density,
+        appearance.accent,
+        appearance.corners,
+        appearance.textSize,
+        reducedMotion,
+        now,
+        user.id,
+      )
       .run();
-    const secure = new URL(request.url).protocol === "https:" ? "; Secure" : "";
-    return redirect("/settings?notice=appearance", {
-      headers: {
-        "Set-Cookie": `sd_theme=${safeTheme}; Path=/; Max-Age=31536000; SameSite=Lax${secure}`,
-      },
+    return redirect("/settings?notice=appearance#appearance", {
+      headers: appearanceCookies(appearance, request, reducedMotion === 1).map(
+        (cookie) => ["Set-Cookie", cookie] as [string, string],
+      ),
     });
   }
 
@@ -216,6 +234,7 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
   const {
     user,
     settings,
+    appearance,
     integrations,
     counts,
     integrationKeyConfigured,
@@ -239,24 +258,25 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
       />
 
       {notice && notices[notice] ? (
-        <div className="rounded-sm border border-success/30 bg-success/5 px-4 py-3 text-sm">
+        <div className="rounded-lg border border-success/25 bg-success-soft px-4 py-3 text-sm">
           {notices[notice]}
         </div>
       ) : null}
       {error && errors[error] ? (
-        <div className="rounded-sm border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+        <div className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger">
           {errors[error]}
         </div>
       ) : null}
 
-      <div className="grid gap-5 xl:grid-cols-[220px_minmax(0,1fr)]">
-        <nav aria-label="Settings sections" className="hidden xl:block">
-          <ul className="sticky top-20 space-y-1 text-sm">
+      <div className="grid gap-5 lg:grid-cols-[200px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)]">
+        <nav aria-label="Settings sections" className="hidden lg:block">
+          <ul className="sticky top-24 space-y-1.5 text-sm">
             {[
               ["profile", "Profile"],
               ["learning", "Learning"],
               ["appearance", "Appearance"],
               ["ai", "AI coach"],
+              ["offline", "Offline"],
               ["integrations", "Integrations"],
               ["content", "Content"],
               ["danger", "Danger zone"],
@@ -264,7 +284,7 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className="block rounded-sm px-2 py-1.5 text-muted hover:bg-hover hover:text-ink"
+                  className="flex min-h-10 items-center rounded-md px-3 text-muted transition-colors hover:bg-hover hover:text-ink"
                 >
                   {label}
                 </a>
@@ -358,38 +378,13 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
           <Card id="appearance">
             <CardHeader
               title="Appearance"
-              description="Monochrome by default. The theme also follows the system until you choose one."
+              description="Tablet-first by default: larger targets, calmer surfaces and one accent that can be yours. Changes preview instantly and save to your account."
             />
-            <Form method="post" className="grid gap-4 p-5 sm:grid-cols-3">
-              <input type="hidden" name="intent" value="appearance" />
-              <label className="space-y-1.5">
-                <span className="text-sm font-medium">Theme</span>
-                <Select name="theme" defaultValue={settings.theme}>
-                  <option value="system">System</option>
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                </Select>
-              </label>
-              <label className="space-y-1.5">
-                <span className="text-sm font-medium">Density</span>
-                <Select name="density" defaultValue={settings.density}>
-                  <option value="comfortable">Comfortable</option>
-                  <option value="compact">Compact</option>
-                </Select>
-              </label>
-              <div className="flex items-end">
-                <Checkbox
-                  name="reducedMotion"
-                  label="Reduce motion"
-                  defaultChecked={settings.reducedMotion}
-                />
-              </div>
-              <div className="sm:col-span-3">
-                <Button type="submit" disabled={busy}>
-                  Save appearance
-                </Button>
-              </div>
-            </Form>
+            <AppearanceForm
+              initial={appearance}
+              reducedMotion={settings.reducedMotion}
+              busy={busy}
+            />
           </Card>
 
           <Card id="ai">
@@ -428,6 +423,8 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
               </div>
             </Form>
           </Card>
+
+          <OfflineSettings />
 
           <Card id="integrations">
             <CardHeader
@@ -623,9 +620,9 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
 
 function Count({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="rounded-sm border border-line bg-surface px-3 py-2">
-      <p className="text-[10px] uppercase tracking-wide text-muted">{label}</p>
-      <p className="font-mono text-lg">{value}</p>
+    <div className="rounded-md border border-line bg-surface/60 px-3.5 py-3">
+      <p className="text-[10px] uppercase tracking-[0.12em] text-muted">{label}</p>
+      <p className="mt-0.5 font-mono text-xl">{value}</p>
     </div>
   );
 }

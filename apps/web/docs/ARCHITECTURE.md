@@ -181,14 +181,28 @@ Both require `x-integration-key: INTEGRATION_KEY`.
 ## Design system
 
 Tokens live in `app/app.css` as CSS custom properties and are exposed to Tailwind 4 through
-`@theme inline`. The palette is monochrome: hierarchy comes from the gray ramp, weight and spacing,
-not color. Status colors are reserved for state and always come with a label or icon. The accent is
-the text color; the focus ring is the only saturated color.
+`@theme inline`. The base palette is a warm neutral ramp; hierarchy comes from surface, line,
+weight and spacing. One accent color carries interactive state, progress and focus, and can be
+changed per device without touching component code.
 
-Components use tokens (`bg-canvas`, `text-muted`, `border-line`) and never hard-code a palette value.
-Motion uses the `--duration-*` and `--ease-*` tokens and is disabled by the reduced-motion setting.
-The shell collapses from a 240 px sidebar to a five-destination bottom bar; the command palette is
-the “More” destination on mobile.
+The shell is tablet-first:
+
+- below 768 px, a five-destination bottom bar;
+- 768–1023 px, an icon-and-label rail that keeps 44 px targets and leaves the content wide;
+- 1024 px and up, the full sidebar (248 px, 272 px on wide screens).
+
+Buttons, fields, rows and icon controls have a minimum 44 px tap target. Type sizes start at 16 px,
+metadata never drops below 11 px, and motion is disabled by `prefers-reduced-motion`.
+
+Appearance is stored in SSR-readable cookies (`sd_theme`, `sd_accent`, `sd_density`, `sd_corners`,
+`sd_text`, `sd_motion`) so the first paint matches the user's choices. The settings action also
+persists them in `user_settings`. The topbar palette applies a change instantly and the settings page previews the
+same controls before saving. Status colors are reserved for state and always come with a label or
+icon. The accent is user-selectable; the default is Iris, and Mono restores the original
+monochrome treatment.
+
+Components use tokens (`bg-canvas`, `text-muted`, `border-line`, `bg-accent`) and never hard-code a
+palette value. The command palette is the “More” destination on mobile and `Ctrl/Cmd+K` everywhere.
 
 ## Decisions and deviations from STACK.md
 

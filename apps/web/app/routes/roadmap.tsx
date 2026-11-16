@@ -1,11 +1,13 @@
 import { ArrowRight, BookOpen, Clock3, Layers, Sparkles } from "lucide-react";
 import { Link, redirect } from "react-router";
+import { SaveOfflineButton } from "~/components/pwa/save-offline-button";
 import { RoadmapMap } from "~/components/roadmap/roadmap-map";
 import { TopicIndex } from "~/components/roadmap/topic-index";
 import { roadmapIcon } from "~/components/shell/icons";
 import { Badge } from "~/components/ui/badge";
 import { LinkButton } from "~/components/ui/button";
 import { ProgressBar } from "~/components/ui/progress";
+import { RichText } from "~/components/ui/rich-text";
 import { PageHeader } from "~/components/ui/surfaces";
 import { getRoadmapDetail } from "~/features/roadmaps/roadmaps.server";
 import { requireUser } from "~/lib/auth/auth.server";
@@ -47,6 +49,10 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
     ? `/roadmaps/${roadmap.slug}/${nextTopic.slug}`
     : `/roadmaps/${roadmap.slug}`;
   const searchHref = `/search?q=${encodeURIComponent(roadmap.title)}`;
+  const offlineUrls = [
+    `/roadmaps/${roadmap.slug}`,
+    ...coreTopics.map((topic) => `/roadmaps/${roadmap.slug}/${topic.slug}`),
+  ];
   const progressLabel = isPreview
     ? `${progress}% of the sample`
     : isGuided
@@ -71,6 +77,13 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
                 Open next step
               </LinkButton>
             ) : null}
+            {isGuided ? (
+              <SaveOfflineButton
+                urls={offlineUrls}
+                label="Save offline"
+                className="h-11 px-4 text-sm"
+              />
+            ) : null}
             <LinkButton
               to={coachHref}
               variant={isGuided && nextTopic ? "secondary" : "primary"}
@@ -87,28 +100,28 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
         }
       />
 
-      <div className="flex flex-wrap items-center gap-4 border-y border-line py-3">
-        <div className="min-w-40 flex-1">
-          <div className="flex items-baseline justify-between gap-3 text-xs">
-            <span className="font-medium">{progressLabel}</span>
-            <span className="font-mono text-[10px] text-muted">
+      <div className="flex flex-wrap items-center gap-5 rounded-lg border border-line bg-raised px-5 py-4 shadow-card">
+        <div className="min-w-44 flex-1">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-sm font-medium">{progressLabel}</span>
+            <span className="font-mono text-[11px] text-muted">
               {coreCompleted}/{coreTopics.length}
             </span>
           </div>
-          <ProgressBar value={coreCompleted} max={coreTopics.length || 1} className="mt-1.5" />
+          <ProgressBar value={coreCompleted} max={coreTopics.length || 1} className="mt-2" />
         </div>
-        <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted">
-          <span className="inline-flex items-center gap-1">
-            <BookOpen size={11} />{" "}
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+          <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-surface/60 px-3">
+            <BookOpen size={13} />{" "}
             {isPreview ? `${coreTopics.length} sample` : `${coreTopics.length} topics`}
           </span>
           {isPreview ? (
-            <span className="inline-flex items-center gap-1">
-              <Layers size={11} /> {roadmap.sourceTopicCount} source
+            <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-surface/60 px-3">
+              <Layers size={13} /> {roadmap.sourceTopicCount} source
             </span>
           ) : null}
-          <span className="inline-flex items-center gap-1">
-            <Clock3 size={11} /> {roadmap.estimatedHours}h
+          <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-surface/60 px-3">
+            <Clock3 size={13} /> {roadmap.estimatedHours}h
           </span>
           <Badge tone="outline" className="capitalize">
             {roadmap.level}
@@ -118,8 +131,8 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
 
       {isPreview ? (
         <>
-          <div className="rounded-md border border-warning/30 bg-warning/5 px-4 py-3 text-sm">
-            <p className="font-medium">Preview, not a guided path</p>
+          <div className="rounded-lg border border-warning/25 bg-warning-soft px-5 py-4 text-sm">
+            <p className="font-semibold">Preview, not a guided path</p>
             <p className="mt-1 max-w-3xl leading-relaxed text-muted">
               This roadmap has {roadmap.sourceTopicCount} source topics, but no curated order yet.
               The sample below is for reference; ask the coach to turn your goal into a sequence.
@@ -140,15 +153,38 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
             roadmapSlug={roadmap.slug}
             nextTopicId={nextTopic?.id ?? undefined}
           />
+          <details className="rounded-lg border border-line bg-raised shadow-card">
+            <summary className="flex min-h-16 cursor-pointer list-none flex-wrap items-center gap-2 px-5 py-4 [&::-webkit-details-marker]:hidden md:px-6">
+              <span className="font-semibold">Stage briefs</span>
+              <span className="rounded-full bg-surface px-2.5 py-1 text-xs text-muted">
+                What each of the {coreStages.length} stages builds
+              </span>
+            </summary>
+            <ol className="divide-y divide-line/70 border-t border-line/80">
+              {coreStages.map((stage, index) => (
+                <li key={stage.id} className="flex gap-3 px-5 py-4 md:px-6">
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent-soft font-mono text-[11px] font-medium text-accent">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-semibold">{stage.title}</h3>
+                    <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted">
+                      <RichText text={stage.description} />
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </details>
           {extended && extended.topics.length > 0 ? (
-            <details className="rounded-md border border-line">
-              <summary className="cursor-pointer list-none px-4 py-3 text-sm [&::-webkit-details-marker]:hidden">
-                <span className="font-medium">Extended library</span>
-                <span className="ml-2 text-xs text-muted">
+            <details className="rounded-lg border border-line bg-raised shadow-card">
+              <summary className="flex min-h-16 cursor-pointer list-none flex-wrap items-center gap-2 px-5 py-4 [&::-webkit-details-marker]:hidden md:px-6">
+                <span className="font-semibold">Extended library</span>
+                <span className="rounded-full bg-surface px-2.5 py-1 text-xs text-muted">
                   {extended.topics.length} additional topics
                 </span>
               </summary>
-              <div className="border-t border-line p-4">
+              <div className="border-t border-line/80 p-4 md:p-6">
                 <TopicIndex
                   topics={extended.topics}
                   roadmapSlug={roadmap.slug}
@@ -163,27 +199,38 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
         </>
       ) : (
         <>
-          <div className="rounded-md border border-line bg-surface px-4 py-3 text-sm">
-            <p className="font-medium">Reference library, not a sequence</p>
+          <div className="rounded-lg border border-line bg-surface/60 px-5 py-4 text-sm">
+            <p className="font-semibold">Reference library, not a sequence</p>
             <p className="mt-1 max-w-3xl leading-relaxed text-muted">
               These topics come from the community roadmap without a curated order. Use search or
               ask the coach to build a route around your goal.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3 text-xs">
-            <Link to={searchHref} className="underline">
+          <div className="flex flex-wrap items-center gap-2.5 text-sm">
+            <Link
+              to={searchHref}
+              className="font-medium text-accent underline decoration-accent/30 underline-offset-4"
+            >
               Search “{roadmap.title}” in the library
             </Link>
-            <Link to="/roadmaps?status=guided" className="underline">
+            <span aria-hidden="true" className="text-muted">
+              ·
+            </span>
+            <Link
+              to="/roadmaps?status=guided"
+              className="font-medium text-accent underline decoration-accent/30 underline-offset-4"
+            >
               Browse guided paths
             </Link>
           </div>
-          <details className="rounded-md border border-line">
-            <summary className="cursor-pointer list-none px-4 py-3 text-sm [&::-webkit-details-marker]:hidden">
-              <span className="font-medium">Browse all reference topics</span>
-              <span className="ml-2 text-xs text-muted">{sampleTopics.length} topics</span>
+          <details className="rounded-lg border border-line bg-raised shadow-card">
+            <summary className="flex min-h-16 cursor-pointer list-none flex-wrap items-center gap-2 px-5 py-4 [&::-webkit-details-marker]:hidden md:px-6">
+              <span className="font-semibold">Browse all reference topics</span>
+              <span className="rounded-full bg-surface px-2.5 py-1 text-xs text-muted">
+                {sampleTopics.length} topics
+              </span>
             </summary>
-            <div className="border-t border-line p-4">
+            <div className="border-t border-line/80 p-4 md:p-6">
               <TopicIndex
                 topics={sampleTopics}
                 roadmapSlug={roadmap.slug}
@@ -197,7 +244,7 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
         </>
       )}
 
-      <p className="text-[10px] leading-relaxed text-muted">
+      <p className="max-w-3xl text-xs leading-relaxed text-muted">
         Content is a personal-use copy of the roadmap.sh fork and stays behind the shared sazardev
         session. Guided stages and practice prompts are original to this app.
       </p>

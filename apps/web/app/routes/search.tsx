@@ -32,21 +32,24 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
         description="Full-text search over 2,000 topics, 5,000 resources and your own notes. The command palette does the same thing from anywhere."
       />
 
-      <form method="get" className="flex items-center gap-2">
+      <form
+        method="get"
+        className="flex flex-col gap-2.5 rounded-lg border border-line bg-raised p-2.5 shadow-card sm:flex-row sm:items-center"
+      >
         <div className="relative flex-1">
           <Search
-            size={16}
-            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
+            size={18}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
           />
           <input
             type="search"
             name="q"
             defaultValue={q}
             placeholder="Search topics, resources and notes..."
-            className="h-12 w-full rounded-sm border border-line bg-canvas pl-10 pr-4 text-[15px] outline-none placeholder:text-muted focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-focus/40"
+            className="h-12 w-full rounded-md border border-transparent bg-surface/60 pl-11 pr-4 text-base outline-none placeholder:text-muted focus-visible:border-accent focus-visible:bg-raised focus-visible:ring-4 focus-visible:ring-accent/15"
           />
         </div>
-        <Button type="submit" size="lg">
+        <Button type="submit" className="h-12">
           Search
         </Button>
       </form>
@@ -106,39 +109,41 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
 
 function ResultGroup({ title, hits }: { title: string; hits: SearchHit[] }) {
   return (
-    <section className="space-y-2" aria-labelledby={`results-${title}`}>
+    <section className="space-y-3" aria-labelledby={`results-${title}`}>
       <div className="flex items-center gap-2">
-        <h2 id={`results-${title}`} className="text-sm font-semibold">
+        <h2 id={`results-${title}`} className="text-xl font-semibold tracking-tight">
           {title}
         </h2>
         <Badge tone="outline">{hits.length}</Badge>
       </div>
       <Card>
-        <ul className="divide-y divide-line">
+        <ul className="divide-y divide-line/70">
           {hits.map((hit) => (
             <li key={`${hit.kind}-${hit.id}`}>
               <a
                 href={hit.url}
                 target={hit.url.startsWith("http") ? "_blank" : undefined}
                 rel={hit.url.startsWith("http") ? "noreferrer noopener" : undefined}
-                className="flex items-start gap-3 px-4 py-3 transition-colors duration-fast hover:bg-hover"
+                className="flex min-h-20 items-start gap-3 px-5 py-4 transition-colors duration-fast hover:bg-hover"
               >
-                <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-sm border border-line bg-surface text-muted">
+                <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
                   {hit.kind === "topic" ? (
-                    <MapIcon size={14} />
+                    <MapIcon size={17} />
                   ) : hit.kind === "resource" ? (
-                    <BookOpen size={14} />
+                    <BookOpen size={17} />
                   ) : (
-                    <FileText size={14} />
+                    <FileText size={17} />
                   )}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-medium">{hit.title}</span>
-                  <span className="mt-0.5 line-clamp-2 block text-xs text-muted">
+                  <span className="block text-base font-medium">{hit.title}</span>
+                  <span className="mt-1 line-clamp-2 block text-sm leading-relaxed text-muted">
                     {hit.snippet || hit.subtitle}
                   </span>
                 </span>
-                <ArrowRight size={13} className="mt-1 shrink-0 text-muted" />
+                <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border border-line text-muted">
+                  <ArrowRight size={15} />
+                </span>
               </a>
             </li>
           ))}
@@ -165,16 +170,21 @@ function SearchCategory({
     <Card>
       <CardHeader
         title={
-          <span className="inline-flex items-center gap-2">
-            {icon}
+          <span className="inline-flex items-center gap-2.5">
+            <span className="flex size-9 items-center justify-center rounded-full bg-accent-soft text-accent">
+              {icon}
+            </span>
             {title}
           </span>
         }
       />
       <CardBody className="space-y-3">
-        <p className="text-xs leading-relaxed text-muted">{body}</p>
-        <Link to={href} className="inline-flex items-center gap-1 text-xs underline">
-          {link} <ArrowRight size={11} />
+        <p className="text-sm leading-relaxed text-muted">{body}</p>
+        <Link
+          to={href}
+          className="inline-flex min-h-9 items-center gap-1 text-sm font-medium text-accent underline decoration-accent/30 underline-offset-4"
+        >
+          {link} <ArrowRight size={13} />
         </Link>
       </CardBody>
     </Card>

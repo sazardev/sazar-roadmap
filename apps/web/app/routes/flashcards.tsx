@@ -3,6 +3,7 @@ import { Form, Link, redirect, useNavigation } from "react-router";
 import { Badge } from "~/components/ui/badge";
 import { LinkButton } from "~/components/ui/button";
 import { ProgressBar } from "~/components/ui/progress";
+import { RichText } from "~/components/ui/rich-text";
 import { Card, CardBody, CardHeader, EmptyState, PageHeader } from "~/components/ui/surfaces";
 import { type ReviewRating, scheduleReview } from "~/features/flashcards/algorithm";
 import {
@@ -132,26 +133,26 @@ export default function FlashcardsPage({ loaderData }: Route.ComponentProps) {
       />
 
       {reviewed ? (
-        <div className="rounded-sm border border-success/30 bg-success/5 px-4 py-3 text-sm">
+        <div className="rounded-lg border border-success/25 bg-success-soft px-4 py-3 text-sm">
           Rated <strong>{ratingLabels[reviewed as ReviewRating] ?? reviewed}</strong>. Next review
           in <strong>{nextInterval ?? "a moment"}</strong>.
         </div>
       ) : null}
 
       {topic ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line bg-surface px-4 py-3 text-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-raised px-5 py-4 text-sm shadow-card">
           <span>
             <span className="text-muted">Filtered to </span>
             <Link
               to={`/roadmaps/${topic.roadmapSlug}/${topic.slug}`}
-              className="font-medium underline"
+              className="font-medium text-accent underline decoration-accent/30 underline-offset-4"
             >
               {topic.title}
             </Link>
           </span>
-          <Link to="/flashcards" className="text-xs text-muted underline">
+          <LinkButton to="/flashcards" variant="ghost" size="sm">
             All cards
-          </Link>
+          </LinkButton>
         </div>
       ) : null}
 
@@ -162,15 +163,17 @@ export default function FlashcardsPage({ loaderData }: Route.ComponentProps) {
         <DeckStat label="Review" value={stats.review} hint="Long interval" />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <Card id="review-card" className="flex min-h-[420px] flex-col">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
-            <div className="flex items-center gap-2 text-xs text-muted">
-              <Brain size={14} strokeWidth={1.8} />
-              <span className="font-medium text-ink">Review session</span>
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <Card id="review-card" className="flex min-h-[480px] flex-col">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line/80 px-5 py-4 md:px-6">
+            <div className="flex items-center gap-2.5 text-sm text-muted">
+              <span className="flex size-9 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <Brain size={18} strokeWidth={1.9} />
+              </span>
+              <span className="font-semibold text-ink">Review session</span>
               {card ? <Badge tone="outline">{card.state}</Badge> : null}
             </div>
-            <span className="font-mono text-[10px] text-muted">
+            <span className="font-mono text-xs text-muted">
               {stats.due - 1 > 0 ? `${stats.due - 1} after this` : "last due card"}
             </span>
           </div>
@@ -178,15 +181,15 @@ export default function FlashcardsPage({ loaderData }: Route.ComponentProps) {
           {card ? (
             <CardBody className="flex flex-1 flex-col gap-6 p-5 sm:p-7">
               <div className="space-y-3">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
                   {card.roadmapTitle} / {card.topicTitle}
                 </p>
-                <h2 className="max-w-3xl text-2xl font-semibold leading-snug tracking-tight">
+                <h2 className="max-w-3xl text-2xl font-semibold leading-snug tracking-tight md:text-3xl">
                   {card.front}
                 </h2>
                 {card.hint ? (
                   <details className="text-sm text-muted">
-                    <summary className="cursor-pointer text-xs underline decoration-line underline-offset-4">
+                    <summary className="inline-flex min-h-10 cursor-pointer items-center text-sm underline decoration-line underline-offset-4">
                       Show hint
                     </summary>
                     <p className="mt-2 max-w-2xl leading-relaxed">{card.hint}</p>
@@ -195,38 +198,42 @@ export default function FlashcardsPage({ loaderData }: Route.ComponentProps) {
               </div>
 
               <details className="group flex-1">
-                <summary className="inline-flex h-9 cursor-pointer list-none items-center gap-2 rounded-sm border border-line px-3 text-xs font-medium transition-colors duration-fast hover:bg-hover [&::-webkit-details-marker]:hidden">
-                  <Check size={13} />
+                <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-md border border-line bg-raised px-4 text-sm font-medium shadow-sm transition-colors duration-fast hover:bg-hover [&::-webkit-details-marker]:hidden">
+                  <Check size={15} />
                   Show answer
                 </summary>
-                <div className="mt-5 space-y-4 rounded-md border border-line bg-surface p-5">
+                <div className="mt-5 space-y-4 rounded-lg border border-line bg-surface/50 p-5 md:p-6">
                   <div className="space-y-1.5">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
                       Answer
                     </p>
-                    <p className="max-w-3xl text-[15px] leading-relaxed">{card.back}</p>
+                    <RichText
+                      text={card.back}
+                      className="block max-w-3xl text-base leading-relaxed"
+                    />
                   </div>
                   {card.explanation ? (
                     <div className="space-y-1.5 border-t border-line pt-4">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
                         Why it matters
                       </p>
-                      <p className="max-w-3xl text-sm leading-relaxed text-muted">
-                        {card.explanation}
-                      </p>
+                      <RichText
+                        text={card.explanation}
+                        className="block max-w-3xl text-sm leading-relaxed text-muted"
+                      />
                     </div>
                   ) : null}
                   <div className="flex flex-wrap items-center gap-2 border-t border-line pt-4">
                     <Link
                       to={`/roadmaps/${card.roadmapSlug}/${card.topicSlug}`}
-                      className="text-xs underline"
+                      className="text-sm font-medium text-accent underline decoration-accent/30 underline-offset-4"
                     >
                       Open topic
                     </Link>
                     <span className="text-muted">·</span>
-                    <span className="text-xs text-muted">How well did you recall it?</span>
+                    <span className="text-sm text-muted">How well did you recall it?</span>
                   </div>
-                  <Form method="post" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  <Form method="post" className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
                     <input type="hidden" name="cardId" value={card.id} />
                     {topic ? <input type="hidden" name="topicId" value={topic.id} /> : null}
                     {(["again", "hard", "good", "easy"] as const).map((rating) => {
@@ -238,31 +245,35 @@ export default function FlashcardsPage({ loaderData }: Route.ComponentProps) {
                           name="rating"
                           value={rating}
                           disabled={busy}
-                          className={`flex flex-col items-center gap-0.5 rounded-sm border px-3 py-2.5 text-sm transition-colors duration-fast hover:bg-hover disabled:opacity-50 ${
-                            rating === "good" ? "border-ink" : "border-line"
+                          className={`flex min-h-16 flex-col items-center justify-center gap-1 rounded-md border px-3 py-3 text-sm transition-[background-color,border-color,transform] duration-fast hover:bg-hover active:scale-[0.98] disabled:opacity-50 ${
+                            rating === "good"
+                              ? "border-accent bg-accent-soft"
+                              : "border-line bg-raised"
                           }`}
                         >
                           <span
                             className={
-                              rating === "again" ? "font-medium text-danger" : "font-medium"
+                              rating === "again"
+                                ? "text-base font-semibold text-danger"
+                                : "text-base font-semibold"
                             }
                           >
                             {ratingLabels[rating]}
                           </span>
-                          <span className="font-mono text-[9px] text-muted">{preview?.label}</span>
+                          <span className="font-mono text-[10px] text-muted">{preview?.label}</span>
                         </button>
                       );
                     })}
                   </Form>
-                  <p className="text-[10px] text-muted">
+                  <p className="text-xs leading-relaxed text-muted">
                     Rating updates the card, the activity log and any active cards goal. The next
                     card appears immediately.
                   </p>
                 </div>
               </details>
 
-              <div className="mt-auto flex items-center gap-3 border-t border-line pt-4 text-[11px] text-muted">
-                <Clock3 size={12} />
+              <div className="mt-auto flex flex-wrap items-center gap-3 border-t border-line/80 pt-4 text-xs text-muted">
+                <Clock3 size={14} />
                 <span>Interval: {card.intervalDays > 0 ? `${card.intervalDays} days` : "new"}</span>
                 <span>·</span>
                 <span>Ease {card.easeFactor.toFixed(2)}</span>
@@ -373,10 +384,10 @@ export default function FlashcardsPage({ loaderData }: Route.ComponentProps) {
 function DeckStat({ label, value, hint }: { label: string; value: number; hint: string }) {
   return (
     <Card>
-      <CardBody className="space-y-1 p-4">
-        <p className="text-xs text-muted">{label}</p>
-        <p className="font-mono text-2xl font-medium tabular-nums">{value}</p>
-        <p className="text-[10px] text-muted">{hint}</p>
+      <CardBody className="space-y-1 p-5">
+        <p className="text-sm text-muted">{label}</p>
+        <p className="font-mono text-3xl font-medium tabular-nums">{value}</p>
+        <p className="text-xs text-muted">{hint}</p>
       </CardBody>
     </Card>
   );

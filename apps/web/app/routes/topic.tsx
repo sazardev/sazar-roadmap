@@ -17,6 +17,7 @@ import { SelectionToNotes } from "~/components/selection-to-notes";
 import { Badge } from "~/components/ui/badge";
 import { Button, LinkButton } from "~/components/ui/button";
 import { Input, Textarea } from "~/components/ui/field";
+import { RichText } from "~/components/ui/rich-text";
 import {
   createNote as createExternalNote,
   createTask,
@@ -179,30 +180,30 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-8 pb-10">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           to={`/roadmaps/${topic.roadmapSlug}`}
-          className="inline-flex items-center gap-1 text-xs text-muted underline decoration-line underline-offset-4 hover:text-ink"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-raised px-4 text-sm font-medium text-muted shadow-sm transition-colors duration-fast hover:border-line-strong hover:bg-hover hover:text-ink"
         >
-          <ArrowLeft size={12} /> {topic.roadmapTitle}
+          <ArrowLeft size={15} /> {topic.roadmapTitle}
         </Link>
         <details className="relative">
-          <summary className="inline-flex h-8 cursor-pointer list-none items-center gap-1.5 rounded-full border border-line px-3 text-xs text-muted transition-colors hover:bg-hover hover:text-ink [&::-webkit-details-marker]:hidden">
-            <MoreHorizontal size={14} /> Actions
+          <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border border-line bg-raised px-4 text-sm font-medium text-muted shadow-sm transition-colors hover:border-line-strong hover:bg-hover hover:text-ink [&::-webkit-details-marker]:hidden">
+            <MoreHorizontal size={17} /> Actions
           </summary>
-          <div className="absolute right-0 top-10 z-30 w-60 rounded-md border border-line bg-raised p-1.5 shadow-float">
+          <div className="absolute right-0 top-[calc(100%+0.6rem)] z-30 w-64 rounded-lg border border-line bg-raised p-2 shadow-float">
             <Link
               to={`/coach?topic=${topic.id}`}
-              className="flex items-center gap-2 rounded-sm px-2.5 py-2 text-xs hover:bg-hover"
+              className="flex min-h-11 items-center gap-2.5 rounded-md px-3 text-sm hover:bg-hover"
             >
-              <Sparkles size={13} className="text-muted" /> Ask the coach
+              <Sparkles size={16} className="text-muted" /> Ask the coach
             </Link>
             {cards.total > 0 ? (
               <Link
                 to={`/flashcards?topic=${topic.id}`}
-                className="flex items-center gap-2 rounded-sm px-2.5 py-2 text-xs hover:bg-hover"
+                className="flex min-h-11 items-center gap-2.5 rounded-md px-3 text-sm hover:bg-hover"
               >
-                <GraduationCap size={13} className="text-muted" /> Review {cards.total} cards
+                <GraduationCap size={16} className="text-muted" /> Review {cards.total} cards
               </Link>
             ) : null}
             <Form method="post">
@@ -210,9 +211,9 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
               <input type="hidden" name="topicId" value={topic.id} />
               <button
                 type="submit"
-                className="flex w-full items-center gap-2 rounded-sm px-2.5 py-2 text-left text-xs hover:bg-hover"
+                className="flex min-h-11 w-full items-center gap-2.5 rounded-md px-3 text-left text-sm hover:bg-hover"
               >
-                <FileText size={13} className="text-muted" /> Save topic to Notes
+                <FileText size={16} className="text-muted" /> Save topic to Notes
               </button>
             </Form>
             <Form method="post">
@@ -220,14 +221,14 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
               <input type="hidden" name="topicId" value={topic.id} />
               <button
                 type="submit"
-                className="flex w-full items-center gap-2 rounded-sm px-2.5 py-2 text-left text-xs hover:bg-hover"
+                className="flex min-h-11 w-full items-center gap-2.5 rounded-md px-3 text-left text-sm hover:bg-hover"
               >
-                <Check size={13} className="text-muted" /> Create study task
+                <Check size={16} className="text-muted" /> Create study task
               </button>
             </Form>
             <Link
               to="/settings"
-              className="flex items-center gap-2 rounded-sm px-2.5 py-2 text-xs text-muted hover:bg-hover hover:text-ink"
+              className="flex min-h-11 items-center gap-2.5 rounded-md px-3 text-sm text-muted hover:bg-hover hover:text-ink"
             >
               Study preferences
             </Link>
@@ -236,35 +237,38 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
       </div>
 
       {notice && notices[notice] ? (
-        <div className="rounded-sm border border-success/30 bg-success/5 px-3 py-2 text-xs">
+        <div className="rounded-lg border border-success/25 bg-success-soft px-4 py-3 text-sm">
           {notices[notice]}
         </div>
       ) : null}
       {error && errors[error] ? (
-        <div className="rounded-sm border border-danger/30 bg-danger/5 px-3 py-2 text-xs text-danger">
+        <div className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger">
           {errors[error]}
         </div>
       ) : null}
 
-      <header className="space-y-3">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+      <header className="space-y-4">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           {topic.stageTitle}
         </p>
-        <h1 className="text-3xl font-semibold leading-tight tracking-[-0.02em] sm:text-4xl">
+        <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.03em] md:text-5xl">
           {topic.title}
         </h1>
-        <p className="max-w-2xl text-base leading-relaxed text-muted">{topic.summary}</p>
+        <RichText
+          text={topic.summary}
+          className="block max-w-2xl text-lg leading-relaxed text-muted"
+        />
         {isReference ? (
-          <p className="text-xs leading-relaxed text-muted">
+          <p className="max-w-2xl rounded-md bg-surface/60 px-4 py-3 text-sm leading-relaxed text-muted">
             Reference topic outside the guided sequence. Practice is optional and does not change
             the guided percentage.
           </p>
         ) : null}
-        <div className="flex flex-wrap items-center gap-3 text-xs text-muted">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
           <Badge tone={passed ? "success" : inPractice ? "warning" : "outline"}>
             {passed ? (
               <>
-                <Check size={11} /> Practice passed
+                <Check size={12} /> Practice passed
               </>
             ) : isReference ? (
               "Reference practice"
@@ -277,11 +281,11 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
           <Badge tone="outline" className="capitalize">
             {topic.difficulty}
           </Badge>
-          <span className="inline-flex items-center gap-1">
-            <Clock3 size={12} /> {topic.estimatedMinutes} min
+          <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-surface/60 px-3">
+            <Clock3 size={13} /> {topic.estimatedMinutes} min
           </span>
-          <span className="inline-flex items-center gap-1">
-            <BookOpen size={12} /> {resources.length} resources
+          <span className="inline-flex min-h-8 items-center gap-1.5 rounded-full bg-surface/60 px-3">
+            <BookOpen size={13} /> {resources.length} resources
           </span>
           {progress.lastStudiedAt ? (
             <span>Last studied {relativeDay(progress.lastStudiedAt).toLowerCase()}</span>
@@ -290,37 +294,50 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
       </header>
 
       <SelectionToNotes topicId={topic.id}>
-        <div className="space-y-10">
+        <div className="space-y-12">
           {topic.whyItMatters ? (
             <section className="space-y-3">
-              <h2 className="text-lg font-semibold tracking-tight">Why it matters</h2>
-              <p className="max-w-prose text-[15px] leading-relaxed">{topic.whyItMatters}</p>
+              <h2 className="text-2xl font-semibold tracking-tight">Why it matters</h2>
+              <RichText
+                text={topic.whyItMatters}
+                className="block max-w-prose text-base leading-relaxed md:text-[1.0625rem]"
+              />
             </section>
           ) : null}
 
-          <section className="space-y-3">
-            <h2 className="text-lg font-semibold tracking-tight">Key concepts</h2>
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold tracking-tight">Key concepts</h2>
             <ol className="space-y-3">
               {topic.keyConcepts.map((concept, index) => (
-                <li key={concept} className="flex gap-3 text-[15px] leading-relaxed">
-                  <span className="mt-0.5 w-6 shrink-0 font-mono text-[10px] text-muted">
+                <li
+                  key={concept}
+                  className="flex gap-3.5 rounded-lg border border-line/70 bg-raised p-4 text-base leading-relaxed shadow-card"
+                >
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent-soft font-mono text-[11px] font-medium text-accent">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <span>{concept}</span>
+                  <RichText text={concept} />
                 </li>
               ))}
             </ol>
           </section>
 
-          <section className="space-y-4 rounded-md border border-line bg-surface p-5">
-            <h2 className="text-lg font-semibold tracking-tight">Practice</h2>
-            <p className="max-w-prose text-[15px] leading-relaxed">{topic.practice}</p>
+          <section className="accent-band space-y-4 rounded-lg border border-line p-5 shadow-card md:p-7">
+            <div className="flex items-center gap-2.5">
+              <span className="flex size-9 items-center justify-center rounded-full bg-accent text-accent-ink">
+                <GraduationCap size={18} />
+              </span>
+              <h2 className="text-2xl font-semibold tracking-tight">Practice</h2>
+            </div>
+            <RichText
+              text={topic.practice}
+              className="block max-w-prose text-base leading-relaxed"
+            />
             <div className="flex flex-wrap items-center gap-3">
               <LinkButton
                 to={`/practice?topic=${topic.id}`}
                 variant={passed ? "secondary" : "primary"}
-                size="sm"
-                icon={<ArrowRight size={13} />}
+                icon={<ArrowRight size={16} />}
               >
                 {passed
                   ? "Review practice feedback"
@@ -328,7 +345,7 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
                     ? "Practice this reference topic"
                     : "Start guided practice"}
               </LinkButton>
-              <span className="text-xs text-muted">
+              <span className="text-sm text-muted">
                 {passed
                   ? "A topic is complete once the review passes."
                   : isReference
@@ -340,15 +357,18 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
 
           {topic.pitfalls.length > 0 ? (
             <section className="space-y-3">
-              <h2 className="text-lg font-semibold tracking-tight">Common pitfalls</h2>
-              <ul className="space-y-2">
+              <h2 className="text-2xl font-semibold tracking-tight">Common pitfalls</h2>
+              <ul className="space-y-2.5">
                 {topic.pitfalls.map((pitfall) => (
-                  <li key={pitfall} className="flex gap-2.5 text-sm leading-relaxed text-muted">
+                  <li
+                    key={pitfall}
+                    className="flex gap-3 rounded-lg border border-line/70 bg-raised p-4 text-sm leading-relaxed text-muted"
+                  >
                     <span
                       aria-hidden="true"
-                      className="mt-2 size-1 shrink-0 rounded-full bg-danger"
+                      className="mt-2 size-1.5 shrink-0 rounded-full bg-danger"
                     />
-                    {pitfall}
+                    <RichText text={pitfall} />
                   </li>
                 ))}
               </ul>
@@ -357,26 +377,28 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
 
           <section className="space-y-3">
             <div className="flex items-end justify-between gap-3">
-              <h2 className="text-lg font-semibold tracking-tight">Resources</h2>
+              <h2 className="text-2xl font-semibold tracking-tight">Resources</h2>
             </div>
             {resources.length === 0 ? (
               <p className="text-sm text-muted">No resources yet.</p>
             ) : (
-              <ul className="divide-y divide-line border-y border-line">
+              <ul className="divide-y divide-line/70 overflow-hidden rounded-lg border border-line bg-raised shadow-card">
                 {resources.map((resource) => (
-                  <li key={resource.id} className="flex items-center gap-3 py-3">
-                    <BookOpen size={14} className="shrink-0 text-muted" />
+                  <li key={resource.id} className="flex min-h-16 items-center gap-3 px-4 py-3">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface text-muted">
+                      <BookOpen size={17} />
+                    </span>
                     <div className="min-w-0 flex-1">
                       <a
                         href={resource.url}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="inline-flex items-center gap-1.5 text-sm font-medium underline decoration-line underline-offset-4 hover:decoration-ink"
+                        className="inline-flex items-center gap-1.5 text-sm font-medium underline decoration-line underline-offset-4 hover:decoration-accent"
                       >
                         <span className="line-clamp-1">{resource.title}</span>
-                        <ExternalLink size={10} className="shrink-0 text-muted" />
+                        <ExternalLink size={12} className="shrink-0 text-muted" />
                       </a>
-                      <p className="text-[10px] text-muted">
+                      <p className="mt-0.5 text-xs text-muted">
                         {resource.provider ?? resource.kind} · {resource.kind}
                       </p>
                     </div>
@@ -387,9 +409,9 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
                       <button
                         type="submit"
                         aria-label={resource.bookmarked ? "Remove bookmark" : "Bookmark resource"}
-                        className="inline-flex size-8 items-center justify-center rounded-sm text-muted hover:bg-hover hover:text-ink"
+                        className="flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-hover hover:text-accent"
                       >
-                        {resource.bookmarked ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
+                        {resource.bookmarked ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
                       </button>
                     </Form>
                   </li>
@@ -400,49 +422,42 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
         </div>
       </SelectionToNotes>
 
-      <details className="rounded-md border border-line">
-        <summary className="cursor-pointer list-none px-4 py-3 text-sm [&::-webkit-details-marker]:hidden">
-          <span className="font-medium">Notes</span>
-          <span className="ml-2 text-xs text-muted">
+      <details className="rounded-lg border border-line bg-raised shadow-card">
+        <summary className="flex min-h-16 cursor-pointer list-none flex-wrap items-center gap-2 px-5 py-4 [&::-webkit-details-marker]:hidden">
+          <span className="font-semibold">Notes</span>
+          <span className="rounded-full bg-surface px-2.5 py-1 text-xs text-muted">
             {notes.length > 0 ? `${notes.length} saved` : "Add a private note"}
           </span>
         </summary>
-        <div className="space-y-4 border-t border-line p-4">
+        <div className="space-y-4 border-t border-line/80 p-4 md:p-5">
           {notes.length > 0 ? (
             <ul className="space-y-3">
               {notes.map((note) => (
-                <li key={note.id} className="rounded-sm border border-line bg-surface px-3 py-2.5">
-                  <p className="text-xs font-medium">{note.title}</p>
-                  <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-muted">
+                <li key={note.id} className="rounded-md border border-line bg-surface/60 px-4 py-3">
+                  <p className="text-sm font-medium">{note.title}</p>
+                  <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-muted">
                     {note.bodyMd}
                   </p>
-                  <p className="mt-1 text-[10px] text-muted">{relativeDay(note.updatedAt)}</p>
+                  <p className="mt-2 text-xs text-muted">{relativeDay(note.updatedAt)}</p>
                 </li>
               ))}
             </ul>
           ) : null}
-          <Form method="post" className="space-y-2">
+          <Form method="post" className="space-y-2.5">
             <input type="hidden" name="topicId" value={topic.id} />
             <Input
               name="title"
               defaultValue={`Notes on ${topic.title}`}
               aria-label="Note title"
-              className="h-9 text-xs"
+              className="h-11 text-sm"
             />
             <Textarea
               name="body"
               placeholder="What clicked? What is still unclear?"
               aria-label="Note body"
-              className="min-h-24 text-sm"
+              className="min-h-28 text-base"
             />
-            <Button
-              type="submit"
-              name="intent"
-              value="note"
-              variant="secondary"
-              size="sm"
-              disabled={busy}
-            >
+            <Button type="submit" name="intent" value="note" variant="secondary" disabled={busy}>
               Save note
             </Button>
           </Form>
@@ -450,16 +465,21 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
       </details>
 
       <nav
-        className="flex items-center justify-between gap-4 border-t border-line pt-5 text-sm"
+        className="grid gap-3 border-t border-line/80 pt-6 sm:grid-cols-2"
         aria-label="Topic navigation"
       >
         {previous ? (
           <Link
             to={`/roadmaps/${topic.roadmapSlug}/${previous.slug}`}
-            className="inline-flex min-w-0 items-center gap-2 text-muted hover:text-ink"
+            className="group flex min-h-16 items-center gap-3 rounded-lg border border-line bg-raised p-4 shadow-card transition-[border-color,background-color] duration-fast hover:border-line-strong hover:bg-hover"
           >
-            <ArrowLeft size={14} className="shrink-0" />
-            <span className="truncate">{previous.title}</span>
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-line text-muted group-hover:border-accent/30 group-hover:bg-accent-soft group-hover:text-accent">
+              <ArrowLeft size={16} />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-xs text-muted">Previous</span>
+              <span className="block truncate text-sm font-medium">{previous.title}</span>
+            </span>
           </Link>
         ) : (
           <span />
@@ -467,17 +487,22 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
         {next ? (
           <Link
             to={`/roadmaps/${topic.roadmapSlug}/${next.slug}`}
-            className="inline-flex min-w-0 items-center gap-2 text-right text-muted hover:text-ink"
+            className="group flex min-h-16 items-center justify-end gap-3 rounded-lg border border-line bg-raised p-4 text-right shadow-card transition-[border-color,background-color] duration-fast hover:border-line-strong hover:bg-hover"
           >
-            <span className="truncate">{next.title}</span>
-            <ArrowRight size={14} className="shrink-0" />
+            <span className="min-w-0">
+              <span className="block text-xs text-muted">Next</span>
+              <span className="block truncate text-sm font-medium">{next.title}</span>
+            </span>
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-line text-muted group-hover:border-accent/30 group-hover:bg-accent-soft group-hover:text-accent">
+              <ArrowRight size={16} />
+            </span>
           </Link>
         ) : (
           <span />
         )}
       </nav>
 
-      <p className="text-[10px] leading-relaxed text-muted">
+      <p className="max-w-3xl text-xs leading-relaxed text-muted">
         Content is a personal-use copy of the roadmap.sh fork. Source:{" "}
         <a href={sourceUrl} className="underline">
           roadmap.sh/{topic.roadmapSlug}

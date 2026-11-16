@@ -7,7 +7,7 @@ import type {
 import { cn } from "~/lib/utils";
 
 const fieldClass =
-  "block w-full rounded-sm border border-line bg-canvas px-3 text-sm text-ink placeholder:text-muted focus-visible:border-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/40 disabled:cursor-not-allowed disabled:opacity-50";
+  "block w-full rounded-md border border-line bg-raised px-3.5 text-base text-ink shadow-sm placeholder:text-muted focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15 disabled:cursor-not-allowed disabled:opacity-50";
 
 export function Label({
   htmlFor,
@@ -56,17 +56,17 @@ export function Field({
 }
 
 export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
-  return <input className={cn(fieldClass, "h-10", className)} {...props} />;
+  return <input className={cn(fieldClass, "h-11", className)} {...props} />;
 }
 
 export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
-    <textarea className={cn(fieldClass, "min-h-24 py-2 leading-relaxed", className)} {...props} />
+    <textarea className={cn(fieldClass, "min-h-28 py-2.5 leading-relaxed", className)} {...props} />
   );
 }
 
 export function Select({ className, ...props }: SelectHTMLAttributes<HTMLSelectElement>) {
-  return <select className={cn(fieldClass, "h-10", className)} {...props} />;
+  return <select className={cn(fieldClass, "h-11", className)} {...props} />;
 }
 
 export function Checkbox({
@@ -74,10 +74,10 @@ export function Checkbox({
   ...props
 }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   return (
-    <label className="flex items-center gap-2.5 text-sm">
+    <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
       <input
         type="checkbox"
-        className="size-4 rounded-sm border-line accent-[var(--ink)]"
+        className="size-5 rounded-sm border-line accent-[var(--accent)]"
         {...props}
       />
       <span>{label}</span>

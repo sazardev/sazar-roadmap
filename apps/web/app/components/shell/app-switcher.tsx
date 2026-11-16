@@ -77,15 +77,16 @@ export function AppSwitcher() {
       <button
         type="button"
         aria-label="Switch app"
+        title="Switch app"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex size-8 items-center justify-center rounded-sm border border-transparent text-muted transition-colors duration-fast hover:border-line hover:bg-hover hover:text-ink"
+        className="inline-flex size-11 items-center justify-center rounded-full border border-transparent text-muted transition-colors duration-fast hover:border-line hover:bg-hover hover:text-ink"
       >
-        <LayoutGrid size={15} strokeWidth={1.8} />
+        <LayoutGrid size={19} strokeWidth={1.8} />
       </button>
       {open ? (
-        <div className="absolute left-0 top-10 z-50 w-[280px] rounded-md border border-line bg-raised p-1.5 shadow-float">
-          <p className="px-2.5 pb-1.5 pt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+        <div className="absolute bottom-0 left-full z-50 ml-3 w-[300px] rounded-lg border border-line bg-raised p-2 shadow-float lg:bottom-[calc(100%+0.5rem)] lg:left-0 lg:ml-0">
+          <p className="px-2.5 pb-2 pt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
             sazardev apps
           </p>
           {apps.map((app) => {
@@ -94,23 +95,23 @@ export function AppSwitcher() {
               <a
                 key={app.name}
                 href={app.href}
-                className="flex items-start gap-3 rounded-sm px-2.5 py-2 transition-colors duration-fast hover:bg-hover"
+                className="flex min-h-12 items-start gap-3 rounded-md px-2.5 py-2 transition-colors duration-fast hover:bg-hover"
                 aria-current={app.current ? "page" : undefined}
               >
-                <Icon size={16} strokeWidth={1.7} className="mt-0.5 shrink-0 text-muted" />
+                <Icon size={18} strokeWidth={1.7} className="mt-0.5 shrink-0 text-muted" />
                 <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2 text-[13px] font-medium">
+                  <span className="flex items-center gap-2 text-sm font-medium">
                     {app.name}
                     {app.current ? (
-                      <span className="rounded-full bg-hover px-1.5 text-[9px] uppercase tracking-wide text-muted">
+                      <span className="rounded-full bg-accent-soft px-1.5 text-[9px] uppercase tracking-wide text-accent">
                         here
                       </span>
                     ) : null}
                   </span>
-                  <span className="block truncate text-[11px] text-muted">{app.description}</span>
+                  <span className="block truncate text-xs text-muted">{app.description}</span>
                 </span>
                 {app.current ? null : (
-                  <ArrowUpRight size={13} className="mt-1 shrink-0 text-muted" />
+                  <ArrowUpRight size={14} className="mt-1 shrink-0 text-muted" />
                 )}
               </a>
             );

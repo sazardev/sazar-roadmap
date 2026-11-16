@@ -9,7 +9,7 @@ export const golang: Curriculum = {
     "A guided path through Go's deliberately small language and the habits that make it dependable in production: values and composition, interfaces, concurrency and cancellation, errors, tests, the standard library, and the tools that ship a service. Every stage ends with code you can run and inspect.",
   level: "beginner",
   icon: "code",
-  estimatedHours: 64,
+  estimatedHours: 72,
   stages: [
     {
       slug: "getting-started",
@@ -1418,6 +1418,182 @@ export const golang: Curriculum = {
               "Breaking a v1 API without a major version.",
               "Publishing a tag without a clean go.mod and go.sum.",
               "Forgetting to test the module from a clean consumer module.",
+            ],
+          },
+        ),
+      ],
+    },
+    {
+      slug: "runtime-and-escape-hatches",
+      title: "Runtime and escape hatches",
+      description:
+        "The parts of Go closest to the machine: reflection, unsafe, cgo, build constraints, generated code, race detection, synchronization primitives and memory behavior. Use each one only when the simpler tool is not enough, and know exactly what you give up.",
+      topics: [
+        topic(
+          "reflection",
+          "Serializers, ORMs and dependency injection all use reflection; knowing its cost and failure modes keeps it out of hot paths.",
+          [
+            "reflect.Type versus reflect.Value",
+            "Kind, settability and addressability",
+            "Dynamic construction and the cost of losing static types",
+          ],
+          "Write a function that prints the field names and tags of an arbitrary struct, then compare its allocations with a generated implementation using `go test -benchmem`.",
+          {
+            summary:
+              "Reflection inspects and constructs values at runtime through `reflect.Type` and `reflect.Value`. It makes generic serializers and dependency injection possible, but every access crosses a type boundary and loses compile-time guarantees.",
+            difficulty: "advanced",
+            minutes: 55,
+            pitfalls: [
+              "Calling Interface() on an unexported field and panicking instead of checking CanInterface.",
+              "Using reflection in a request hot path without an allocation and latency benchmark.",
+              "Treating Kind and Type as interchangeable when embedded and named types differ.",
+            ],
+          },
+        ),
+        topic(
+          "unsafe-package",
+          "Unsafe is the boundary for zero-copy interop and runtime internals; one invalid pointer conversion is undefined behavior the race detector cannot catch.",
+          [
+            "unsafe.Pointer conversion rules",
+            "uintptr versus unsafe.Pointer across garbage-collection points",
+            "Struct layout, alignment and Sizeof/Offsetof",
+          ],
+          "Measure a struct's size and field offsets, use unsafe to read a field, then replace the unsafe access with a safe accessor and compare readability and cost.",
+          {
+            summary:
+              "Package `unsafe` exposes `Pointer`, `Sizeof`, `Offsetof` and `Alignof`, plus the conversion rules that connect pointers and integers. It is legitimate for interop and layout-sensitive code, but the compiler stops protecting you from lifetime and aliasing mistakes.",
+            difficulty: "advanced",
+            minutes: 45,
+            pitfalls: [
+              "Storing a uintptr in a variable that survives a garbage-collection point.",
+              "Assuming a struct layout is stable across architectures or Go versions.",
+              "Reaching for unsafe to silence a type error that a small wrapper would solve.",
+            ],
+          },
+        ),
+        topic(
+          "cgo-basics",
+          "Most systems integrations eventually meet a C library; knowing the call boundary prevents latency, deployment and cross-compilation surprises.",
+          [
+            'import "C", the preamble and generated stubs',
+            "Passing pointers and the cgo pointer rules",
+            "CGO_ENABLED, static builds and cross-compilation",
+          ],
+          "Wrap one function from a small C library, measure calls per second with and without cgo, then build the same program with CGO_ENABLED=0 and document what breaks.",
+          {
+            summary:
+              "Cgo lets Go call C and C call Go through generated stubs. Each call crosses a foreign-function boundary, complicates static builds and disables straightforward cross-compilation, so it belongs behind a narrow interface.",
+            difficulty: "advanced",
+            minutes: 55,
+            pitfalls: [
+              "Passing a Go pointer to C and letting C retain it after the call returns.",
+              "Forgetting runtime.KeepAlive when a Go object must outlive the final cgo call.",
+              "Assuming a cgo binary cross-compiles as easily as a pure-Go binary.",
+            ],
+          },
+        ),
+        topic(
+          "build-constraints--tags",
+          "A build-tag mistake silently ships the wrong implementation or drops a file from the build.",
+          [
+            "//go:build expressions and the legacy +build form",
+            "GOOS, GOARCH and custom tags",
+            "go list, file naming and test-only tags",
+          ],
+          "Add Linux-only and Windows-only implementations behind build constraints, inspect both file sets with `go list -tags`, and build each target without changing imports.",
+          {
+            summary:
+              "Build constraints select files by operating system, architecture, Go version or custom tags before compilation. They let one module ship platform-specific code and optional integrations without runtime branching.",
+            difficulty: "advanced",
+            minutes: 40,
+            pitfalls: [
+              "Keeping only the legacy +build line and breaking on a modern toolchain.",
+              "Writing a constraint expression with the wrong boolean grouping.",
+              "Assuming tests honor a custom tag without passing the same tag to go test.",
+            ],
+          },
+        ),
+        topic(
+          "go-generate",
+          "Generated code is part of the API surface; if the command is not reproducible, the repository and the binary diverge.",
+          [
+            "//go:generate directives and go generate ./...",
+            "Generated file headers and review policy",
+            "Tool dependencies and deterministic output",
+          ],
+          "Add a generator for mocks or string methods, run it twice, and verify the second run produces an identical file and a clean build.",
+          {
+            summary:
+              "`go generate` runs commands named in source comments; it is a convention for producing code, not part of the build. Generated files must be committed, reviewed and reproducible from the command in the repository.",
+            difficulty: "advanced",
+            minutes: 40,
+            pitfalls: [
+              "Wiring generate into go build so every build mutates the tree.",
+              "Committing generated output that does not match the current generator input.",
+              "Hiding generator tools in go.mod without a pinned, documented version.",
+            ],
+          },
+        ),
+        topic(
+          "race-detection",
+          "Race bugs are silent in production and reproducible under the detector; it is the cheapest way to catch them before users do.",
+          [
+            "Happens-before and conflicting unsynchronized access",
+            "go test -race and the runtime cost",
+            "Data race versus race condition",
+          ],
+          "Reproduce a data race with two goroutines, run `go test -race`, fix it with a mutex or a channel, and confirm the report disappears without adding sleeps.",
+          {
+            summary:
+              "The race detector instruments memory accesses and reports conflicting unsynchronized access at runtime. It only sees paths that execute, so a passing run narrows the search but never proves the absence of a race.",
+            difficulty: "advanced",
+            minutes: 45,
+            pitfalls: [
+              "Running the race detector in production and confusing its overhead with the service cost.",
+              "Fixing a report with time.Sleep instead of establishing happens-before.",
+              "Treating a green test run as proof that a concurrent design is race-free.",
+            ],
+          },
+        ),
+        topic(
+          "sync-package",
+          "Most concurrency bugs are synchronization bugs; knowing what each primitive guarantees is the difference between a lock and a guess.",
+          [
+            "Mutex, RWMutex and the invariant they protect",
+            "Once, WaitGroup and Cond",
+            "sync/atomic and lock copying",
+          ],
+          "Protect a counter with atomic.Int64, then with a mutex, benchmark both under contention, and run go vet to catch a copied lock.",
+          {
+            summary:
+              "Package `sync` provides mutexes, read-write locks, wait groups, once and condition variables, while `sync/atomic` provides lock-free operations on simple values. Each primitive protects a specific invariant, and the wrong one creates contention or hides a race.",
+            difficulty: "advanced",
+            minutes: 50,
+            pitfalls: [
+              "Copying a mutex after first use, which silently splits the lock.",
+              "Choosing RWMutex for a write-heavy path and paying more coordination than a plain mutex.",
+              "Using sync.Map for an ordinary map that would be clearer behind a mutex.",
+            ],
+          },
+        ),
+        topic(
+          "memory-management",
+          "Memory behavior explains latency spikes; tuning without a profile usually makes the service worse.",
+          [
+            "Stack growth, heap allocation and escape analysis",
+            "GOGC, GOMEMLIMIT and the live heap",
+            "Allocation rate, pointer density and finalizers",
+          ],
+          "Benchmark a handler with -benchmem, remove one allocation per request with a buffer or value type, and compare allocs/op and p99 latency.",
+          {
+            summary:
+              "Go manages memory with a concurrent garbage collector, stack growth and escape analysis. Allocation rate, live heap and pointer density determine CPU and pause cost more than total heap size, so tuning starts with a profile.",
+            difficulty: "advanced",
+            minutes: 50,
+            pitfalls: [
+              "Returning pointers to large values from a hot path without measuring escape.",
+              "Copying a GOGC setting from a blog post instead of reading the allocation profile.",
+              "Using finalizers for deterministic cleanup that a defer or explicit Close should own.",
             ],
           },
         ),

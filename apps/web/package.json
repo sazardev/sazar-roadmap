@@ -1,12 +1,12 @@
 {
   "name": "@sazardev/roadmap",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Sazar Roadmap: a private learning operating system on Cloudflare Workers",
   "scripts": {
     "dev": "react-router dev",
-    "build": "react-router build",
+    "build": "react-router build && tsx scripts/build-service-worker.ts",
     "preview": "pnpm build && vite preview",
     "deploy": "pnpm build:prod && wrangler deploy -c build/server/wrangler.prod.json",
     "typegen": "wrangler types && react-router typegen",

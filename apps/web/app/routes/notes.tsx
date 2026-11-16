@@ -2,7 +2,7 @@ import { ArrowUpRight, ExternalLink, FileText, Plus, Search, Trash2 } from "luci
 import { Form, Link, redirect, useNavigation } from "react-router";
 import { Badge } from "~/components/ui/badge";
 import { Button, LinkButton } from "~/components/ui/button";
-import { Input, Textarea } from "~/components/ui/field";
+import { Input, Select, Textarea } from "~/components/ui/field";
 import { Card, CardBody, CardHeader, EmptyState, PageHeader } from "~/components/ui/surfaces";
 import { getReading, integrationStatus } from "~/features/integrations/integrations.server";
 import {
@@ -119,62 +119,62 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
             </LinkButton>
             <a
               href="#new-note"
-              className="inline-flex h-10 items-center gap-2 rounded-sm bg-ink px-4 text-sm font-medium text-canvas"
+              className="inline-flex h-11 items-center gap-2 rounded-md bg-accent px-5 text-sm font-medium text-accent-ink shadow-sm transition-colors hover:bg-accent-strong"
             >
-              <Plus size={15} /> New note
+              <Plus size={16} /> New note
             </a>
           </>
         }
       />
 
       {topic ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-sm border border-line bg-surface px-4 py-3 text-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-raised px-5 py-4 text-sm shadow-card">
           <span>
             <span className="text-muted">Filtered to </span>
             <Link
               to={`/roadmaps/${topic.roadmapSlug}/${topic.slug}`}
-              className="font-medium underline"
+              className="font-medium text-accent underline decoration-accent/30 underline-offset-4"
             >
               {topic.title}
             </Link>
           </span>
-          <Link to="/notes" className="text-xs text-muted underline">
+          <LinkButton to="/notes" variant="ghost" size="sm">
             All notes
-          </Link>
+          </LinkButton>
         </div>
       ) : null}
 
-      <form method="get" className="flex items-center gap-2">
+      <form method="get" className="flex items-center gap-2.5">
         <div className="relative flex-1">
           <Search
-            size={14}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+            size={18}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
           />
           <input
             type="search"
             name="q"
             defaultValue={q}
             placeholder="Search your notes..."
-            className="h-10 w-full rounded-sm border border-line bg-canvas pl-8 pr-3 text-sm outline-none placeholder:text-muted focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-focus/40"
+            className="h-12 w-full rounded-md border border-line bg-raised pl-11 pr-4 text-base shadow-sm outline-none placeholder:text-muted focus-visible:border-accent focus-visible:ring-4 focus-visible:ring-accent/15"
           />
         </div>
         {topic ? <input type="hidden" name="topic" value={topic.id} /> : null}
-        <Button type="submit" variant="secondary">
+        <Button type="submit" variant="secondary" className="h-12">
           Search
         </Button>
       </form>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-5">
           <details
             id="new-note"
-            className="rounded-md border border-line"
+            className="rounded-lg border border-line bg-raised shadow-card"
             open={notes.length === 0}
           >
-            <summary className="flex cursor-pointer list-none items-center gap-2 px-5 py-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">
-              <Plus size={15} /> New note
+            <summary className="flex min-h-16 cursor-pointer list-none items-center gap-2 px-5 py-4 text-base font-semibold [&::-webkit-details-marker]:hidden">
+              <Plus size={17} /> New note
             </summary>
-            <Form method="post" className="space-y-3 border-t border-line p-5">
+            <Form method="post" className="space-y-3 border-t border-line/80 p-5 md:p-6">
               <input type="hidden" name="intent" value="create" />
               {topic ? <input type="hidden" name="topicId" value={topic.id} /> : null}
               <Input
@@ -191,19 +191,16 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
                 aria-label="Note body"
               />
               {!topic ? (
-                <label className="block space-y-1.5">
-                  <span className="text-xs text-muted">Attach to a topic (optional)</span>
-                  <select
-                    name="topicId"
-                    className="h-10 w-full rounded-sm border border-line bg-canvas px-3 text-sm"
-                  >
+                <label className="block space-y-2">
+                  <span className="text-sm font-medium">Attach to a topic (optional)</span>
+                  <Select name="topicId" defaultValue="">
                     <option value="">No topic</option>
                     {topics.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.roadmapTitle} / {item.title}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </label>
               ) : null}
               <Button type="submit" disabled={busy}>
@@ -215,7 +212,7 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
           {editing ? (
             <Card>
               <CardHeader title="Edit note" description="Changes re-index the note for search." />
-              <Form method="post" className="space-y-3 p-5">
+              <Form method="post" className="space-y-3 p-5 md:p-6">
                 <input type="hidden" name="intent" value="update" />
                 <input type="hidden" name="noteId" value={editing.id} />
                 <Input name="title" defaultValue={editing.title} required aria-label="Note title" />
@@ -226,11 +223,11 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
                   className="min-h-40"
                   aria-label="Note body"
                 />
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Button type="submit" size="sm" disabled={busy}>
                     Save changes
                   </Button>
-                  <Link to="/notes" className="text-xs text-muted underline">
+                  <Link to="/notes" className="text-sm text-muted underline">
                     Cancel
                   </Link>
                 </div>
@@ -256,20 +253,20 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
         <aside className="space-y-4">
           <Card>
             <CardHeader title="Reading in Learn" description="Imported articles and progress." />
-            <CardBody className="space-y-3">
+            <CardBody className="space-y-1.5">
               {!learning ? (
-                <p className="text-xs text-muted">Learn is not connected yet.</p>
+                <p className="text-sm leading-relaxed text-muted">Learn is not connected yet.</p>
               ) : reading.length === 0 ? (
-                <p className="text-xs text-muted">Nothing in progress.</p>
+                <p className="text-sm leading-relaxed text-muted">Nothing in progress.</p>
               ) : (
                 reading.slice(0, 4).map((item) => (
                   <a
                     key={item.id}
                     href={item.url}
-                    className="block space-y-1 rounded-sm p-1.5 hover:bg-hover"
+                    className="block min-h-14 space-y-1 rounded-md px-2.5 py-2 transition-colors hover:bg-hover"
                   >
-                    <span className="line-clamp-2 text-xs font-medium">{item.title}</span>
-                    <span className="block text-[10px] text-muted">
+                    <span className="line-clamp-2 text-sm font-medium">{item.title}</span>
+                    <span className="block text-xs text-muted">
                       {Math.round(item.progress * 100)}% · {item.source}
                     </span>
                   </a>
@@ -277,16 +274,16 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
               )}
               <a
                 href="https://learn.sazardev.stream"
-                className="inline-flex items-center gap-1 text-xs text-muted underline"
+                className="inline-flex min-h-10 items-center gap-1 text-sm text-muted underline"
               >
-                Open Learn <ExternalLink size={10} />
+                Open Learn <ExternalLink size={12} />
               </a>
             </CardBody>
           </Card>
 
           <Card>
             <CardHeader title="Notes app" />
-            <CardBody className="space-y-2 text-xs leading-relaxed text-muted">
+            <CardBody className="space-y-2 text-sm leading-relaxed text-muted">
               <p>Use the Notes app for pages, databases, GitHub cards and imported documents.</p>
               <p>
                 “Save to Notes” from a topic creates a page with the summary, concepts, practice
@@ -294,9 +291,9 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
               </p>
               <a
                 href="https://notes.sazardev.stream"
-                className="inline-flex items-center gap-1 underline"
+                className="inline-flex min-h-10 items-center gap-1 underline"
               >
-                notes.sazardev.stream <ExternalLink size={10} />
+                notes.sazardev.stream <ExternalLink size={12} />
               </a>
             </CardBody>
           </Card>
@@ -309,17 +306,17 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
 function NoteCard({ note, busy }: { note: NoteItem; busy: boolean }) {
   return (
     <Card>
-      <CardBody className="space-y-3 p-4">
+      <CardBody className="space-y-3 p-5 md:p-6">
         <div className="flex items-start gap-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-sm border border-line bg-surface text-muted">
-            <FileText size={14} />
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+            <FileText size={17} />
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-semibold">{note.title}</h3>
+              <h3 className="text-base font-semibold">{note.title}</h3>
               {note.source !== "internal" ? <Badge tone="outline">{note.source}</Badge> : null}
             </div>
-            <p className="text-[10px] text-muted">
+            <p className="mt-1 text-xs text-muted">
               {relativeDay(note.updatedAt)}
               {note.topicTitle ? " · " : ""}
               {note.topicTitle && note.roadmapSlug && note.topicSlug ? (
@@ -329,10 +326,10 @@ function NoteCard({ note, busy }: { note: NoteItem; busy: boolean }) {
               ) : null}
             </p>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-1">
             <Link
               to={`/notes?edit=${note.id}`}
-              className="rounded-sm px-2 py-1 text-[10px] text-muted hover:bg-hover hover:text-ink"
+              className="inline-flex min-h-9 items-center rounded-md px-2.5 text-xs font-medium text-muted hover:bg-hover hover:text-ink"
             >
               Edit
             </Link>
@@ -343,9 +340,9 @@ function NoteCard({ note, busy }: { note: NoteItem; busy: boolean }) {
                 type="submit"
                 disabled={busy}
                 aria-label={`Delete ${note.title}`}
-                className="inline-flex size-7 items-center justify-center rounded-sm text-muted hover:bg-danger/10 hover:text-danger disabled:opacity-50"
+                className="inline-flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-danger-soft hover:text-danger disabled:opacity-50"
               >
-                <Trash2 size={13} />
+                <Trash2 size={16} />
               </button>
             </Form>
           </div>
@@ -356,9 +353,9 @@ function NoteCard({ note, busy }: { note: NoteItem; busy: boolean }) {
         {note.externalUrl ? (
           <a
             href={note.externalUrl}
-            className="inline-flex items-center gap-1 text-[10px] text-muted underline"
+            className="inline-flex min-h-8 items-center gap-1 text-xs text-muted underline"
           >
-            Open source note <ExternalLink size={9} />
+            Open source note <ExternalLink size={11} />
           </a>
         ) : null}
       </CardBody>

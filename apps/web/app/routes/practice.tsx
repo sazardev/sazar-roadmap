@@ -12,6 +12,7 @@ import { Form, Link, useActionData, useNavigation } from "react-router";
 import { Badge } from "~/components/ui/badge";
 import { Button, LinkButton } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/field";
+import { RichText } from "~/components/ui/rich-text";
 import { PageHeader } from "~/components/ui/surfaces";
 import { evaluatePractice, type PracticeTopic } from "~/features/practice/evaluate.server";
 import {
@@ -198,34 +199,36 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
           description="A topic is complete only when the AI review passes. Pick a topic and show your work."
         />
         {queue.length === 0 ? (
-          <div className="rounded-md border border-dashed border-line px-5 py-10">
-            <p className="text-sm font-medium">You are caught up.</p>
-            <p className="mt-1 text-sm text-muted">
+          <div className="rounded-lg border border-dashed border-line-strong/70 bg-surface/50 px-6 py-10">
+            <p className="text-base font-semibold">You are caught up.</p>
+            <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-muted">
               Every queued topic has passed its practice review. Add another roadmap or revisit a
               topic to go deeper.
             </p>
-            <LinkButton to="/roadmaps" variant="secondary" size="sm" className="mt-4">
+            <LinkButton to="/roadmaps" variant="secondary" className="mt-5">
               Browse roadmaps
             </LinkButton>
           </div>
         ) : (
-          <ul className="divide-y divide-line border-y border-line">
+          <ul className="divide-y divide-line/70 overflow-hidden rounded-lg border border-line bg-raised shadow-card">
             {queue.map((item) => (
               <li key={item.id}>
                 <Link
                   to={`/practice?topic=${item.id}`}
-                  className="flex items-center gap-4 py-3.5 transition-colors hover:bg-hover"
+                  className="flex min-h-[4.5rem] items-center gap-4 px-5 py-3.5 transition-colors hover:bg-hover"
                 >
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[10px] uppercase tracking-[0.14em] text-muted">
+                    <span className="block text-[11px] uppercase tracking-[0.14em] text-muted">
                       {item.roadmapTitle} / {item.stageTitle}
                     </span>
-                    <span className="mt-0.5 block text-sm font-medium">{item.title}</span>
+                    <span className="mt-1 block text-base font-medium">{item.title}</span>
                   </span>
-                  <span className="inline-flex items-center gap-1 text-[11px] text-muted">
-                    <Clock3 size={11} /> {item.estimatedMinutes}m
+                  <span className="inline-flex items-center gap-1.5 text-xs text-muted">
+                    <Clock3 size={14} /> {item.estimatedMinutes}m
                   </span>
-                  <ArrowRight size={14} className="text-muted" />
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-line text-muted">
+                    <ArrowRight size={15} />
+                  </span>
                 </Link>
               </li>
             ))}
@@ -251,22 +254,22 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           to={`/roadmaps/${topic.roadmapSlug}/${topic.slug}`}
-          className="inline-flex items-center gap-1 text-xs text-muted underline decoration-line underline-offset-4 hover:text-ink"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-raised px-4 text-sm font-medium text-muted shadow-sm transition-colors duration-fast hover:border-line-strong hover:bg-hover hover:text-ink"
         >
-          <ArrowLeft size={12} /> Back to {topic.title}
+          <ArrowLeft size={15} /> Back to {topic.title}
         </Link>
         {cards.total > 0 ? (
-          <Link to={`/flashcards?topic=${topic.id}`} className="text-xs text-muted underline">
+          <LinkButton to={`/flashcards?topic=${topic.id}`} variant="ghost" size="sm">
             {cards.total} {cards.total === 1 ? "card" : "cards"}
-          </Link>
+          </LinkButton>
         ) : null}
       </div>
 
-      <header className="space-y-2">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+      <header className="space-y-3">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           {isReference ? "Reference practice" : "Guided practice"} / {topic.stageTitle}
         </p>
-        <h1 className="text-3xl font-semibold leading-tight tracking-[-0.02em] sm:text-4xl">
+        <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.03em] md:text-5xl">
           {topic.title}
         </h1>
         <p className="max-w-2xl text-base leading-relaxed text-muted">
@@ -275,30 +278,32 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
             : "Write your answer, explanation or code. The AI reviewer checks it against the task and the rubric; only a pass marks the topic complete."}
         </p>
         {isReference ? (
-          <p className="text-xs leading-relaxed text-muted">
+          <p className="max-w-2xl rounded-md bg-surface/60 px-4 py-3 text-sm leading-relaxed text-muted">
             This is an extra reference topic. Passing its practice does not change the guided
             percentage.
           </p>
         ) : null}
       </header>
 
-      <section className="rounded-md border border-line bg-surface p-5">
-        <div className="flex items-center gap-2">
-          <Target size={15} className="text-muted" />
-          <h2 className="text-sm font-semibold">The task</h2>
+      <section className="accent-band rounded-lg border border-line p-5 shadow-card md:p-6">
+        <div className="flex items-center gap-2.5">
+          <span className="flex size-9 items-center justify-center rounded-full bg-accent text-accent-ink">
+            <Target size={17} />
+          </span>
+          <h2 className="text-base font-semibold">The task</h2>
         </div>
-        <p className="mt-2 text-[15px] leading-relaxed">{topic.practice}</p>
+        <RichText text={topic.practice} className="mt-3 block text-base leading-relaxed" />
         {topic.keyConcepts.length > 0 ? (
-          <div className="mt-4 border-t border-line pt-3">
-            <p className="text-[10px] uppercase tracking-[0.14em] text-muted">
+          <div className="mt-4 border-t border-line/80 pt-3">
+            <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
               A strong answer covers
             </p>
-            <ul className="mt-2 space-y-1.5">
+            <ul className="mt-2 space-y-2">
               {topic.keyConcepts.slice(0, 4).map((concept) => (
-                <li key={concept} className="flex gap-2 text-xs leading-relaxed text-muted">
+                <li key={concept} className="flex gap-2.5 text-sm leading-relaxed text-muted">
                   <span
                     aria-hidden="true"
-                    className="mt-1.5 size-1 shrink-0 rounded-full bg-line-strong"
+                    className="mt-2 size-1.5 shrink-0 rounded-full bg-accent/60"
                   />
                   {concept}
                 </li>
@@ -309,16 +314,16 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
       </section>
 
       {!aiEnabled ? (
-        <div className="rounded-sm border border-warning/30 bg-warning/5 px-4 py-3 text-sm">
+        <div className="rounded-lg border border-warning/25 bg-warning-soft px-4 py-3 text-sm">
           AI review is disabled. Enable it in Settings to complete practice.
-          <Link to="/settings" className="ml-1 underline">
+          <Link to="/settings" className="ml-1 font-medium underline">
             Open settings
           </Link>
         </div>
       ) : null}
 
       {error ? (
-        <div className="rounded-sm border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+        <div className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger">
           {error}
         </div>
       ) : null}
@@ -359,7 +364,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
             id="practice-response"
             name="response"
             defaultValue={defaultResponse}
-            className="min-h-64 text-[15px] leading-relaxed"
+            className="min-h-64 text-base leading-relaxed"
             placeholder="Explain the idea in your own words, sketch the design, or paste the code you wrote. Be specific about the decisions and trade-offs."
             disabled={busy}
             required
@@ -367,20 +372,20 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
             maxLength={10000}
           />
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[11px] text-muted">
+            <p className="text-xs leading-relaxed text-muted">
               The reviewer can take up to 30 seconds. Nothing is marked complete until it passes.
             </p>
             <Button
               type="submit"
               disabled={busy}
-              icon={busy ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+              icon={busy ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
             >
               {busy ? "Reviewing..." : revise ? "Submit revision" : "Submit for review"}
             </Button>
           </div>
           {busy ? (
-            <div className="flex items-center gap-2 rounded-sm border border-line bg-surface px-3 py-2 text-xs text-muted">
-              <Loader2 size={13} className="animate-spin" />
+            <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-3 text-sm text-muted">
+              <Loader2 size={15} className="animate-spin" />
               The reviewer is reading your answer. This can take up to 30 seconds.
             </div>
           ) : null}
@@ -407,29 +412,33 @@ function ReviewPanel({ attempt, passed }: { attempt: PracticeAttempt; passed: bo
     <section
       className={
         passed
-          ? "space-y-4 rounded-md border border-success/40 bg-success/5 p-5"
-          : "space-y-4 rounded-md border border-warning/40 bg-warning/5 p-5"
+          ? "space-y-4 rounded-lg border border-success/30 bg-success-soft p-5 md:p-6"
+          : "space-y-4 rounded-lg border border-warning/30 bg-warning-soft p-5 md:p-6"
       }
       aria-live="polite"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           {passed ? (
-            <Check size={16} className="text-success" />
+            <Check size={19} className="text-success" />
           ) : (
-            <CircleAlert size={16} className="text-warning" />
+            <CircleAlert size={19} className="text-warning" />
           )}
-          <h2 className="text-sm font-semibold">{passed ? "Practice passed" : "Needs revision"}</h2>
+          <h2 className="text-base font-semibold">
+            {passed ? "Practice passed" : "Needs revision"}
+          </h2>
         </div>
         <Badge tone={passed ? "success" : "warning"}>{attempt.score}/100</Badge>
       </div>
-      <p className="text-sm leading-relaxed">{attempt.feedback}</p>
+      <p className="text-base leading-relaxed">{attempt.feedback}</p>
       {attempt.strengths.length > 0 ? (
         <div>
-          <p className="text-[10px] uppercase tracking-[0.14em] text-muted">What worked</p>
-          <ul className="mt-1.5 space-y-1">
+          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+            What worked
+          </p>
+          <ul className="mt-2 space-y-1.5">
             {attempt.strengths.map((item) => (
-              <li key={item} className="text-xs leading-relaxed">
+              <li key={item} className="text-sm leading-relaxed">
                 {item}
               </li>
             ))}
@@ -438,10 +447,12 @@ function ReviewPanel({ attempt, passed }: { attempt: PracticeAttempt; passed: bo
       ) : null}
       {attempt.gaps.length > 0 ? (
         <div>
-          <p className="text-[10px] uppercase tracking-[0.14em] text-muted">What to fix</p>
-          <ul className="mt-1.5 space-y-1">
+          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+            What to fix
+          </p>
+          <ul className="mt-2 space-y-1.5">
             {attempt.gaps.map((item) => (
-              <li key={item} className="text-xs leading-relaxed">
+              <li key={item} className="text-sm leading-relaxed">
                 {item}
               </li>
             ))}
@@ -449,11 +460,11 @@ function ReviewPanel({ attempt, passed }: { attempt: PracticeAttempt; passed: bo
         </div>
       ) : null}
       {attempt.nextStep ? (
-        <p className="border-t border-line pt-3 text-xs text-muted">
+        <p className="border-t border-line/80 pt-3 text-sm leading-relaxed text-muted">
           <span className="font-medium text-ink">Next:</span> {attempt.nextStep}
         </p>
       ) : null}
-      <p className="text-[10px] text-muted">
+      <p className="text-xs text-muted">
         Reviewed {relativeDay(attempt.createdAt).toLowerCase()} · {attempt.model ?? "AI reviewer"}
       </p>
     </section>

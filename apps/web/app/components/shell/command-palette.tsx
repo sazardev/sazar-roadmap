@@ -362,21 +362,21 @@ export function CommandPalette() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center px-4 pt-[12vh]">
+    <div className="fixed inset-0 z-[100] flex items-start justify-center px-3 pt-[8vh] sm:px-6 sm:pt-[12vh]">
       <button
         type="button"
         aria-label="Close command palette"
-        className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={close}
       />
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
-        className="relative z-10 w-full max-w-[620px] overflow-hidden rounded-md border border-line bg-raised shadow-float"
+        className="relative z-10 w-full max-w-[680px] overflow-hidden rounded-lg border border-line bg-raised shadow-float"
       >
-        <div className="flex items-center gap-3 border-b border-line px-4">
-          <Search size={17} className="shrink-0 text-muted" />
+        <div className="flex items-center gap-3 border-b border-line px-4 md:px-5">
+          <Search size={20} className="shrink-0 text-muted" />
           <input
             ref={inputRef}
             role="combobox"
@@ -390,35 +390,35 @@ export function CommandPalette() {
             }}
             onKeyDown={onKeyDown}
             placeholder="Search topics, resources, notes or run a command..."
-            className="h-12 w-full bg-transparent text-[15px] outline-none placeholder:text-muted"
+            className="h-14 w-full bg-transparent text-base outline-none placeholder:text-muted md:h-16"
             autoComplete="off"
             spellCheck={false}
           />
-          {loading ? <Loader2 size={15} className="animate-spin text-muted" /> : null}
+          {loading ? <Loader2 size={17} className="animate-spin text-muted" /> : null}
           {query ? (
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="rounded-sm px-1.5 py-1 text-[10px] text-muted hover:bg-hover"
+              className="inline-flex min-h-9 items-center rounded-full px-3 text-xs text-muted hover:bg-hover"
             >
               Clear
             </button>
           ) : null}
         </div>
 
-        <div id="command-results" role="listbox" className="max-h-[52vh] overflow-y-auto p-1.5">
+        <div id="command-results" role="listbox" className="max-h-[55vh] overflow-y-auto p-2">
           {visibleItems.length === 0 && !loading ? (
-            <div className="px-4 py-10 text-center">
-              <p className="text-sm font-medium">No matches for “{query}”</p>
-              <p className="mt-1 text-xs text-muted">
+            <div className="px-4 py-12 text-center">
+              <p className="text-base font-medium">No matches for “{query}”</p>
+              <p className="mt-1.5 text-sm text-muted">
                 Try a topic name, a roadmap, or type {">"} for actions.
               </p>
             </div>
           ) : null}
 
           {[...grouped.entries()].map(([group, items]) => (
-            <div key={group} className="py-1">
-              <p className="px-2.5 pb-1 pt-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+            <div key={group} className="py-1.5">
+              <p className="px-3 pb-1.5 pt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
                 {group}
               </p>
               {items.map((item) => {
@@ -437,25 +437,32 @@ export function CommandPalette() {
                     onMouseEnter={() => setActive(index)}
                     onClick={() => (isHit ? openHit(item) : runCommand(item))}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-sm px-2.5 py-2 text-left transition-colors duration-fast",
-                      index === active ? "bg-hover" : "hover:bg-hover",
+                      "flex min-h-14 w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors duration-fast",
+                      index === active ? "bg-accent-soft" : "hover:bg-hover",
                     )}
                   >
-                    <span className="flex size-7 shrink-0 items-center justify-center rounded-sm border border-line bg-canvas text-muted">
-                      <Icon size={14} strokeWidth={1.8} />
+                    <span
+                      className={cn(
+                        "flex size-9 shrink-0 items-center justify-center rounded-md border",
+                        index === active
+                          ? "border-accent/25 bg-raised text-accent"
+                          : "border-line bg-surface/60 text-muted",
+                      )}
+                    >
+                      <Icon size={17} strokeWidth={1.8} />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13px] font-medium">{label}</span>
-                      <span className="block truncate text-[11px] text-muted">{subtitle}</span>
+                      <span className="block truncate text-sm font-medium">{label}</span>
+                      <span className="block truncate text-xs text-muted">{subtitle}</span>
                     </span>
                     {isHit ? (
-                      <span className="shrink-0 rounded-full bg-hover px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-muted">
+                      <span className="shrink-0 rounded-full bg-surface px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
                         {item.kind}
                       </span>
                     ) : item.group === "Open" ? (
-                      <ArrowRight size={13} className="shrink-0 text-muted" />
+                      <ArrowRight size={15} className="shrink-0 text-muted" />
                     ) : index === active ? (
-                      <CornerDownLeft size={13} className="shrink-0 text-muted" />
+                      <CornerDownLeft size={15} className="shrink-0 text-accent" />
                     ) : null}
                   </button>
                 );
@@ -464,8 +471,8 @@ export function CommandPalette() {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-3 py-2 text-[10px] text-muted">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface/40 px-4 py-3 text-xs text-muted">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="flex items-center gap-1">
               <Kbd>↑</Kbd>
               <Kbd>↓</Kbd> navigate

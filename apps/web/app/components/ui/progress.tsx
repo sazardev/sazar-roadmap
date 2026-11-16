@@ -15,11 +15,11 @@ export function ProgressBar({
 }) {
   const ratio = percent(value, max);
   return (
-    <div className={cn("space-y-1.5", className)}>
+    <div className={cn("space-y-2", className)}>
       {(label || showValue) && (
         <div className="flex items-baseline justify-between gap-4 text-xs text-muted">
-          {label ? <span>{label}</span> : <span />}
-          {showValue ? <span className="font-mono tabular-nums">{ratio}%</span> : null}
+          {label ? <span className="font-medium">{label}</span> : <span />}
+          {showValue ? <span className="font-mono text-[11px] tabular-nums">{ratio}%</span> : null}
         </div>
       )}
       <div
@@ -28,10 +28,10 @@ export function ProgressBar({
         aria-valuemax={max}
         aria-valuenow={Math.min(value, max)}
         aria-label={label ?? "Progress"}
-        className="h-1.5 w-full overflow-hidden rounded-full bg-hover"
+        className="h-2 w-full overflow-hidden rounded-full bg-hover"
       >
         <div
-          className="h-full rounded-full bg-ink transition-[width] duration-base ease-out"
+          className="h-full rounded-full bg-accent transition-[width] duration-base ease-out"
           style={{ width: `${ratio}%` }}
         />
       </div>
@@ -77,7 +77,7 @@ export function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="var(--ink)"
+          stroke="var(--accent)"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}

@@ -139,44 +139,44 @@ export default function GoalsPage({ loaderData }: Route.ComponentProps) {
         actions={
           <a
             href="#new-goal"
-            className="inline-flex h-10 items-center gap-2 rounded-sm bg-ink px-4 text-sm font-medium text-canvas"
+            className="inline-flex h-11 items-center gap-2 rounded-md bg-accent px-5 text-sm font-medium text-accent-ink shadow-sm transition-colors hover:bg-accent-strong"
           >
-            <Plus size={15} /> New goal
+            <Plus size={16} /> New goal
           </a>
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-3">
         <Card>
-          <CardBody className="space-y-2 p-5">
-            <p className="text-xs text-muted">This week</p>
-            <p className="font-mono text-2xl">{formatMinutes(stats.minutesThisWeek)}</p>
+          <CardBody className="space-y-2.5 p-5">
+            <p className="text-sm text-muted">This week</p>
+            <p className="font-mono text-3xl">{formatMinutes(stats.minutesThisWeek)}</p>
             <ProgressBar value={stats.minutesThisWeek} max={weeklyGoal} />
-            <p className="text-[10px] text-muted">
+            <p className="text-xs text-muted">
               {weeklyPercent}% of the {formatMinutes(weeklyGoal)} weekly target
             </p>
           </CardBody>
         </Card>
         <Card>
-          <CardBody className="space-y-2 p-5">
-            <p className="text-xs text-muted">Active goals</p>
-            <p className="font-mono text-2xl">{active.length}</p>
-            <p className="text-[10px] text-muted">{completed.length} completed or archived</p>
+          <CardBody className="space-y-2.5 p-5">
+            <p className="text-sm text-muted">Active goals</p>
+            <p className="font-mono text-3xl">{active.length}</p>
+            <p className="text-xs text-muted">{completed.length} completed or archived</p>
           </CardBody>
         </Card>
         <Card>
-          <CardBody className="space-y-2 p-5">
-            <p className="text-xs text-muted">Streak</p>
-            <p className="font-mono text-2xl">{stats.streak} days</p>
-            <p className="text-[10px] text-muted">Any logged session keeps it alive</p>
+          <CardBody className="space-y-2.5 p-5">
+            <p className="text-sm text-muted">Streak</p>
+            <p className="font-mono text-3xl">{stats.streak} days</p>
+            <p className="text-xs text-muted">Any logged session keeps it alive</p>
           </CardBody>
         </Card>
       </div>
 
-      <section className="space-y-3" aria-labelledby="active-goals">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <h2 id="active-goals" className="text-lg font-semibold tracking-tight">
+      <section className="space-y-4" aria-labelledby="active-goals">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="space-y-1">
+            <h2 id="active-goals" className="text-xl font-semibold tracking-tight">
               Active
             </h2>
             <p className="text-sm text-muted">
@@ -205,11 +205,18 @@ export default function GoalsPage({ loaderData }: Route.ComponentProps) {
         )}
       </section>
 
-      <details className="rounded-md border border-line" open={newGoal} id="new-goal">
-        <summary className="flex cursor-pointer list-none items-center gap-2 px-5 py-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">
-          <Plus size={15} /> Create a goal
+      <details
+        className="rounded-lg border border-line bg-raised shadow-card"
+        open={newGoal}
+        id="new-goal"
+      >
+        <summary className="flex min-h-16 cursor-pointer list-none items-center gap-2 px-5 py-4 text-base font-semibold [&::-webkit-details-marker]:hidden">
+          <Plus size={17} /> Create a goal
         </summary>
-        <Form method="post" className="grid gap-4 border-t border-line p-5 sm:grid-cols-2">
+        <Form
+          method="post"
+          className="grid gap-4 border-t border-line/80 p-5 sm:grid-cols-2 md:p-6"
+        >
           <input type="hidden" name="intent" value="create" />
           <label className="space-y-2 sm:col-span-2">
             <span className="text-sm font-medium">Title</span>
@@ -267,11 +274,11 @@ export default function GoalsPage({ loaderData }: Route.ComponentProps) {
       </details>
 
       {completed.length > 0 ? (
-        <details className="rounded-md border border-line">
-          <summary className="cursor-pointer list-none px-5 py-4 text-sm font-medium text-muted [&::-webkit-details-marker]:hidden">
+        <details className="rounded-lg border border-line bg-raised shadow-card">
+          <summary className="flex min-h-16 cursor-pointer list-none items-center px-5 py-4 text-sm font-medium text-muted [&::-webkit-details-marker]:hidden">
             Completed and archived ({completed.length})
           </summary>
-          <div className="space-y-3 border-t border-line p-5">
+          <div className="space-y-3 border-t border-line/80 p-5">
             {completed.map((goal) => (
               <GoalCard key={goal.id} goal={goal} busy={busy} compact />
             ))}
@@ -293,27 +300,27 @@ function GoalCard({
 }) {
   const progress = percent(goal.currentValue, goal.targetValue);
   return (
-    <Card className={compact ? "bg-surface" : ""}>
-      <CardBody className="space-y-4 p-5">
+    <Card className={compact ? "bg-surface/50" : ""}>
+      <CardBody className="space-y-4 p-5 md:p-6">
         <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 space-y-1">
+          <div className="min-w-0 space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-semibold">{goal.title}</h3>
+              <h3 className="text-base font-semibold">{goal.title}</h3>
               <Badge tone={goal.status === "completed" ? "success" : "outline"}>
                 {goal.status}
               </Badge>
               <Badge tone="outline">{goal.kind}</Badge>
             </div>
             {goal.description ? (
-              <p className="text-xs leading-relaxed text-muted">{goal.description}</p>
+              <p className="text-sm leading-relaxed text-muted">{goal.description}</p>
             ) : null}
           </div>
-          <span className="shrink-0 font-mono text-[11px] text-muted">{progress}%</span>
+          <span className="shrink-0 font-mono text-xs text-muted">{progress}%</span>
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <ProgressBar value={goal.currentValue} max={goal.targetValue} />
-          <div className="flex items-center justify-between text-[10px] text-muted">
+          <div className="flex items-center justify-between text-xs text-muted">
             <span>
               {goal.currentValue} / {goal.targetValue} {goal.unit}
             </span>
@@ -331,20 +338,18 @@ function GoalCard({
                   <button
                     type="submit"
                     disabled={busy}
-                    className="flex size-5 items-center justify-center rounded-full border border-line text-muted hover:bg-hover hover:text-ink disabled:opacity-50"
+                    className="flex size-8 items-center justify-center rounded-full border border-line text-muted transition-colors hover:bg-hover hover:text-accent disabled:opacity-50"
                     aria-label={milestone.completedAt ? "Mark incomplete" : "Mark complete"}
                   >
-                    {milestone.completedAt ? <Check size={11} /> : <Circle size={9} />}
+                    {milestone.completedAt ? <Check size={13} /> : <Circle size={10} />}
                   </button>
                   <span
-                    className={`flex-1 text-xs ${milestone.completedAt ? "text-muted line-through" : ""}`}
+                    className={`flex-1 text-sm ${milestone.completedAt ? "text-muted line-through" : ""}`}
                   >
                     {milestone.title}
                   </span>
                   {milestone.targetValue ? (
-                    <span className="font-mono text-[10px] text-muted">
-                      {milestone.targetValue}
-                    </span>
+                    <span className="font-mono text-xs text-muted">{milestone.targetValue}</span>
                   ) : null}
                 </Form>
               </li>

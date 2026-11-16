@@ -5,11 +5,11 @@ type Tone = "neutral" | "outline" | "success" | "warning" | "danger" | "solid";
 
 const tones: Record<Tone, string> = {
   neutral: "border-transparent bg-hover text-ink",
-  outline: "border-line bg-transparent text-muted",
-  success: "border-transparent bg-success/10 text-success",
-  warning: "border-transparent bg-warning/10 text-warning",
-  danger: "border-transparent bg-danger/10 text-danger",
-  solid: "border-ink bg-ink text-canvas",
+  outline: "border-line bg-surface/60 text-muted",
+  success: "border-transparent bg-success-soft text-success",
+  warning: "border-transparent bg-warning-soft text-warning",
+  danger: "border-transparent bg-danger-soft text-danger",
+  solid: "border-accent bg-accent text-accent-ink",
 };
 
 export function Badge({
@@ -24,7 +24,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium leading-5 tracking-wide",
+        "inline-flex min-h-6 items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium leading-5 tracking-wide",
         tones[tone],
         className,
       )}
@@ -34,9 +34,14 @@ export function Badge({
   );
 }
 
-export function Kbd({ children }: { children: ReactNode }) {
+export function Kbd({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <kbd className="inline-flex min-w-5 items-center justify-center rounded border border-line bg-surface px-1.5 font-mono text-[10px] leading-5 text-muted">
+    <kbd
+      className={cn(
+        "inline-flex min-h-6 min-w-6 items-center justify-center rounded-md border border-line bg-surface px-1.5 font-mono text-[10px] leading-5 text-muted shadow-sm",
+        className,
+      )}
+    >
       {children}
     </kbd>
   );
@@ -53,5 +58,5 @@ export function StatusDot({
     warning: "bg-warning",
     danger: "bg-danger",
   }[tone];
-  return <span aria-hidden="true" className={cn("inline-block size-2 rounded-full", color)} />;
+  return <span aria-hidden="true" className={cn("inline-block size-2.5 rounded-full", color)} />;
 }
