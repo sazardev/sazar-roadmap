@@ -49,19 +49,16 @@ export function Topbar({
       .join("") || "S";
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line/80 bg-canvas/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/65">
-      <div className="flex h-16 items-center gap-2 px-4 sm:px-6 md:h-[76px] md:gap-4 md:px-7 lg:px-8 xl:px-10">
-        <Link to="/" className="flex min-w-0 items-center gap-2.5 md:hidden">
-          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent text-accent-ink shadow-card">
-            <Route size={20} strokeWidth={1.9} />
+    <header className="z-30 border-b border-line/60 bg-canvas/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/65 md:sticky md:top-0 md:border-line/80">
+      <div className="flex h-14 items-center gap-1.5 px-3 sm:h-16 sm:gap-2 sm:px-6 md:h-[76px] md:gap-4 md:px-7 lg:px-8 xl:px-10">
+        <Link to="/" className="flex min-w-0 items-center gap-2 md:hidden">
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-accent text-accent-ink shadow-sm">
+            <Route size={17} strokeWidth={1.9} />
+          </span>
+          <span className="truncate text-sm font-semibold tracking-tight">
+            {section === "Dashboard" ? "Roadmap" : section}
           </span>
           <span className="sr-only">sazardev Roadmap home</span>
-          <span className="hidden min-w-0 sm:block">
-            <span className="block font-mono text-[9px] uppercase tracking-[0.2em] text-muted">
-              sazardev
-            </span>
-            <span className="block truncate text-sm font-semibold leading-tight">Roadmap</span>
-          </span>
         </Link>
 
         <div className="hidden min-w-0 md:block">
@@ -71,11 +68,11 @@ export function Topbar({
           <h2 className="truncate text-base font-semibold tracking-tight">{section}</h2>
         </div>
 
-        <div className="ml-auto flex items-center gap-1.5 md:gap-2">
+        <div className="ml-auto flex items-center gap-0.5 md:gap-2">
           <button
             type="button"
             onClick={() => window.dispatchEvent(new CustomEvent("sd:open-palette"))}
-            className="group inline-flex h-11 w-11 items-center justify-center gap-2.5 rounded-full border border-line bg-raised px-0 text-sm text-muted shadow-sm transition-[border-color,background-color,color] duration-fast hover:border-line-strong hover:bg-hover hover:text-ink sm:w-auto sm:justify-start sm:px-3.5 md:min-w-56 lg:min-w-72"
+            className="group inline-flex size-10 shrink-0 items-center justify-center gap-2.5 rounded-full text-sm text-muted transition-[border-color,background-color,color] duration-fast hover:bg-hover hover:text-ink sm:h-11 sm:w-auto sm:justify-start sm:border sm:border-line sm:bg-raised sm:px-3.5 sm:shadow-sm sm:hover:border-line-strong md:min-w-56 lg:min-w-72"
           >
             <Search size={18} strokeWidth={1.9} className="shrink-0" />
             <span className="sr-only">Search anything</span>
@@ -88,12 +85,14 @@ export function Topbar({
           <div className="hidden sm:block">
             <ThemeToggle initial={appearance.theme} compact />
           </div>
-          <AppearanceMenu appearance={appearance} />
+          <div className="hidden sm:block">
+            <AppearanceMenu appearance={appearance} />
+          </div>
 
           <details className="relative">
             <summary
               aria-label="Account menu"
-              className="flex size-11 cursor-pointer list-none items-center justify-center rounded-full border border-line bg-accent-soft text-sm font-semibold text-accent transition-[border-color,background-color] duration-fast hover:border-line-strong hover:bg-hover [&::-webkit-details-marker]:hidden"
+              className="flex size-9 cursor-pointer list-none items-center justify-center rounded-full border border-transparent bg-accent-soft text-xs font-semibold text-accent transition-[border-color,background-color] duration-fast hover:border-line-strong hover:bg-hover sm:size-11 sm:border-line sm:text-sm [&::-webkit-details-marker]:hidden"
             >
               {initials}
             </summary>

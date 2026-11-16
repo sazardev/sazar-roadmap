@@ -27,7 +27,7 @@ export function AppShell({
         <PwaRuntime />
         <main
           id="main"
-          className="mx-auto w-full max-w-[1440px] flex-1 px-4 pb-28 pt-5 sm:px-6 md:px-7 md:pb-16 md:pt-7 lg:px-8 lg:py-8 xl:px-10 xl:py-9"
+          className="mx-auto w-full max-w-[1440px] flex-1 px-4 pb-28 pt-4 sm:px-6 sm:pt-5 md:px-7 md:pb-16 md:pt-7 lg:px-8 lg:py-8 xl:px-10 xl:py-9"
         >
           {children}
         </main>

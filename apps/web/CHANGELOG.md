@@ -27,6 +27,9 @@
   again.
 - Moved the tablet breakpoint to `lg`, added safe-area padding and a labelled icon rail, constrained
   fixed prompts to the visual viewport and fixed horizontal overflow in dashboard cards.
+- Slimmed the mobile app bar to 56 px, made it non-sticky on phones, replaced the raised search pill
+  with a quiet icon target, moved appearance controls behind the account menu and reduced the
+  avatar treatment; tablet and desktop keep the sticky workspace bar.
 - Inline code in topic prose now renders as code instead of literal backticks, including flashcards
   and practice pages.
 - Rebuilt the shell tablet-first: a labelled icon rail from 768 px, the full sidebar from 1024 px
