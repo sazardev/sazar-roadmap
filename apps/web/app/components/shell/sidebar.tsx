@@ -113,7 +113,7 @@ export function Sidebar({ dueReviews, streak }: { dueReviews: number; streak: nu
             <Flame size={13} strokeWidth={1.8} />
             {streak > 0 ? `${streak}-day streak` : "Start a streak"}
           </span>
-          <span className="font-mono text-[10px] text-muted">v0.1</span>
+          <span className="font-mono text-[10px] text-muted">v0.2.0</span>
         </div>
       </div>
     </aside>
