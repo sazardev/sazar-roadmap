@@ -81,7 +81,7 @@ the three-step onboarding. `DEV_NO_AUTH` is ignored on every non-loopback hostna
 | Regenerate content seed                   | `pnpm content:build`                               |
 | Apply D1 migrations (local / remote)      | `pnpm db:migrate:local` / `pnpm db:migrate:remote` |
 | Seed D1 (local / remote)                  | `pnpm db:seed:local` / `pnpm db:seed:remote`       |
-| Rebuild FTS5 indexes                      | `pnpm db:reindex:local` or Settings → Content      |
+| Rebuild FTS5 indexes (local only)         | `pnpm db:reindex:local`                            |
 
 ## Stack
 

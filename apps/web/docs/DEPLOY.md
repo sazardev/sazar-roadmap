@@ -32,9 +32,10 @@ pnpm db:migrate:remote
 pnpm db:seed:remote
 ```
 
-`db:seed:remote` regenerates the seed and applies it with `wrangler d1 execute --remote`. It is
-idempotent for content: `INSERT ... ON CONFLICT DO UPDATE`, so user progress is preserved. It does
-not delete stale content rows.
+`db:seed:remote` regenerates the seed and applies it with `wrangler d1 execute --remote`. The
+upserts carry a `WHERE` guard, so rows whose content did not change are not rewritten and D1 only
+bills real changes. FTS5 stays in sync through database triggers; the seed never rebuilds the
+index. User progress is preserved, and stale content rows are not deleted.
 
 To update only roadmap metadata (level and progression order) without touching the 2,000 topics:
 

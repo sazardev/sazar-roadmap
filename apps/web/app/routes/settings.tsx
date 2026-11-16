@@ -1,4 +1,4 @@
-import { AlertTriangle, Check, Database, RefreshCw, Sparkles } from "lucide-react";
+import { AlertTriangle, Check, Database, Sparkles } from "lucide-react";
 import { Form, Link, redirect, useNavigation } from "react-router";
 import { AppearanceForm } from "~/components/shell/appearance";
 import { Badge } from "~/components/ui/badge";
@@ -176,15 +176,6 @@ export async function action({ request, context }: Route.ActionArgs) {
     return redirect("/settings?notice=ai");
   }
 
-  if (intent === "reindex") {
-    await env.DB.batch([
-      env.DB.prepare("INSERT INTO topics_fts(topics_fts) VALUES('rebuild')"),
-      env.DB.prepare("INSERT INTO resources_fts(resources_fts) VALUES('rebuild')"),
-      env.DB.prepare("INSERT INTO notes_fts(notes_fts) VALUES('rebuild')"),
-    ]);
-    return redirect("/settings?notice=reindex");
-  }
-
   if (intent === "reset-progress") {
     if (String(form.get("confirm") ?? "") !== "RESET") {
       return redirect("/settings?error=confirm-reset");
@@ -217,7 +208,6 @@ const notices: Record<string, string> = {
   learning: "Learning preferences updated.",
   appearance: "Appearance updated.",
   ai: "AI preferences updated.",
-  reindex: "Search index rebuilt.",
   reset: "Progress reset. Notes and integrations were left intact.",
   "notes-deleted": "All Roadmap notes deleted.",
 };
@@ -537,29 +527,14 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                 <Count label="Progress rows" value={counts.progress} />
                 <Count label="Environment" value={environment} />
               </div>
-              <div className="flex flex-wrap items-center gap-2 border-t border-line pt-4">
-                <Form method="post">
-                  <input type="hidden" name="intent" value="reindex" />
-                  <Button
-                    type="submit"
-                    variant="secondary"
-                    size="sm"
-                    disabled={busy}
-                    icon={<RefreshCw size={13} />}
-                  >
-                    Rebuild search index
-                  </Button>
-                </Form>
-                <p className="text-[11px] text-muted">
-                  FTS5 index for topics, resources and notes. Safe to run repeatedly.
-                </p>
-              </div>
               <div className="flex items-start gap-2 rounded-sm border border-line bg-surface px-3 py-2.5 text-[11px] text-muted">
                 <Database size={13} className="mt-0.5 shrink-0" />
                 <span>
                   Content is seeded with <code className="font-mono">pnpm db:seed:remote</code>. The
-                  public URL is <code className="font-mono">{publicUrl}</code>. Guided curricula
-                  live in <code className="font-mono">apps/web/app/content/curricula</code>.
+                  seed only writes rows that changed; the search index is kept in sync by database
+                  triggers. The public URL is <code className="font-mono">{publicUrl}</code>. Guided
+                  curricula live in{" "}
+                  <code className="font-mono">apps/web/app/content/curricula</code>.
                 </span>
               </div>
             </CardBody>
