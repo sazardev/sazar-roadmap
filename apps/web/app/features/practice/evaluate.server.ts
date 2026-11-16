@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export interface PracticeResource {
+  title: string;
+  url: string;
+  kind: string;
+}
+
 export interface PracticeTopic {
   id: string;
   title: string;
@@ -10,6 +16,7 @@ export interface PracticeTopic {
   pitfalls: string[];
   roadmapTitle: string;
   stageTitle: string;
+  resources?: PracticeResource[];
 }
 
 export interface PracticeReview {
@@ -25,6 +32,13 @@ export interface PracticeReview {
 export type PracticeReviewResult =
   | { ok: true; review: PracticeReview }
   | { ok: false; error: string };
+
+/** A clear answer that shows the core idea is enough to move on. */
+export const PASS_SCORE = 65;
+
+export function verdictForScore(score: number): "pass" | "revise" {
+  return score >= PASS_SCORE ? "pass" : "revise";
+}
 
 const reviewSchema = z.object({
   verdict: z.enum(["pass", "revise"]),
@@ -46,23 +60,53 @@ function extractJson(text: string): unknown {
   }
 }
 
+function studyReferences(topic: PracticeTopic): string {
+  const resources = topic.resources ?? [];
+  if (resources.length === 0) return "not recorded";
+  return resources
+    .slice(0, 5)
+    .map((resource) => `${resource.title} (${resource.kind}) — ${resource.url}`)
+    .join("\n");
+}
+
 function systemPrompt(topic: PracticeTopic): string {
   return [
-    "You are a strict but fair technical reviewer for a personal learning system.",
-    "The learner must demonstrate understanding through a practice response, not merely recognize the topic.",
-    "Evaluate only the learner response against the task and rubric below.",
+    "You are a fair, encouraging technical coach reviewing practice for a personal learning system.",
+    "Your job is to decide whether the learner showed enough understanding to move on, and to help them improve.",
+    "The learner is studying, not defending a thesis. A response does not need to be perfect, exhaustive or polished.",
     "",
-    "PASS only when all of these are true:",
-    "- It directly answers the practice task, not a different question.",
-    "- It explains the idea in the learner's own words and shows understanding, not copied definitions.",
-    "- It includes a concrete example, artifact, decision or code sketch where the task asks for one.",
-    "- It names at least one trade-off, limitation or pitfall relevant to the topic.",
-    "- It is specific enough that another engineer could inspect or act on it.",
+    "PASS (score 65-100) when:",
+    "- It answers the main question in the learner's own words, even if it is brief.",
+    "- It shows the core idea correctly; some details may be missing.",
+    "- It includes a concrete example, artifact, decision or code sketch when the task asks for application.",
+    "- It names at least one relevant trade-off, limitation or pitfall when the topic calls for it.",
+    "Do not require every key concept: one or two correctly explained concepts are enough to pass.",
+    "A missing trade-off or example lowers the score, but it should not fail an otherwise correct explanation.",
+    "Minor omissions, grammar or spelling do not block a pass.",
     "",
-    "REVISE when it is vague, superficial, generic, copied, missing the requested artifact, or does not engage with the key concepts.",
-    "A short answer can pass if it is precise and complete; length alone is not a criterion.",
-    "Do not pass a response just because it sounds confident.",
-    "Be encouraging but do not inflate the score.",
+    "REVISE (score 0-64) only when:",
+    "- The response is off-topic, copied, or only restates a definition without showing understanding.",
+    "- It misses the central concept of the topic.",
+    "- It ignores an artifact the task explicitly asks for, such as code or a design decision.",
+    "- It is too vague to tell whether the learner understands.",
+    "",
+    "Scoring calibration:",
+    "- 85-100: clear, accurate, specific, with a good example or trade-off.",
+    "- 70-84: correct core idea with one or two minor gaps.",
+    "- 65-69: enough understanding to continue; note the gaps for later review.",
+    "- 45-64: partial understanding; one focused revision should fix it.",
+    "- 0-44: off-topic, copied, or no real explanation.",
+    "",
+    "Feedback rules:",
+    "- Write 2-4 sentences directly to the learner.",
+    "- Start with what is right, then give the single most useful improvement.",
+    "- Be specific and kind. Never scold or say the learner failed.",
+    "- If it passes, say so clearly and name one thing to keep doing.",
+    "- If it needs revision, give one concrete action and point to a section or study reference below.",
+    "- Match the learner's language (English or Spanish). Keep JSON keys in English.",
+    "- Do not invent resources or URLs. You may mention the references listed below by title.",
+    "- gaps: at most 3, concrete and actionable.",
+    "- next_step: one short action, ideally naming a concept or study reference to review.",
     "",
     "Return JSON only, with no markdown fences and no extra text:",
     '{"verdict":"pass" or "revise","score":0-100,"feedback":"2-4 sentences addressed to the learner","strengths":["..."],"gaps":["..."],"next_step":"one concrete action"}',
@@ -75,6 +119,7 @@ function systemPrompt(topic: PracticeTopic): string {
     `Key concepts: ${topic.concepts.join("; ") || "not recorded"}`,
     `Practice task: ${topic.practice}`,
     `Pitfalls: ${topic.pitfalls.join("; ") || "not recorded"}`,
+    `Study references:\n${studyReferences(topic)}`,
   ].join("\n");
 }
 
@@ -119,7 +164,10 @@ export async function evaluatePractice(
 ): Promise<PracticeReviewResult> {
   const cleanResponse = response.trim().slice(0, 8000);
   if (cleanResponse.length < 40) {
-    return { ok: false, error: "Write a more complete response before submitting." };
+    return {
+      ok: false,
+      error: "Add a little more detail so the reviewer can see your reasoning.",
+    };
   }
 
   let content: string | null = null;
@@ -134,14 +182,14 @@ export async function evaluatePractice(
   } catch {
     return {
       ok: false,
-      error: "The AI reviewer could not respond. Your work was not marked complete. Try again.",
+      error: "The reviewer could not respond. Nothing was lost; try again in a moment.",
     };
   }
 
   if (!content) {
     return {
       ok: false,
-      error: "The AI reviewer returned no result. Your work was not marked complete. Try again.",
+      error: "The reviewer returned no result. Nothing was lost; try again in a moment.",
     };
   }
 
@@ -149,22 +197,22 @@ export async function evaluatePractice(
   if (!parsed.success) {
     return {
       ok: false,
-      error:
-        "The AI reviewer returned an invalid result. Your work was not marked complete. Try again.",
+      error: "The reviewer returned an invalid result. Nothing was lost; try again in a moment.",
     };
   }
 
   const data = parsed.data;
-  const verdict = data.verdict === "pass" && data.score >= 75 ? "pass" : "revise";
+  const score = Math.round(data.score);
+  const verdict = verdictForScore(score);
   return {
     ok: true,
     review: {
       verdict,
-      score: Math.round(data.score),
+      score,
       feedback: data.feedback,
       strengths: data.strengths,
       gaps: data.gaps,
-      nextStep: data.next_step,
+      nextStep: data.next_step || "Review the key concepts and try one more pass.",
       model,
     },
   };

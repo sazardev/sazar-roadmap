@@ -1,9 +1,13 @@
 import {
   ArrowLeft,
   ArrowRight,
+  BookOpen,
   Check,
   CircleAlert,
   Clock3,
+  ExternalLink,
+  Lightbulb,
+  ListChecks,
   Loader2,
   Sparkles,
   Target,
@@ -26,7 +30,7 @@ import {
   recordRevision,
 } from "~/features/practice/practice.server";
 import { getContinueTopics, getNextTopic } from "~/features/progress/progress.server";
-import { getTopicDetail } from "~/features/roadmaps/roadmaps.server";
+import { getTopicDetail, type TopicResource } from "~/features/roadmaps/roadmaps.server";
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
 import { getEnv } from "~/lib/db.server";
 import { pageMeta } from "~/lib/meta";
@@ -105,7 +109,7 @@ export async function action({ request, context }: Route.ActionArgs) {
   }
   if ((await countRecentAttempts(env, user.id, topicId)) >= 6) {
     return back(
-      "Too many reviews for this topic in a short time. Wait a few minutes and try again.",
+      "You have used several reviews for this topic. Take a short break, review the hints, then try again in a few minutes.",
     );
   }
 
@@ -133,6 +137,13 @@ export async function action({ request, context }: Route.ActionArgs) {
     }>();
   if (!topic) return back("Topic not found.");
 
+  const resourceRows = await env.DB.prepare(
+    `SELECT title, url, kind FROM resources
+     WHERE topic_id = ? ORDER BY sort_order, title LIMIT 5`,
+  )
+    .bind(topicId)
+    .all<{ title: string; url: string; kind: string }>();
+
   const practiceTopic: PracticeTopic = {
     id: topic.id,
     title: topic.title,
@@ -143,6 +154,7 @@ export async function action({ request, context }: Route.ActionArgs) {
     pitfalls: parseList(topic.pitfalls),
     roadmapTitle: topic.roadmapTitle,
     stageTitle: topic.stageTitle,
+    resources: resourceRows.results,
   };
 
   const review = await evaluatePractice(
@@ -199,7 +211,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
         <PageHeader
           eyebrow="Guided practice"
           title="Practice"
-          description="A topic is complete only when the AI review passes. Pick a topic and show your work."
+          description="Show the core idea in your own words. A short, specific answer is enough; the hints and resources are here when you need them."
         />
         {queue.length === 0 ? (
           <div className="rounded-lg border border-dashed border-line-strong/70 bg-surface/50 px-6 py-10">
@@ -241,7 +253,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
     );
   }
 
-  const { topic, progress, cards } = detail;
+  const { topic, progress, cards, resources } = detail;
   const isReference = topic.stageSlug === "extended-library";
   const attempt = actionData?.attempt ?? latestAttempt;
   const passed = actionData?.passed === true || (attempt?.verdict === "pass" && !retry);
@@ -279,7 +291,9 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
         <p className="max-w-2xl text-base leading-relaxed text-muted">
           {passed
             ? "Practice passed. You demonstrated the idea and this topic is now complete."
-            : "Write your answer, explanation or code. The AI reviewer checks it against the task and the rubric; only a pass marks the topic complete."}
+            : revise
+              ? "You are close. Use the hints and the study links, then submit one more pass."
+              : "Write your answer, explanation or code. The reviewer looks for the core idea, not perfection: a clear answer that shows understanding passes at 65/100 or higher."}
         </p>
         {isReference ? (
           <p className="max-w-2xl rounded-md bg-surface/60 px-4 py-3 text-sm leading-relaxed text-muted">
@@ -297,6 +311,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
           <h2 className="text-base font-semibold">The task</h2>
         </div>
         <RichText text={topic.practice} className="mt-3 block text-base leading-relaxed" />
+        <AnswerOutline />
         {topic.keyConcepts.length > 0 ? (
           <div className="mt-4 border-t border-line/80 pt-3">
             <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
@@ -315,6 +330,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
             </ul>
           </div>
         ) : null}
+        <PracticeHints pitfalls={topic.pitfalls} resources={resources} />
       </section>
 
       {!aiEnabled ? (
@@ -334,7 +350,14 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
 
       {passed && attempt ? <ReviewPanel attempt={attempt} passed /> : null}
 
-      {revise && attempt && !passed ? <ReviewPanel attempt={attempt} passed={false} /> : null}
+      {revise && attempt && !passed ? (
+        <ReviewPanel
+          attempt={attempt}
+          passed={false}
+          resources={resources}
+          topicHref={`/roadmaps/${topic.roadmapSlug}/${topic.slug}`}
+        />
+      ) : null}
 
       {passed ? (
         <div className="flex flex-wrap items-center gap-2">
@@ -382,6 +405,93 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
   );
 }
 
+function AnswerOutline() {
+  return (
+    <div className="mt-4 rounded-md border border-line/80 bg-surface/50 px-4 py-3">
+      <p className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+        <ListChecks size={13} /> A good answer usually
+      </p>
+      <ol className="mt-2 space-y-1.5 text-sm leading-relaxed text-muted">
+        <li className="flex gap-2">
+          <span className="w-4 shrink-0 font-medium text-ink">1.</span>
+          States the idea in one or two sentences.
+        </li>
+        <li className="flex gap-2">
+          <span className="w-4 shrink-0 font-medium text-ink">2.</span>
+          Applies it to the task with a concrete example, code sketch or decision.
+        </li>
+        <li className="flex gap-2">
+          <span className="w-4 shrink-0 font-medium text-ink">3.</span>
+          Names one trade-off, limit or pitfall.
+        </li>
+      </ol>
+    </div>
+  );
+}
+
+function PracticeHints({
+  pitfalls,
+  resources,
+}: {
+  pitfalls: string[];
+  resources: TopicResource[];
+}) {
+  return (
+    <details className="group mt-4 rounded-md border border-line/80 bg-surface/40">
+      <summary className="flex cursor-pointer list-none items-center gap-2 px-3.5 py-2.5 text-sm font-medium text-muted transition-colors duration-fast hover:text-ink [&::-webkit-details-marker]:hidden">
+        <Lightbulb size={14} /> Stuck? Open the hints
+      </summary>
+      <div className="space-y-3 border-t border-line/70 px-3.5 py-3 text-sm leading-relaxed text-muted">
+        <p>
+          <span className="font-medium text-ink">Keep it small:</span> answer the main question in a
+          few sentences. You do not need to cover every concept to pass.
+        </p>
+        {pitfalls[0] ? (
+          <p>
+            <span className="font-medium text-ink">Common trap:</span> {pitfalls[0]}
+          </p>
+        ) : null}
+        {resources.length > 0 ? (
+          <div>
+            <p className="flex items-center gap-1.5 font-medium text-ink">
+              <BookOpen size={13} /> Read or watch:
+            </p>
+            <StudyLinks resources={resources} />
+          </div>
+        ) : null}
+        <p className="text-xs">You can answer in English or Spanish.</p>
+      </div>
+    </details>
+  );
+}
+
+function StudyLinks({ resources, limit = 3 }: { resources: TopicResource[]; limit?: number }) {
+  const links = resources.slice(0, limit);
+  if (links.length === 0) return null;
+  return (
+    <ul className="mt-2 space-y-1.5">
+      {links.map((resource) => (
+        <li key={resource.id}>
+          <a
+            href={resource.url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-start gap-1.5 text-sm underline decoration-line-strong underline-offset-2 transition-colors hover:text-ink"
+          >
+            <ExternalLink size={13} className="mt-1 shrink-0" />
+            <span>
+              {resource.title}
+              <span className="ml-1.5 text-xs text-muted">
+                {resource.provider ?? resource.kind}
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function PracticeForm({
   topicId,
   defaultResponse,
@@ -408,7 +518,7 @@ function PracticeForm({
         value={value}
         onChange={(event) => setValue(event.target.value)}
         className="min-h-64 text-base leading-relaxed"
-        placeholder="Explain the idea in your own words, sketch the design, or paste the code you wrote. Be specific about the decisions and trade-offs."
+        placeholder="Explain the idea in your own words, sketch the design, or paste the code you wrote. Three to six sentences is enough; be specific about one decision or trade-off."
         disabled={busy}
         required
         minLength={40}
@@ -425,8 +535,9 @@ function PracticeForm({
         </p>
       ) : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs leading-relaxed text-muted">
-          The reviewer can take up to 30 seconds. Nothing is marked complete until it passes.
+        <p className="max-w-md text-xs leading-relaxed text-muted">
+          The reviewer reads for the core idea and passes at 65+. Short and specific is fine. You
+          can answer in English or Spanish.
         </p>
         <Button
           type="submit"
@@ -457,7 +568,17 @@ function ClearDraftOnPass({ topicId }: { topicId: string }) {
   return null;
 }
 
-function ReviewPanel({ attempt, passed }: { attempt: PracticeAttempt; passed: boolean }) {
+function ReviewPanel({
+  attempt,
+  passed,
+  resources = [],
+  topicHref,
+}: {
+  attempt: PracticeAttempt;
+  passed: boolean;
+  resources?: TopicResource[];
+  topicHref?: string;
+}) {
   return (
     <section
       className={
@@ -475,7 +596,7 @@ function ReviewPanel({ attempt, passed }: { attempt: PracticeAttempt; passed: bo
             <CircleAlert size={19} className="text-warning" />
           )}
           <h2 className="text-base font-semibold">
-            {passed ? "Practice passed" : "Needs revision"}
+            {passed ? "Practice passed" : "One more pass"}
           </h2>
         </div>
         <Badge tone={passed ? "success" : "warning"}>{attempt.score}/100</Badge>
@@ -513,6 +634,25 @@ function ReviewPanel({ attempt, passed }: { attempt: PracticeAttempt; passed: bo
         <p className="border-t border-line/80 pt-3 text-sm leading-relaxed text-muted">
           <span className="font-medium text-ink">Next:</span> {attempt.nextStep}
         </p>
+      ) : null}
+      {!passed ? (
+        <div className="border-t border-line/80 pt-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+            Where to study next
+          </p>
+          {resources.length > 0 ? (
+            <StudyLinks resources={resources} />
+          ) : (
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              Re-read the topic and its key concepts before the next pass.
+            </p>
+          )}
+          {topicHref ? (
+            <Link to={topicHref} className="mt-2 inline-block text-xs text-muted underline">
+              Open the full topic
+            </Link>
+          ) : null}
+        </div>
       ) : null}
       <p className="text-xs text-muted">
         Reviewed {relativeDay(attempt.createdAt).toLowerCase()} · {attempt.model ?? "AI reviewer"}
