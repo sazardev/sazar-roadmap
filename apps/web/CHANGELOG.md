@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.2 — 2026-11-16
+
+- Made the practice reviewer more encouraging: a clear answer that shows the core idea now passes
+  at 65/100, without requiring every concept or a trade-off.
+- Added a three-step answer outline and collapsible hints with the common trap and study references.
+- Practice feedback now matches the learner's language and points to the topic's resources after a
+  revision.
+- Surfaced study links on the practice page and in the revision panel, so what to study next and
+  where to study it are one click away.
+- Added unit coverage for the pass threshold.
+
 ## 0.5.1 — 2026-11-16
 
 - Made the D1 content seed incremental: unchanged rows are no longer rewritten, so a repeated seed

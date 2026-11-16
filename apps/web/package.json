@@ -1,6 +1,6 @@
 {
   "name": "@sazardev/roadmap",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "private": true,
   "type": "module",
   "description": "Sazar Roadmap: a private learning operating system on Cloudflare Workers",
