@@ -10,22 +10,25 @@ Live: <https://roadmap.sazardev.stream> (private, shared session).
 ## What it does
 
 - **Five guided paths** — Frontend, Backend, Go, AI Engineer and Cloudflare — with curated stages,
-  key concepts, practice prompts and pitfalls. Each path renders as a compact column map; clicking a node opens a
-  drawer with resources and progress actions.
+  key concepts, practice prompts and pitfalls. Each path renders as a compact column map; clicking a node opens the full topic
+  page. The topic page is a narrow reading column with a discreet actions menu, and selecting text
+  lets you save it to Notes.
 - **Two reference libraries** — DevOps and Full Stack — plus a preview of every other roadmap in
   the fork: 98 roadmaps, 2,162 topics and 5,485 resources in D1. The library is grouped by
   progression (start from zero, build depth, specialize) and keeps the upstream editorial order,
   not an alphabetical list.
-- **Progress that means something** — `learning`, `practiced` and `mastered` are separate states;
-  sessions, minutes, confidence and activity are recorded.
-- **Deliberate practice** — a prompt, a blank page, a model answer and a self-check.
+- **Progress that means something** — a topic becomes `practice passed` only after the guided
+  exercise is submitted and the AI review approves it. There is no manual “mark done”.
+- **AI-reviewed practice** — write a summary, explanation or code, get rubric-based feedback,
+  revise until it passes, and only then advance the roadmap. Reading time is logged separately
+  from completion.
 - **Spaced review** — a small, tested SM-2 variant with Again / Hard / Good / Easy intervals.
 - **AI coach** — Workers AI with retrieved topic context, citations back to topics, a deterministic
   fallback and a per-user model choice.
 - **Goals** — weekly minutes, topics, cards and custom targets; automatic progress from sessions and
   reviews.
-- **Notes and resources** — private notes attached to topics, a bookmarkable resource shelf and
-  one-click copies to the Notes app.
+- **Notes and resources** — private notes attached to topics, a bookmarkable resource shelf,
+  one-click copies to the Notes app, and a selection toolbar that sends selected text to Notes.
 - **People and questions** — save the people who can help, write the question first and record the
   answer.
 - **The rest of the workspace** — Tasks, Learn, News and English are read on the dashboard through

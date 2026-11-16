@@ -6,6 +6,7 @@ export default [
   route("onboarding", "routes/onboarding.tsx"),
   route("api/health", "routes/api.health.tsx"),
   route("api/search", "routes/api.search.tsx"),
+  route("api/selection-note", "routes/api.selection-note.tsx"),
   route("api/reindex", "routes/api.reindex.tsx"),
   route("internal/today", "routes/internal.today.tsx"),
   route("internal/search", "routes/internal.search.tsx"),

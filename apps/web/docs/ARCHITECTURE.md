@@ -88,11 +88,13 @@ invalid syntax falls back to parameterized `LIKE` queries.
 ## Roadmap flow and ordering
 
 The roadmap detail page renders a `RoadmapMap`: one column per guided stage, connected left to
-right, with compact topic nodes that show only title, status and duration. Clicking a node opens a
-`TopicDrawer` over the map with the summary, status actions, resources and a link to the full topic
-page. The next topic is highlighted, and the percentage counts only the guided stages, not the
-extended reference library. Reference roadmaps and large extended shelves are collapsible indexes,
-not fake sequences.
+right, with compact topic nodes that show only title and status. Clicking a node navigates directly
+to the full topic page. That page is a narrow reading column centered on the content: summary, why
+it matters, key concepts, practice, pitfalls and resources. Coach, tasks and Notes live in a small
+actions menu rather than competing with the reading. Selecting text shows a floating toolbar that
+can copy the selection or save it to Notes (falling back to Roadmap notes when the integration is
+not configured). The percentage counts only the guided stages, not the extended reference library.
+Reference roadmaps and large extended shelves are collapsible indexes, not fake sequences.
 
 Content is ordered by progression, not alphabetically. `scripts/build-content.ts` assigns:
 
@@ -103,6 +105,25 @@ Content is ordered by progression, not alphabetically. `scripts/build-content.ts
 Guided paths are ordered beginner first (Frontend, Backend, Go), then intermediate (AI Engineer,
 Cloudflare). The content library is rendered in three groups: start from zero, build depth and
 specialize.
+
+## Practice gate
+
+A topic is never marked complete by a checkbox. The only path is:
+
+1. The learner submits a written explanation, design sketch or code to `/practice`.
+2. `evaluatePractice` sends the topic context and the response to Workers AI with an explicit
+   rubric: address the task, explain in your own words, include a concrete artifact, name a
+   trade-off and be specific.
+3. The reviewer returns JSON: verdict, score, feedback, strengths, gaps and a next step.
+4. A pass requires `verdict = pass` **and** score ≥ 75. On pass, `completePractice` writes the
+   attempt, sets `practiced`, records a 25-minute practice session, updates goals and plans, and
+   logs the activity. On revise, `recordRevision` keeps the topic in `learning` and stores the
+   feedback for the next attempt.
+5. An AI failure or invalid response never marks the topic complete; the learner gets an error and
+   can retry. Attempts are rate-limited per topic.
+
+`practice_attempts` is append-only, so the feedback history is auditable. The topic page only shows
+a practice status and a CTA; the reading UI has no manual status controls.
 
 ## Spaced review
 

@@ -8,8 +8,8 @@ const meta: Record<
   { label: string; icon: LucideIcon; tone: "neutral" | "warning" | "success" | "solid" }
 > = {
   not_started: { label: "Not started", icon: Circle, tone: "neutral" },
-  learning: { label: "Learning", icon: Clock3, tone: "warning" },
-  practiced: { label: "Practiced", icon: Check, tone: "success" },
+  learning: { label: "In practice", icon: Clock3, tone: "warning" },
+  practiced: { label: "Practice passed", icon: Check, tone: "success" },
   mastered: { label: "Mastered", icon: Award, tone: "solid" },
 };
 

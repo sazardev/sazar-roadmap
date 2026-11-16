@@ -1,16 +1,14 @@
 import { ArrowRight, BookOpen, Clock3, Layers, Sparkles } from "lucide-react";
 import { Link, redirect } from "react-router";
 import { RoadmapMap } from "~/components/roadmap/roadmap-map";
-import { TopicDrawer } from "~/components/roadmap/topic-drawer";
 import { TopicIndex } from "~/components/roadmap/topic-index";
 import { roadmapIcon } from "~/components/shell/icons";
 import { Badge } from "~/components/ui/badge";
 import { LinkButton } from "~/components/ui/button";
 import { ProgressBar } from "~/components/ui/progress";
 import { PageHeader } from "~/components/ui/surfaces";
-import { parseTopicStatus, setTopicStatus } from "~/features/progress/progress.server";
-import { getRoadmapDetail, getTopicDetail } from "~/features/roadmaps/roadmaps.server";
-import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
+import { getRoadmapDetail } from "~/features/roadmaps/roadmaps.server";
+import { requireUser } from "~/lib/auth/auth.server";
 import { getEnv } from "~/lib/db.server";
 import { pageMeta } from "~/lib/meta";
 import { percent } from "~/lib/utils";
@@ -23,48 +21,14 @@ export async function loader({ request, params, context }: Route.LoaderArgs) {
   const env = getEnv(context);
   const detail = await getRoadmapDetail(env, user.id, params.slug);
   if (!detail) throw new Response("Roadmap not found", { status: 404 });
+  const topicSlug = new URL(request.url).searchParams.get("topic");
+  if (topicSlug) throw redirect(`/roadmaps/${params.slug}/${topicSlug}`);
 
-  const url = new URL(request.url);
-  const topicSlug = url.searchParams.get("topic");
-  const drawer =
-    topicSlug && detail.roadmap.status === "guided"
-      ? await getTopicDetail(env, user.id, params.slug, topicSlug)
-      : null;
-
-  return {
-    ...detail,
-    drawer,
-    notice: url.searchParams.get("notice") ? "Progress updated." : null,
-  };
-}
-
-export async function action({ request, params, context }: Route.ActionArgs) {
-  const user = await requireUser(context, request);
-  assertSameOrigin(request);
-  const env = getEnv(context);
-  const form = await request.formData();
-  const intent = String(form.get("intent") ?? "");
-
-  if (intent === "status") {
-    const topicId = String(form.get("topicId") ?? "");
-    const status = parseTopicStatus(form.get("status"));
-    if (!topicId || !status) throw new Response("Invalid status", { status: 400 });
-    const topic = await env.DB.prepare(
-      `SELECT t.slug FROM topics t JOIN roadmaps r ON r.id = t.roadmap_id
-       WHERE t.id = ? AND r.slug = ?`,
-    )
-      .bind(topicId, params.slug)
-      .first<{ slug: string }>();
-    if (!topic) throw new Response("Topic not found", { status: 404 });
-    await setTopicStatus(env, user.id, topicId, status);
-    return redirect(`/roadmaps/${params.slug}?topic=${topic.slug}&notice=status`);
-  }
-
-  return Response.json({ error: "Unknown action" }, { status: 400 });
+  return detail;
 }
 
 export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) {
-  const { roadmap, stages, nextTopic, drawer, notice } = loaderData;
+  const { roadmap, stages, nextTopic } = loaderData;
   const Icon = roadmapIcon(roadmap.icon);
   const isPreview = roadmap.contentStatus === "preview";
   const isGuided = roadmap.status === "guided";
@@ -80,7 +44,7 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
   const extended = stages.find((stage) => stage.slug === "extended-library");
   const coachHref = nextTopic ? `/coach?topic=${nextTopic.id}` : "/coach";
   const nextHref = nextTopic
-    ? `/roadmaps/${roadmap.slug}?topic=${nextTopic.slug}`
+    ? `/roadmaps/${roadmap.slug}/${nextTopic.slug}`
     : `/roadmaps/${roadmap.slug}`;
   const searchHref = `/search?q=${encodeURIComponent(roadmap.title)}`;
   const progressLabel = isPreview
@@ -237,10 +201,6 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
         Content is a personal-use copy of the roadmap.sh fork and stays behind the shared sazardev
         session. Guided stages and practice prompts are original to this app.
       </p>
-
-      {drawer ? (
-        <TopicDrawer detail={drawer} closeHref={`/roadmaps/${roadmap.slug}`} notice={notice} />
-      ) : null}
     </div>
   );
 }

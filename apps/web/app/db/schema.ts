@@ -296,6 +296,32 @@ export const flashcardAttempts = sqliteTable(
   (table) => [index("attempts_user_idx").on(table.userId, table.reviewedAt)],
 );
 
+export const practiceAttempts = sqliteTable(
+  "practice_attempts",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    topicId: text("topic_id")
+      .notNull()
+      .references(() => topics.id, { onDelete: "cascade" }),
+    response: text("response").notNull(),
+    verdict: text("verdict").notNull(),
+    score: integer("score").notNull().default(0),
+    feedback: text("feedback").notNull(),
+    strengths: text("strengths", { mode: "json" }).$type<string[]>().notNull(),
+    gaps: text("gaps", { mode: "json" }).$type<string[]>().notNull(),
+    nextStep: text("next_step"),
+    model: text("model"),
+    createdAt: text("created_at").notNull().$defaultFn(now),
+  },
+  (table) => [
+    index("practice_attempts_user_topic_idx").on(table.userId, table.topicId, table.createdAt),
+    index("practice_attempts_user_idx").on(table.userId, table.createdAt),
+  ],
+);
+
 export const coachThreads = sqliteTable(
   "coach_threads",
   {

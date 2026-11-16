@@ -8,9 +8,8 @@ import { cn } from "~/lib/utils";
 
 const legend: Array<{ label: string; status: TopicStatus }> = [
   { label: "Not started", status: "not_started" },
-  { label: "Learning", status: "learning" },
-  { label: "Practiced", status: "practiced" },
-  { label: "Mastered", status: "mastered" },
+  { label: "In practice", status: "learning" },
+  { label: "Practice passed", status: "practiced" },
 ];
 
 function StageColumn({
@@ -66,7 +65,7 @@ function TopicNode({
   const completed = topic.status === "practiced" || topic.status === "mastered";
   return (
     <Link
-      to={`/roadmaps/${roadmapSlug}?topic=${topic.slug}`}
+      to={`/roadmaps/${roadmapSlug}/${topic.slug}`}
       aria-current={next ? "step" : undefined}
       title={topic.summary}
       className={cn(
