@@ -310,26 +310,37 @@ function loadRoadmaps(): Map<string, RoadmapSource> {
   return sources;
 }
 
-function defaultWhy(_source: ParsedTopic, _roadmapTitle: string): string {
-  // Extended/reference topics do not get a duplicated summary in the "why" slot.
-  return "";
+function firstSentence(source: ParsedTopic): string {
+  const sentence = source.summary.split(/(?<=[.!?])\s+/)[0]?.trim() ?? source.summary.trim();
+  return sentence.replace(/[.!?]+$/, "").slice(0, 240);
 }
 
-function defaultConcepts(source: ParsedTopic): string[] {
-  const _firstSentence = source.summary.split(/(?<=[.!?])\s+/)[0] ?? source.summary;
+function defaultWhy(source: ParsedTopic, roadmapTitle: string): string {
+  const concrete = firstSentence(source);
+  const opening = concrete
+    ? concrete.charAt(0).toUpperCase() + concrete.slice(1)
+    : `${source.title} is part of the ${roadmapTitle} path`;
+  return `In ${roadmapTitle}, knowing ${source.title} matters when a design or debugging decision depends on it. ${opening}. Treat it as a tool with a cost, not a term to memorize.`;
+}
+
+function defaultConcepts(source: ParsedTopic, roadmapTitle: string): string[] {
   return [
-    `What ${source.title} is and which problem it solves`,
-    `How it behaves in a real system: trade-offs, limits and failure modes`,
-    `How to recognize it in code, architecture or an interview`,
-  ].slice(0, 3);
+    `What ${source.title} is and the problem it solves in ${roadmapTitle}`,
+    `The signals that tell you when to use it and when another approach fits better`,
+    `One failure mode and one thing you would measure after applying it`,
+  ];
 }
 
 function defaultPractice(source: ParsedTopic): string {
-  return `Build or analyze a small artifact that uses ${source.title}. Write down the decisions you made, one trade-off and one thing you would measure before shipping it.`;
+  return `Guided exercise for ${source.title}: 1) Explain in two sentences what it is and the problem it solves. 2) Apply it to a small case you can describe in five lines of code, a diagram or a decision log. 3) Name one trade-off, one failure mode and one signal you would measure before shipping. Use the source notes below if you get stuck.`;
 }
 
-function defaultPitfalls(_source: ParsedTopic): string[] {
-  return [];
+function defaultPitfalls(source: ParsedTopic): string[] {
+  return [
+    `Explaining ${source.title} by repeating its definition without showing a decision it changes.`,
+    `Claiming it is always the right choice instead of naming the conditions where it stops fitting.`,
+    `Skipping the failure mode: what breaks in a real system when ${source.title.toLowerCase()} is misused or absent.`,
+  ];
 }
 
 function buildContentMarkdown(
@@ -410,11 +421,19 @@ function createTopic(
   overrides: Partial<CurriculumTopic> = {},
 ): SeedTopic {
   const why = overrides.why ?? defaultWhy(source, roadmap.title);
-  const concepts = overrides.concepts ?? defaultConcepts(source);
+  const concepts = overrides.concepts ?? defaultConcepts(source, roadmap.title);
   const practice = overrides.practice ?? defaultPractice(source);
   const pitfalls = overrides.pitfalls ?? defaultPitfalls(source);
   const summary = overrides.summary ?? source.summary;
   const resources = [...source.resources];
+  if (resources.length === 0) {
+    resources.push({
+      label: `${source.title} on roadmap.sh`,
+      url: `https://roadmap.sh/${roadmap.slug}/${source.slug}`,
+      kind: "roadmap",
+      provider: "roadmap.sh",
+    });
+  }
   for (const extra of overrides.resources ?? []) {
     if (!resources.some((resource) => resource.url === extra.url)) {
       resources.push({
