@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.3 — 2026-11-16
+
+- Fixed progress reset to remove AI practice attempts, so a reset topic cannot stay "passed" or
+  rate-limited.
+- Fixed goal status transitions and stats invalidation on progress, goal and settings changes.
+- Made study logging concurrency-safe, preserved `mastered` on a practice pass, and respected the
+  saved week-start setting in weekly stats.
+- Applied the coach rate limit across all threads, cleared AI timeouts and removed no-op writes from
+  auth on every request.
+- Cut "Save offline" from 80 to 24 full page renders and removed duplicate next-topic scans.
+- Fixed the coach composer keeping sent text, added screen-reader status announcements, and made the
+  offline "Clear saved pages" button work.
+- Fixed empty resource search snippets, hid stale empty stages and added a one-time cleanup
+  migration for them.
+- Made `content:audit` run before every seed and corrected stale documentation numbers and the
+  practice threshold.
+
 ## 0.5.2 — 2026-11-16
 
 - Made the practice reviewer more encouraging: a clear answer that shows the core idea now passes
