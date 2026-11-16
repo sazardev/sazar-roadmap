@@ -96,6 +96,8 @@ and [docs/DEPLOY.md](docs/DEPLOY.md) for the production runbook.
 in `app/content/curricula/`, then produces an idempotent SQL seed:
 
 - 5 guided curricula: Frontend, Backend, Go, AI Engineer, Cloudflare.
+- Go Engineering is the deepest path: 8 stages, 64 curated topics and 108 extended reference
+  topics, with a content audit (`pnpm content:audit`) that blocks generic filler and thin topics.
 - 2 full reference libraries: DevOps, Full Stack.
 - 92 catalog roadmaps with a 16-topic preview each.
 - One recall flashcard per guided/reference topic, plus resources extracted from the fork.

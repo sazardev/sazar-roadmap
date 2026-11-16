@@ -310,11 +310,9 @@ function loadRoadmaps(): Map<string, RoadmapSource> {
   return sources;
 }
 
-function defaultWhy(source: ParsedTopic, roadmapTitle: string): string {
-  return (
-    source.summary ||
-    `${source.title} is part of the ${roadmapTitle} path and appears repeatedly in real work, interviews and production decisions.`
-  );
+function defaultWhy(_source: ParsedTopic, _roadmapTitle: string): string {
+  // Extended/reference topics do not get a duplicated summary in the "why" slot.
+  return "";
 }
 
 function defaultConcepts(source: ParsedTopic): string[] {
@@ -330,11 +328,8 @@ function defaultPractice(source: ParsedTopic): string {
   return `Build or analyze a small artifact that uses ${source.title}. Write down the decisions you made, one trade-off and one thing you would measure before shipping it.`;
 }
 
-function defaultPitfalls(source: ParsedTopic): string[] {
-  return [
-    `Treating ${source.title} as a checklist item instead of understanding the trade-off behind it.`,
-    `Memorizing terminology without being able to recognize the concept in a real codebase.`,
-  ];
+function defaultPitfalls(_source: ParsedTopic): string[] {
+  return [];
 }
 
 function buildContentMarkdown(
@@ -346,7 +341,9 @@ function buildContentMarkdown(
   pitfalls: string[],
   source: ParsedTopic,
 ): string {
-  const lines = [`## Overview`, summary, ``, `## Why it matters`, why, ``, `## Key concepts`];
+  const lines = [`## Overview`, summary];
+  if (why.trim()) lines.push(``, `## Why it matters`, why);
+  lines.push(``, `## Key concepts`);
   for (const concept of concepts) lines.push(`- ${concept}`);
   lines.push(``, `## Practice`, practice, ``, `## Common pitfalls`);
   for (const pitfall of pitfalls) lines.push(`- ${pitfall}`);
@@ -416,6 +413,18 @@ function createTopic(
   const concepts = overrides.concepts ?? defaultConcepts(source);
   const practice = overrides.practice ?? defaultPractice(source);
   const pitfalls = overrides.pitfalls ?? defaultPitfalls(source);
+  const summary = overrides.summary ?? source.summary;
+  const resources = [...source.resources];
+  for (const extra of overrides.resources ?? []) {
+    if (!resources.some((resource) => resource.url === extra.url)) {
+      resources.push({
+        label: extra.title,
+        url: extra.url,
+        kind: extra.kind ?? "docs",
+        provider: providerFromUrl(extra.url),
+      });
+    }
+  }
   const id = `${roadmap.slug}::${source.slug}`;
   return {
     id,
@@ -423,14 +432,14 @@ function createTopic(
     stageId: stage.id,
     slug: source.slug,
     title: overrides.title ?? source.title,
-    summary: source.summary,
+    summary,
     why,
     concepts,
     practice,
     pitfalls,
     contentMd: buildContentMarkdown(
       source.title,
-      source.summary,
+      summary,
       why,
       concepts,
       practice,
@@ -441,7 +450,7 @@ function createTopic(
     minutes: overrides.minutes ?? 45,
     difficulty: overrides.difficulty ?? "core",
     sortOrder: index,
-    resources: source.resources,
+    resources,
   };
 }
 

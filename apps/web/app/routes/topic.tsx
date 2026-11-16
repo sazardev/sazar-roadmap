@@ -174,6 +174,7 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
   const { topic, progress, resources, notes, cards, previous, next } = detail;
   const passed = progress.status === "practiced" || progress.status === "mastered";
   const inPractice = progress.status === "learning";
+  const isReference = topic.stageSlug === "extended-library";
   const sourceUrl = `https://roadmap.sh/${topic.roadmapSlug}`;
 
   return (
@@ -253,12 +254,20 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
           {topic.title}
         </h1>
         <p className="max-w-2xl text-base leading-relaxed text-muted">{topic.summary}</p>
+        {isReference ? (
+          <p className="text-xs leading-relaxed text-muted">
+            Reference topic outside the guided sequence. Practice is optional and does not change
+            the guided percentage.
+          </p>
+        ) : null}
         <div className="flex flex-wrap items-center gap-3 text-xs text-muted">
           <Badge tone={passed ? "success" : inPractice ? "warning" : "outline"}>
             {passed ? (
               <>
                 <Check size={11} /> Practice passed
               </>
+            ) : isReference ? (
+              "Reference practice"
             ) : inPractice ? (
               "In practice"
             ) : (
@@ -282,10 +291,12 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
 
       <SelectionToNotes topicId={topic.id}>
         <div className="space-y-10">
-          <section className="space-y-3">
-            <h2 className="text-lg font-semibold tracking-tight">Why it matters</h2>
-            <p className="max-w-prose text-[15px] leading-relaxed">{topic.whyItMatters}</p>
-          </section>
+          {topic.whyItMatters ? (
+            <section className="space-y-3">
+              <h2 className="text-lg font-semibold tracking-tight">Why it matters</h2>
+              <p className="max-w-prose text-[15px] leading-relaxed">{topic.whyItMatters}</p>
+            </section>
+          ) : null}
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold tracking-tight">Key concepts</h2>
@@ -311,12 +322,18 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
                 size="sm"
                 icon={<ArrowRight size={13} />}
               >
-                {passed ? "Review practice feedback" : "Start guided practice"}
+                {passed
+                  ? "Review practice feedback"
+                  : isReference
+                    ? "Practice this reference topic"
+                    : "Start guided practice"}
               </LinkButton>
               <span className="text-xs text-muted">
                 {passed
                   ? "A topic is complete once the review passes."
-                  : "Required to complete this topic."}
+                  : isReference
+                    ? "Optional; it does not change the guided percentage."
+                    : "Required to complete this topic."}
               </span>
             </div>
           </section>

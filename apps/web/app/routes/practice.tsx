@@ -236,6 +236,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
   }
 
   const { topic, progress, cards } = detail;
+  const isReference = topic.stageSlug === "extended-library";
   const attempt = actionData?.attempt ?? latestAttempt;
   const passed = actionData?.passed === true || (attempt?.verdict === "pass" && !retry);
   const revise = attempt?.verdict === "revise" && !passed;
@@ -263,7 +264,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
 
       <header className="space-y-2">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-          Guided practice / {topic.stageTitle}
+          {isReference ? "Reference practice" : "Guided practice"} / {topic.stageTitle}
         </p>
         <h1 className="text-3xl font-semibold leading-tight tracking-[-0.02em] sm:text-4xl">
           {topic.title}
@@ -273,6 +274,12 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
             ? "Practice passed. You demonstrated the idea and this topic is now complete."
             : "Write your answer, explanation or code. The AI reviewer checks it against the task and the rubric; only a pass marks the topic complete."}
         </p>
+        {isReference ? (
+          <p className="text-xs leading-relaxed text-muted">
+            This is an extra reference topic. Passing its practice does not change the guided
+            percentage.
+          </p>
+        ) : null}
       </header>
 
       <section className="rounded-md border border-line bg-surface p-5">
