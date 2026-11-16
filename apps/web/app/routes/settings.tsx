@@ -1,9 +1,8 @@
 import { AlertTriangle, Check, Database, RefreshCw, Sparkles } from "lucide-react";
 import { Form, Link, redirect, useNavigation } from "react-router";
-import { OfflineSettings } from "~/components/pwa/offline-settings";
 import { AppearanceForm } from "~/components/shell/appearance";
 import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
+import { Button, LinkButton } from "~/components/ui/button";
 import { Checkbox, Input, Select } from "~/components/ui/field";
 import { Card, CardBody, CardHeader, PageHeader } from "~/components/ui/surfaces";
 import { integrationStatus } from "~/features/integrations/integrations.server";
@@ -223,6 +222,16 @@ const notices: Record<string, string> = {
   "notes-deleted": "All Roadmap notes deleted.",
 };
 
+const settingsSections = [
+  ["profile", "Profile"],
+  ["learning", "Learning"],
+  ["appearance", "Appearance"],
+  ["ai", "AI coach"],
+  ["integrations", "Integrations"],
+  ["content", "Content"],
+  ["danger", "Danger zone"],
+] as const;
+
 const errors: Record<string, string> = {
   name: "A display name is required.",
   "confirm-reset": "Type RESET exactly to confirm.",
@@ -250,11 +259,16 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
   const currentModel = settings.aiModel ?? aiModel;
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 sm:space-y-7">
       <PageHeader
         eyebrow="Workspace"
         title="Settings"
         description="Profile, learning defaults, appearance, AI and the connections to the rest of the sazardev workspace."
+        actions={
+          <LinkButton to="/account" variant="secondary" size="sm">
+            Account & offline
+          </LinkButton>
+        }
       />
 
       {notice && notices[notice] ? (
@@ -268,19 +282,25 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
         </div>
       ) : null}
 
-      <div className="grid gap-5 lg:grid-cols-[200px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)]">
+      <nav
+        aria-label="Settings sections"
+        className="scrollbar-thin -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:hidden"
+      >
+        {settingsSections.map(([id, label]) => (
+          <a
+            key={id}
+            href={`#${id}`}
+            className="inline-flex min-h-9 shrink-0 items-center rounded-full border border-line bg-raised px-3 text-xs font-medium text-muted transition-colors hover:border-line-strong hover:text-ink"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-[200px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)]">
         <nav aria-label="Settings sections" className="hidden lg:block">
           <ul className="sticky top-24 space-y-1.5 text-sm">
-            {[
-              ["profile", "Profile"],
-              ["learning", "Learning"],
-              ["appearance", "Appearance"],
-              ["ai", "AI coach"],
-              ["offline", "Offline"],
-              ["integrations", "Integrations"],
-              ["content", "Content"],
-              ["danger", "Danger zone"],
-            ].map(([id, label]) => (
+            {settingsSections.map(([id, label]) => (
               <li key={id}>
                 <a
                   href={`#${id}`}
@@ -299,7 +319,7 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
               title="Profile"
               description="How the workspace addresses you. The email comes from the shared session."
             />
-            <Form method="post" className="grid gap-4 p-5 sm:grid-cols-2">
+            <Form method="post" className="grid gap-3 p-4 sm:grid-cols-2 sm:gap-4 sm:p-5">
               <input type="hidden" name="intent" value="profile" />
               <label className="space-y-1.5 sm:col-span-2">
                 <span className="text-sm font-medium">Display name</span>
@@ -338,7 +358,7 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
               title="Learning"
               description="Defaults for the dashboard, weekly goals and the daily plan."
             />
-            <Form method="post" className="grid gap-4 p-5 sm:grid-cols-3">
+            <Form method="post" className="grid gap-3 p-4 sm:grid-cols-3 sm:gap-4 sm:p-5">
               <input type="hidden" name="intent" value="learning" />
               <label className="space-y-1.5">
                 <span className="text-sm font-medium">Daily minutes</span>
@@ -397,7 +417,7 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                 </Badge>
               }
             />
-            <Form method="post" className="grid gap-4 p-5 sm:grid-cols-2">
+            <Form method="post" className="grid gap-3 p-4 sm:grid-cols-2 sm:gap-4 sm:p-5">
               <input type="hidden" name="intent" value="ai" />
               <label className="space-y-1.5 sm:col-span-2">
                 <span className="text-sm font-medium">Model</span>
@@ -423,8 +443,6 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
               </div>
             </Form>
           </Card>
-
-          <OfflineSettings />
 
           <Card id="integrations">
             <CardHeader

@@ -180,7 +180,7 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
   const sourceUrl = `https://roadmap.sh/${topic.roadmapSlug}`;
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-8 pb-10">
+    <div className="mx-auto w-full max-w-3xl space-y-6 pb-10 sm:space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           to={`/roadmaps/${topic.roadmapSlug}`}
@@ -248,16 +248,16 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
         </div>
       ) : null}
 
-      <header className="space-y-4">
+      <header className="space-y-3">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           {topic.stageTitle}
         </p>
-        <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.03em] md:text-5xl">
+        <h1 className="max-w-3xl text-2xl font-semibold leading-[1.1] tracking-[-0.03em] sm:text-3xl md:text-4xl">
           {topic.title}
         </h1>
         <RichText
           text={topic.summary}
-          className="block max-w-2xl text-lg leading-relaxed text-muted"
+          className="block max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
         />
         {isReference ? (
           <p className="max-w-2xl rounded-md bg-surface/60 px-4 py-3 text-sm leading-relaxed text-muted">
@@ -295,10 +295,10 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
       </header>
 
       <SelectionToNotes topicId={topic.id}>
-        <div className="space-y-12">
+        <div className="space-y-7 sm:space-y-10">
           {topic.whyItMatters ? (
             <section className="space-y-3">
-              <h2 className="text-2xl font-semibold tracking-tight">Why it matters</h2>
+              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Why it matters</h2>
               <RichText
                 text={topic.whyItMatters}
                 className="block max-w-prose text-base leading-relaxed md:text-[1.0625rem]"
@@ -307,12 +307,12 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
           ) : null}
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold tracking-tight">Key concepts</h2>
+            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Key concepts</h2>
             <ol className="space-y-3">
               {topic.keyConcepts.map((concept, index) => (
                 <li
                   key={concept}
-                  className="flex gap-3.5 rounded-lg border border-line/70 bg-raised p-4 text-base leading-relaxed shadow-card"
+                  className="flex gap-3 rounded-lg border border-line/70 bg-raised p-3.5 text-sm leading-relaxed shadow-card sm:gap-3.5 sm:p-4 sm:text-base"
                 >
                   <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent-soft font-mono text-[11px] font-medium text-accent">
                     {String(index + 1).padStart(2, "0")}
@@ -323,12 +323,12 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
             </ol>
           </section>
 
-          <section className="accent-band space-y-4 rounded-lg border border-line p-5 shadow-card md:p-7">
+          <section className="accent-band space-y-3 rounded-lg border border-line p-4 shadow-card sm:space-y-4 sm:p-5 md:p-7">
             <div className="flex items-center gap-2.5">
               <span className="flex size-9 items-center justify-center rounded-full bg-accent text-accent-ink">
                 <GraduationCap size={18} />
               </span>
-              <h2 className="text-2xl font-semibold tracking-tight">Practice</h2>
+              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Practice</h2>
             </div>
             <RichText
               text={topic.practice}
@@ -365,12 +365,12 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
 
           {topic.pitfalls.length > 0 ? (
             <section className="space-y-3">
-              <h2 className="text-2xl font-semibold tracking-tight">Common pitfalls</h2>
+              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Common pitfalls</h2>
               <ul className="space-y-2.5">
                 {topic.pitfalls.map((pitfall) => (
                   <li
                     key={pitfall}
-                    className="flex gap-3 rounded-lg border border-line/70 bg-raised p-4 text-sm leading-relaxed text-muted"
+                    className="flex gap-3 rounded-lg border border-line/70 bg-raised p-3.5 text-xs leading-relaxed text-muted sm:p-4 sm:text-sm"
                   >
                     <span
                       aria-hidden="true"
@@ -385,14 +385,17 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
 
           <section className="space-y-3">
             <div className="flex items-end justify-between gap-3">
-              <h2 className="text-2xl font-semibold tracking-tight">Resources</h2>
+              <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Resources</h2>
             </div>
             {resources.length === 0 ? (
               <p className="text-sm text-muted">No resources yet.</p>
             ) : (
               <ul className="divide-y divide-line/70 overflow-hidden rounded-lg border border-line bg-raised shadow-card">
                 {resources.map((resource) => (
-                  <li key={resource.id} className="flex min-h-16 items-center gap-3 px-4 py-3">
+                  <li
+                    key={resource.id}
+                    className="flex min-h-14 items-center gap-3 px-4 py-2.5 sm:min-h-16 sm:py-3"
+                  >
                     <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface text-muted">
                       <BookOpen size={17} />
                     </span>

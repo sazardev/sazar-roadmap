@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.0 — 2026-11-15
+
+- Rebuilt Coach as a fullscreen chat: compact thread header, scrollable message column, Enter-to-send
+  composer, code-fence rendering, source chips and automatic scroll to the latest message. Mobile
+  hides the workspace bar on `/coach` so the conversation owns the screen.
+- Moved session history to `/coach/history` with open and delete actions; removed the old sessions
+  sidebar and the delete control from the chat header. Options are now history and new chat only.
+- Reduced mobile type and spacing across page headers, cards, buttons, the dashboard, roadmaps,
+  topic reading, settings and navigation; large-text mode is capped at 16.5 px on phones.
+- Replaced the mobile account and appearance popovers with `/account` and Settings pages. The topbar
+  search link and the bottom-bar More item now open `/search` and `/more` pages instead of the
+  command palette. The command palette remains keyboard-only.
+- Removed phone-level backdrop blur, fixed backgrounds and heavy card shadows; shortened the mobile
+  app bar to 56 px, made it non-sticky and removed the appearance control from it.
+- Added a mobile section strip to Settings and moved offline/install controls to Account.
+
 ## 0.4.0 — 2026-11-15
 
 - Added eight guided paths: Network Engineering, Software Architecture, Distributed System Design,
@@ -21,8 +37,8 @@
 - Made the app installable as a PWA with generated icons, a manifest, a build-fingerprinted service
   worker, an offline fallback page, automatic caching of visited pages and a path-level “Save
   offline” action.
-- Added an offline banner, install prompt, update prompt and **Settings → Offline and install** with
-  saved-page counts, storage usage and cache clearing. Signing out clears saved pages. Practice
+- Added an offline banner, an inline update banner and **Account → Offline and install** with
+  saved-page counts, storage usage, install controls and cache clearing. Signing out clears saved pages. Practice
   answers and note bodies are kept as local drafts while offline and restored when the page opens
   again.
 - Moved the tablet breakpoint to `lg`, added safe-area padding and a labelled icon rail, constrained

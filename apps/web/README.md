@@ -25,8 +25,9 @@ Live: <https://roadmap.sazardev.stream> (private, shared session).
   revise until it passes, and only then advance the roadmap. Reading time is logged separately
   from completion.
 - **Spaced review** — a small, tested SM-2 variant with Again / Hard / Good / Easy intervals.
-- **AI coach** — Workers AI with retrieved topic context, citations back to topics, a deterministic
-  fallback and a per-user model choice.
+- **AI coach as a real chat** — a full-height conversation surface with a quiet message column, a
+  composer that sends on Enter, code-aware Markdown, citations back to topics, page-based history
+  and a deterministic fallback. Minimal chrome; no card layout or modal detour.
 - **Goals** — weekly minutes, topics, cards and custom targets; automatic progress from sessions and
   reviews.
 - **Notes and resources** — private notes attached to topics, a bookmarkable resource shelf,
@@ -37,11 +38,13 @@ Live: <https://roadmap.sazardev.stream> (private, shared session).
   private service bindings; missing keys hide a section instead of breaking the page.
 - **Command palette** — `Ctrl/Cmd+K` searches topics, resources and notes and runs navigation.
 - **Tablet and mobile first** — a full sidebar on desktop, a labelled icon rail on tablets, a
-  five-item bottom bar on phones, safe-area padding, large tap targets and one-column reading pages.
+  five-item bottom bar on phones, safe-area padding, compact type and one-column reading pages.
+  Search, More, Account and Coach history are pages, not modal detours.
 - **Installable PWA with offline-first reading** — a manifest, generated service worker, precached
   app shell, automatic caching of visited pages, a one-tap “Save offline” action for a whole path,
-  an offline library page and an install/update prompt. Saved pages remain readable on a plane or a
-  train; writes resume when the connection returns. Signing out clears the page cache.
+  an offline library page, install controls in Account and an inline update banner. Saved pages
+  remain readable on a plane or a train; writes resume when the connection returns. Signing out
+  clears the page cache.
 - **Clean monochrome design** — light/dark/system, Geist Sans/Mono, keyboard-first flows and a
   responsive shell with a desktop sidebar and mobile bottom navigation.
 
@@ -135,7 +138,7 @@ do not make the roadmap content public.
 - uses network-first navigations with a 3.5 s timeout, then a cached page, then `offline.html`;
 - keeps visited pages in a versioned page cache capped at 80 entries;
 - accepts `CACHE_URLS` messages from the roadmap-level **Save offline** action;
-- clears page caches on sign out and from **Settings → Offline and install**.
+- clears page caches on sign out and from **Account → Offline and install**.
 
 Only same-origin GET navigations are cached. `/api/*`, `/internal/*`, `/auth/*` and `/logout` are
 never cached. Practice answers and note bodies are saved as local drafts while offline and restored on return;

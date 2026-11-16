@@ -352,6 +352,32 @@
   }
 }
 
+/* Phones pay for blur, fixed backgrounds and large shadows on every scroll frame. */
+@media (max-width: 767px) {
+  :root {
+    --shadow-card: 0 1px 1px rgb(26 25 22 / 0.03);
+    --shadow-float: 0 12px 32px -24px rgb(26 25 22 / 0.35);
+  }
+
+  /* A 17.5px root makes every rem-based control feel oversized on a phone. */
+  :root[data-text="large"] {
+    --root-size: 16.5px;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-attachment: scroll;
+  }
+
+  .backdrop-blur-xl {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

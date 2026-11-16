@@ -9,10 +9,12 @@ import {
   GraduationCap,
   Loader2,
   Map as MapIcon,
+  MoreHorizontal,
   Search,
   Settings,
   Sparkles,
   Target,
+  UserRound,
   Users,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -122,6 +124,22 @@ const commands: Command[] = [
     url: "/settings",
     group: "Go to",
     icon: Settings,
+  },
+  {
+    id: "more",
+    label: "More",
+    description: "Every section in one screen",
+    url: "/more",
+    group: "Go to",
+    icon: MoreHorizontal,
+  },
+  {
+    id: "account",
+    label: "Account",
+    description: "Profile, appearance and offline",
+    url: "/account",
+    group: "Go to",
+    icon: UserRound,
   },
   {
     id: "new-coach",

@@ -6,15 +6,13 @@ import {
   Circle,
   Monitor,
   Moon,
-  Palette,
   RotateCcw,
   Rows3,
   Square,
   Sun,
   Type,
-  X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
   ACCENTS,
@@ -226,121 +224,6 @@ export function AppearanceFields({
           <div className="h-full w-2/3 rounded-full bg-accent" />
         </div>
       </div>
-    </div>
-  );
-}
-
-export function AppearanceMenu({ appearance }: { appearance: Appearance }) {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(appearance);
-  const ref = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setValue(appearance);
-  }, [appearance]);
-
-  useEffect(() => {
-    const onTheme = (event: Event) => {
-      const theme = (event as CustomEvent<Theme>).detail;
-      if (theme === "light" || theme === "dark" || theme === "system") {
-        setValue((current) => ({ ...current, theme }));
-      }
-    };
-    window.addEventListener("sd:theme", onTheme);
-    return () => window.removeEventListener("sd:theme", onTheme);
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const onPointer = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) setOpen(false);
-    };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onPointer);
-    document.addEventListener("keydown", onKey);
-    const timer = window.setTimeout(() => panelRef.current?.focus(), 20);
-    return () => {
-      document.removeEventListener("mousedown", onPointer);
-      document.removeEventListener("keydown", onKey);
-      window.clearTimeout(timer);
-    };
-  }, [open]);
-
-  const update = (next: Appearance) => {
-    setValue(next);
-    applyAppearance(next);
-  };
-
-  return (
-    <div className="relative" ref={ref}>
-      <button
-        type="button"
-        aria-label="Personalize appearance"
-        title="Personalize appearance"
-        aria-expanded={open}
-        aria-haspopup="dialog"
-        onClick={() => setOpen((current) => !current)}
-        className={cn(
-          "tap-target inline-flex items-center justify-center rounded-full border transition-colors duration-fast",
-          open
-            ? "border-line-strong bg-raised text-ink shadow-sm"
-            : "border-transparent text-muted hover:bg-hover hover:text-ink",
-        )}
-      >
-        <Palette size={19} strokeWidth={1.8} />
-      </button>
-
-      {open ? (
-        <div
-          ref={panelRef}
-          role="dialog"
-          aria-label="Personalize appearance"
-          tabIndex={-1}
-          className="absolute right-0 top-[calc(100%+0.75rem)] z-50 max-h-[calc(100dvh-6.5rem)] w-[22rem] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-line bg-raised p-5 shadow-float outline-none"
-        >
-          <div className="mb-5 flex items-start justify-between gap-4">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-                Personalize
-              </p>
-              <h2 className="mt-1 text-lg font-semibold tracking-tight">Make it yours</h2>
-              <p className="mt-1 text-xs leading-relaxed text-muted">
-                Applies instantly on this device.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close appearance settings"
-              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full text-muted hover:bg-hover hover:text-ink"
-            >
-              <X size={17} />
-            </button>
-          </div>
-
-          <AppearanceFields value={value} onChange={update} />
-
-          <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4">
-            <button
-              type="button"
-              onClick={() => update(DEFAULT_APPEARANCE)}
-              className="inline-flex min-h-10 items-center gap-1.5 rounded-sm px-2 text-xs text-muted hover:bg-hover hover:text-ink"
-            >
-              <RotateCcw size={13} /> Reset
-            </button>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="inline-flex min-h-10 items-center rounded-md bg-accent px-4 text-sm font-medium text-accent-ink hover:bg-accent-strong"
-            >
-              Done
-            </button>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

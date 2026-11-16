@@ -273,7 +273,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           {isReference ? "Reference practice" : "Guided practice"} / {topic.stageTitle}
         </p>
-        <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.03em] md:text-5xl">
+        <h1 className="max-w-3xl text-2xl font-semibold leading-[1.1] tracking-[-0.03em] sm:text-3xl md:text-4xl">
           {topic.title}
         </h1>
         <p className="max-w-2xl text-base leading-relaxed text-muted">

@@ -36,14 +36,14 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-start justify-between gap-4 border-b border-line/80 px-5 py-4 md:px-6 md:py-5",
+        "flex flex-wrap items-start justify-between gap-3 border-b border-line/80 px-4 py-3.5 sm:gap-4 sm:px-5 sm:py-4 md:px-6 md:py-5",
         className,
       )}
     >
       <div className="min-w-0 space-y-1">
-        <h2 className="text-base font-semibold tracking-tight">{title}</h2>
+        <h2 className="text-[15px] font-semibold tracking-tight sm:text-base">{title}</h2>
         {description ? (
-          <p className="max-w-prose text-sm leading-relaxed text-muted">{description}</p>
+          <p className="max-w-prose text-xs leading-relaxed text-muted sm:text-sm">{description}</p>
         ) : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
@@ -52,7 +52,9 @@ export function CardHeader({
 }
 
 export function CardBody({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("px-5 py-4 md:px-6 md:py-5", className)}>{children}</div>;
+  return (
+    <div className={cn("px-4 py-3.5 sm:px-5 sm:py-4 md:px-6 md:py-5", className)}>{children}</div>
+  );
 }
 
 export function PageHeader({
@@ -67,16 +69,18 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5 pb-7 pt-1 md:pb-9 md:pt-2">
-      <div className="min-w-0 max-w-3xl space-y-2.5">
+    <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4 pb-5 pt-0 md:pb-9 md:pt-2">
+      <div className="min-w-0 max-w-3xl space-y-2">
         {eyebrow ? (
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">{eyebrow}</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted sm:text-[11px]">
+            {eyebrow}
+          </p>
         ) : null}
-        <h1 className="text-4xl font-semibold leading-[1.05] tracking-[-0.035em] sm:text-5xl">
+        <h1 className="text-2xl font-semibold leading-[1.1] tracking-[-0.035em] sm:text-3xl md:text-4xl lg:text-5xl">
           {title}
         </h1>
         {description ? (
-          <p className="max-w-2xl text-base leading-relaxed text-muted">{description}</p>
+          <p className="max-w-2xl text-sm leading-relaxed text-muted sm:text-base">{description}</p>
         ) : null}
       </div>
       {actions ? <div className="flex flex-wrap items-center gap-2.5">{actions}</div> : null}
@@ -96,7 +100,7 @@ export function SectionHeading({
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div className="space-y-1">
-        <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+        <h2 className="text-lg font-semibold tracking-tight sm:text-xl">{title}</h2>
         {description ? <p className="text-sm leading-relaxed text-muted">{description}</p> : null}
       </div>
       {action}
@@ -116,7 +120,7 @@ export function EmptyState({
   icon?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-start gap-4 rounded-lg border border-dashed border-line-strong/70 bg-surface/50 px-6 py-8 md:px-8 md:py-10">
+    <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-line-strong/70 bg-surface/50 px-4 py-6 sm:gap-4 sm:px-6 sm:py-8 md:px-8 md:py-10">
       {icon ? (
         <div className="flex size-12 items-center justify-center rounded-full bg-accent-soft text-accent">
           {icon}

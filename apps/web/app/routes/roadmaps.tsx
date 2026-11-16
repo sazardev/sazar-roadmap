@@ -59,7 +59,7 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
     .filter((group) => group.items.length > 0);
 
   return (
-    <div className="space-y-8 md:space-y-10">
+    <div className="space-y-5 sm:space-y-8 md:space-y-10">
       <PageHeader
         eyebrow="Learning paths"
         title="Roadmaps"
@@ -85,7 +85,7 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
             name="q"
             defaultValue={q}
             placeholder="Search roadmaps by title or description..."
-            className="h-12 w-full rounded-md border border-transparent bg-surface/60 pl-11 pr-4 text-base outline-none placeholder:text-muted focus-visible:border-accent focus-visible:bg-raised focus-visible:ring-4 focus-visible:ring-accent/15"
+            className="h-11 w-full rounded-md border border-transparent bg-surface/60 pl-10 pr-3 text-sm outline-none placeholder:text-muted focus-visible:border-accent focus-visible:bg-raised focus-visible:ring-4 focus-visible:ring-accent/15 sm:h-12 sm:pl-11 sm:pr-4 sm:text-base"
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -118,7 +118,7 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
           })}
           <button
             type="submit"
-            className="inline-flex h-10 items-center rounded-md bg-accent px-5 text-sm font-medium text-accent-ink shadow-sm transition-colors hover:bg-accent-strong"
+            className="inline-flex h-10 items-center rounded-md bg-accent px-4 text-sm font-medium text-accent-ink shadow-sm transition-colors hover:bg-accent-strong sm:px-5"
           >
             Search
           </button>
@@ -157,7 +157,7 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
             </div>
             <Badge tone="outline">{guided.length} paths</Badge>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 md:grid-cols-2 2xl:grid-cols-3">
             {guided.map((roadmap) => (
               <GuidedCard key={roadmap.id} roadmap={roadmap} />
             ))}
@@ -178,7 +178,7 @@ export default function Roadmaps({ loaderData }: Route.ComponentProps) {
             </div>
             <Badge tone="outline">{reference.length} libraries</Badge>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
             {reference.map((roadmap) => (
               <ReferenceCard key={roadmap.id} roadmap={roadmap} />
             ))}
@@ -249,7 +249,7 @@ function GuidedCard({ roadmap }: { roadmap: RoadmapCard }) {
   return (
     <Link
       to={`/roadmaps/${roadmap.slug}`}
-      className="group flex min-h-[15rem] flex-col gap-5 rounded-lg border border-line bg-raised p-5 shadow-card transition-[border-color,box-shadow,transform] duration-base hover:-translate-y-0.5 hover:border-line-strong hover:shadow-float active:translate-y-0 md:p-6"
+      className="group flex flex-col gap-4 rounded-lg border border-line bg-raised p-4 shadow-card transition-[border-color,box-shadow] duration-base hover:border-line-strong sm:min-h-[15rem] sm:gap-5 sm:p-5 md:p-6 md:hover:-translate-y-0.5 md:hover:shadow-float"
     >
       <div className="flex items-start gap-4">
         <span className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent transition-colors group-hover:bg-accent group-hover:text-accent-ink">
@@ -302,7 +302,7 @@ function ReferenceCard({ roadmap }: { roadmap: RoadmapCard }) {
   return (
     <Link
       to={`/roadmaps/${roadmap.slug}`}
-      className="group flex min-h-[8.5rem] items-start gap-4 rounded-lg border border-line bg-raised p-5 shadow-card transition-[border-color,box-shadow,transform] duration-base hover:-translate-y-0.5 hover:border-line-strong hover:shadow-float active:translate-y-0 md:p-6"
+      className="group flex items-start gap-3 rounded-lg border border-line bg-raised p-4 shadow-card transition-[border-color,box-shadow] duration-base hover:border-line-strong sm:min-h-[8.5rem] sm:gap-4 sm:p-5 md:p-6 md:hover:-translate-y-0.5 md:hover:shadow-float"
     >
       <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface text-muted transition-colors group-hover:bg-accent-soft group-hover:text-accent">
         <Icon size={20} strokeWidth={1.8} />

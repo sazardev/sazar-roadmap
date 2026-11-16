@@ -16,7 +16,7 @@ import {
   Target,
   Users,
 } from "lucide-react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 import { cn } from "~/lib/utils";
 import { AppSwitcher } from "./app-switcher";
 
@@ -173,6 +173,21 @@ export function Sidebar({ dueReviews, streak }: { dueReviews: number; streak: nu
 }
 
 export function BottomNav({ dueReviews }: { dueReviews: number }) {
+  const location = useLocation();
+  const secondaryPaths = [
+    "/more",
+    "/account",
+    "/practice",
+    "/goals",
+    "/resources",
+    "/people",
+    "/notes",
+    "/settings",
+    "/search",
+  ];
+  const moreActive = secondaryPaths.some(
+    (path) => location.pathname === path || location.pathname.startsWith(`${path}/`),
+  );
   const items = [
     { to: "/", label: "Today", icon: LayoutDashboard, end: true },
     { to: "/roadmaps", label: "Paths", icon: MapIcon },
@@ -182,9 +197,9 @@ export function BottomNav({ dueReviews }: { dueReviews: number }) {
   return (
     <nav
       aria-label="Primary mobile"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line/80 bg-canvas/92 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-line/70 bg-canvas pb-[env(safe-area-inset-bottom)] md:hidden"
     >
-      <ul className="mx-auto grid max-w-xl grid-cols-5 px-2">
+      <ul className="mx-auto grid max-w-xl grid-cols-5 px-1.5">
         {items.map((item) => {
           const Icon = item.icon;
           return (
@@ -194,7 +209,7 @@ export function BottomNav({ dueReviews }: { dueReviews: number }) {
                 end={item.end === true}
                 className={({ isActive }) =>
                   cn(
-                    "relative flex min-h-[4.5rem] flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors duration-fast",
+                    "relative flex min-h-16 flex-col items-center justify-center gap-0.5 text-[10px] font-medium transition-colors duration-fast",
                     isActive ? "text-accent" : "text-muted hover:text-ink",
                   )
                 }
@@ -203,11 +218,11 @@ export function BottomNav({ dueReviews }: { dueReviews: number }) {
                   <>
                     <span
                       className={cn(
-                        "flex size-9 items-center justify-center rounded-full transition-colors duration-fast",
+                        "flex size-8 items-center justify-center rounded-full transition-colors duration-fast",
                         isActive ? "bg-accent-soft" : "bg-transparent",
                       )}
                     >
-                      <Icon size={21} strokeWidth={isActive ? 2.1 : 1.8} />
+                      <Icon size={20} strokeWidth={isActive ? 2.1 : 1.8} />
                     </span>
                     <span>{item.label}</span>
                     {item.badge && item.badge > 0 ? (
@@ -222,16 +237,20 @@ export function BottomNav({ dueReviews }: { dueReviews: number }) {
           );
         })}
         <li>
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent("sd:open-palette"))}
-            className="flex min-h-[4.5rem] w-full flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted transition-colors duration-fast hover:text-ink"
+          <NavLink
+            to="/more"
+            className="group relative flex min-h-16 w-full flex-col items-center justify-center gap-0.5 text-[10px] font-medium transition-colors duration-fast"
           >
-            <span className="flex size-9 items-center justify-center rounded-full">
-              <Menu size={21} strokeWidth={1.8} />
+            <span
+              className={cn(
+                "flex size-8 items-center justify-center rounded-full transition-colors duration-fast",
+                moreActive ? "bg-accent-soft text-accent" : "text-muted group-hover:text-ink",
+              )}
+            >
+              <Menu size={20} strokeWidth={moreActive ? 2.1 : 1.8} />
             </span>
-            <span>More</span>
-          </button>
+            <span className={moreActive ? "text-accent" : "text-muted"}>More</span>
+          </NavLink>
         </li>
       </ul>
     </nav>

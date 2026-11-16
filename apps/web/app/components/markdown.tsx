@@ -43,6 +43,7 @@ export function MarkdownText({ content }: { content: string }) {
   let paragraph: string[] = [];
   let list: string[] = [];
   let ordered = false;
+  let code: string[] | null = null;
 
   const flushParagraph = () => {
     if (paragraph.length === 0) return;
@@ -75,6 +76,28 @@ export function MarkdownText({ content }: { content: string }) {
 
   for (const line of lines) {
     const trimmed = line.trim();
+    if (trimmed.startsWith("```")) {
+      flushParagraph();
+      flushList();
+      if (code === null) {
+        code = [];
+      } else {
+        blocks.push(
+          <pre
+            key={`code-${blocks.length}`}
+            className="overflow-x-auto rounded-lg border border-line bg-surface p-3 font-mono text-xs leading-relaxed"
+          >
+            <code>{code.join("\n")}</code>
+          </pre>,
+        );
+        code = null;
+      }
+      continue;
+    }
+    if (code !== null) {
+      code.push(line);
+      continue;
+    }
     if (!trimmed) {
       flushParagraph();
       flushList();
@@ -128,6 +151,16 @@ export function MarkdownText({ content }: { content: string }) {
     } else {
       paragraph.push(trimmed);
     }
+  }
+  if (code !== null) {
+    blocks.push(
+      <pre
+        key={`code-${blocks.length}`}
+        className="overflow-x-auto rounded-lg border border-line bg-surface p-3 font-mono text-xs leading-relaxed"
+      >
+        <code>{code.join("\n")}</code>
+      </pre>,
+    );
   }
   flushParagraph();
   flushList();

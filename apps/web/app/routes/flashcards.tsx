@@ -184,7 +184,7 @@ export default function FlashcardsPage({ loaderData }: Route.ComponentProps) {
                 <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
                   {card.roadmapTitle} / {card.topicTitle}
                 </p>
-                <h2 className="max-w-3xl text-2xl font-semibold leading-snug tracking-tight md:text-3xl">
+                <h2 className="max-w-3xl text-xl font-semibold leading-snug tracking-tight sm:text-2xl md:text-3xl">
                   {card.front}
                 </h2>
                 {card.hint ? (
@@ -386,7 +386,7 @@ function DeckStat({ label, value, hint }: { label: string; value: number; hint: 
     <Card>
       <CardBody className="space-y-1 p-5">
         <p className="text-sm text-muted">{label}</p>
-        <p className="font-mono text-3xl font-medium tabular-nums">{value}</p>
+        <p className="font-mono text-2xl font-medium tabular-nums sm:text-3xl">{value}</p>
         <p className="text-xs text-muted">{hint}</p>
       </CardBody>
     </Card>

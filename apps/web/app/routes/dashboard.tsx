@@ -175,7 +175,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
   const hasIntegrations = Object.values(integrations.status).some(Boolean);
 
   return (
-    <div className="space-y-7 md:space-y-9">
+    <div className="space-y-5 sm:space-y-7 md:space-y-9">
       <PageHeader
         eyebrow={`${dateLabel} · Private workspace`}
         title={`Good ${greeting}, ${firstName}.`}
@@ -201,9 +201,9 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         }
       />
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
         <Card className="overflow-hidden">
-          <div className="accent-band flex flex-wrap items-center justify-between gap-3 border-b border-line/80 px-5 py-4 md:px-6">
+          <div className="accent-band flex flex-wrap items-center justify-between gap-2 border-b border-line/80 px-4 py-3 sm:gap-3 sm:px-5 sm:py-4 md:px-6">
             <div className="flex items-center gap-2.5">
               <span className="flex size-9 items-center justify-center rounded-full bg-accent text-accent-ink shadow-sm">
                 <Target size={17} strokeWidth={2} />
@@ -220,15 +220,17 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             </span>
           </div>
           {next ? (
-            <CardBody className="space-y-6 p-5 md:p-7">
+            <CardBody className="space-y-4 p-4 sm:space-y-6 sm:p-5 md:p-7">
               <div className="space-y-3">
                 <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
                   {next.roadmapTitle} / {next.stageTitle}
                 </p>
-                <h2 className="max-w-2xl text-2xl font-semibold leading-[1.15] tracking-[-0.02em] md:text-3xl">
+                <h2 className="max-w-2xl text-xl font-semibold leading-[1.15] tracking-[-0.02em] sm:text-2xl md:text-3xl">
                   {next.title}
                 </h2>
-                <p className="max-w-2xl text-base leading-relaxed text-muted">{next.summary}</p>
+                <p className="line-clamp-4 max-w-2xl text-sm leading-relaxed text-muted sm:line-clamp-none sm:text-base">
+                  {next.summary}
+                </p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-line bg-surface/70 px-3 text-xs text-muted">
@@ -327,7 +329,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         </Card>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4">
         <Metric
           icon={<Clock3 size={16} />}
           label="Today"
@@ -354,7 +356,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader
             title="This week"
@@ -419,7 +421,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         </Card>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <Card>
           <CardHeader
             title="Continue the path"
@@ -432,13 +434,15 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
           />
           <CardBody className="divide-y divide-line/70 p-0">
             {continueTopics.length === 0 ? (
-              <div className="p-5 text-sm text-muted">Nothing queued. Add another roadmap.</div>
+              <div className="p-4 text-sm text-muted sm:p-5">
+                Nothing queued. Add another roadmap.
+              </div>
             ) : (
               continueTopics.map((topic) => (
                 <Link
                   key={topic.id}
                   to={`/roadmaps/${topic.roadmapSlug}/${topic.slug}`}
-                  className="group flex min-h-[4.5rem] items-center gap-3 px-5 py-3 transition-colors duration-fast hover:bg-hover md:px-6"
+                  className="group flex min-h-14 items-center gap-3 px-4 py-3 transition-colors duration-fast hover:bg-hover sm:px-5 md:px-6"
                 >
                   <span className="min-w-0 flex-1">
                     <span className="block text-[11px] uppercase tracking-[0.14em] text-muted">
@@ -596,7 +600,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         <CardHeader title="Recent activity" description="A quiet log of what actually happened." />
         <CardBody className="p-0">
           {activity.length === 0 ? (
-            <div className="p-5 text-sm text-muted">
+            <div className="p-4 text-sm text-muted sm:p-5">
               No activity yet. Log your first session above.
             </div>
           ) : (
@@ -650,14 +654,16 @@ function Metric({
   hint: string;
 }) {
   return (
-    <div className="rounded-lg border border-line bg-raised p-4 shadow-card md:p-5">
+    <div className="rounded-lg border border-line bg-raised p-3.5 shadow-card sm:p-4 md:p-5">
       <div className="flex items-center gap-2.5">
         <span className="flex size-9 items-center justify-center rounded-full bg-accent-soft text-accent">
           {icon}
         </span>
-        <span className="text-sm font-medium text-muted">{label}</span>
+        <span className="text-xs font-medium text-muted sm:text-sm">{label}</span>
       </div>
-      <p className="mt-3 text-3xl font-semibold leading-none tracking-tight">{value}</p>
+      <p className="mt-2.5 text-2xl font-semibold leading-none tracking-tight sm:text-3xl">
+        {value}
+      </p>
       <p className="mt-2 text-xs leading-snug text-muted">{hint}</p>
     </div>
   );

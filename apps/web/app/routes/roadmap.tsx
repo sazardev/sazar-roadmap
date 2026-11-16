@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Clock3, Layers, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Clock3, Layers, Sparkles } from "lucide-react";
 import { Link, redirect } from "react-router";
 import { SaveOfflineButton } from "~/components/pwa/save-offline-button";
 import { RoadmapMap } from "~/components/roadmap/roadmap-map";
@@ -60,7 +60,13 @@ export default function RoadmapDetailPage({ loaderData }: Route.ComponentProps) 
       : `${progress}% explored`;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
+      <Link
+        to="/roadmaps"
+        className="inline-flex min-h-8 items-center gap-1.5 text-xs text-muted underline decoration-line underline-offset-4 hover:text-ink"
+      >
+        <ArrowLeft size={12} /> All roadmaps
+      </Link>
       <PageHeader
         eyebrow={
           <span className="inline-flex items-center gap-2">

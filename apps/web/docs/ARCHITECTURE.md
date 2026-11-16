@@ -157,6 +157,12 @@ eight user messages per ten minutes protects cost.
 Vectorize is configured for a future semantic retrieval pass. The current retrieval path is FTS5 so
 the app works without an indexing job.
 
+The interface is a full-height chat surface rather than a page of cards: a compact thread header,
+a scrollable message column with Markdown and source chips, and a composer pinned above the mobile
+bottom bar. `/coach/history` is a separate page for opening or deleting saved threads, so chat
+options stay minimal. On phones the workspace top bar is hidden on `/coach` to keep the conversation
+fullscreen.
+
 ## Integrations
 
 Outbound calls use `features/integrations/integrations.server.ts`. In production, service bindings

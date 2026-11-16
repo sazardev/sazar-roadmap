@@ -15,6 +15,7 @@ export default [
     route("roadmaps", "routes/roadmaps.tsx"),
     route("roadmaps/:slug", "routes/roadmap.tsx"),
     route("roadmaps/:slug/:topicSlug", "routes/topic.tsx"),
+    route("coach/history", "routes/coach.history.tsx"),
     route("coach", "routes/coach.tsx"),
     route("practice", "routes/practice.tsx"),
     route("flashcards", "routes/flashcards.tsx"),
@@ -23,6 +24,8 @@ export default [
     route("people", "routes/people.tsx"),
     route("notes", "routes/notes.tsx"),
     route("search", "routes/search.tsx"),
+    route("more", "routes/more.tsx"),
+    route("account", "routes/account.tsx"),
     route("settings", "routes/settings.tsx"),
   ]),
 ] satisfies RouteConfig;

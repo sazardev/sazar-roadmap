@@ -150,7 +150,7 @@ export default function GoalsPage({ loaderData }: Route.ComponentProps) {
         <Card>
           <CardBody className="space-y-2.5 p-5">
             <p className="text-sm text-muted">This week</p>
-            <p className="font-mono text-3xl">{formatMinutes(stats.minutesThisWeek)}</p>
+            <p className="font-mono text-2xl sm:text-3xl">{formatMinutes(stats.minutesThisWeek)}</p>
             <ProgressBar value={stats.minutesThisWeek} max={weeklyGoal} />
             <p className="text-xs text-muted">
               {weeklyPercent}% of the {formatMinutes(weeklyGoal)} weekly target
@@ -160,14 +160,14 @@ export default function GoalsPage({ loaderData }: Route.ComponentProps) {
         <Card>
           <CardBody className="space-y-2.5 p-5">
             <p className="text-sm text-muted">Active goals</p>
-            <p className="font-mono text-3xl">{active.length}</p>
+            <p className="font-mono text-2xl sm:text-3xl">{active.length}</p>
             <p className="text-xs text-muted">{completed.length} completed or archived</p>
           </CardBody>
         </Card>
         <Card>
           <CardBody className="space-y-2.5 p-5">
             <p className="text-sm text-muted">Streak</p>
-            <p className="font-mono text-3xl">{stats.streak} days</p>
+            <p className="font-mono text-2xl sm:text-3xl">{stats.streak} days</p>
             <p className="text-xs text-muted">Any logged session keeps it alive</p>
           </CardBody>
         </Card>
