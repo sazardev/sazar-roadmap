@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.4 — 2026-11-16
+
+- Expanded every generated reference topic with a rationale, a three-step guided exercise and three
+  concrete pitfalls instead of empty or one-line content.
+- Added a roadmap.sh study link to every topic that had no resources: 233 new resources and no topic
+  left without somewhere to read.
+- `content:audit` now runs before both local and remote seeds, so bad content cannot reach D1.
+
 ## 0.5.3 — 2026-11-16
 
 - Fixed progress reset to remove AI practice attempts, so a reset topic cannot stay "passed" or
