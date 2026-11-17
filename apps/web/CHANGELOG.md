@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.7 — 2026-11-17
+
+- The topic "Actions" popover now closes on Escape or an outside click.
+- Success and error notices on topic and settings pages are announced to screen readers.
+
 ## 0.5.6 — 2026-11-17
 
 - Added confirmation before deleting notes, goals, people, coach conversations, and before signing
