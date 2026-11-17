@@ -1,4 +1,4 @@
-Building & Consuming APIs
+# Building & Consuming APIs
  
 Node.js is commonly used to build HTTP APIs that other clients consume, as well as to consume external APIs from within your application. Building an API involves defining routes, handling requests, and returning responses. Consuming an API involves making HTTP requests and processing the returned data.
 

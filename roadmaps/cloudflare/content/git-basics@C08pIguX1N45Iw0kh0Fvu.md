@@ -1,3 +1,5 @@
+# Git Basics
+
 Git is a version control system for tracking changes in code. Knowing how to commit, branch, and push code is necessary for integrating Workers projects into CI/CD pipelines and collaborating with teams.
 
 Visit the following resources to learn more:

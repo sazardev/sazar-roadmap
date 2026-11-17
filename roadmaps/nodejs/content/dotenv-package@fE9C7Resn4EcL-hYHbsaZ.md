@@ -1,4 +1,4 @@
-dotenv package
+# dotenv package
  
 `dotenv` is an npm package that loads environment variables from a `.env` file into `process.env`. It is commonly used in development to manage configuration like API keys and database URLs without hardcoding them in source code. The `.env` file should not be committed to version control.
 

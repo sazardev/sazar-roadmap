@@ -341,11 +341,13 @@
                 empty.hidden = false;
                 return;
               }
-              var cacheName = pageCache[0];
-              caches.open(cacheName).then((cache) => {
+              Promise.all(pageCache.map((name) => caches.open(name))).then((cacheList) => {
                 requests.forEach((request) => {
                   var url = new URL(request.url);
-                  cache.match(request).then((response) => {
+                  Promise.all(
+                    cacheList.map((cache) => cache.match(request).catch(() => null)),
+                  ).then((matches) => {
+                    var response = matches.find(Boolean);
                     if (!response) return;
                     response
                       .clone()

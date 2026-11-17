@@ -275,7 +275,7 @@ function loadRoadmaps(): Map<string, RoadmapSource> {
     const contentDir = resolve(roadmapsRoot, entry.name, "content");
     let files: string[] = [];
     try {
-      files = readdirSync(contentDir).filter((file) => file.endsWith(".md"));
+      files = readdirSync(contentDir).filter((file) => file.endsWith(".md") && file !== "index.md");
     } catch {
       continue;
     }

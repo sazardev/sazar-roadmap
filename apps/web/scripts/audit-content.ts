@@ -77,6 +77,25 @@ const resourceCache = new Map<string, Map<string, number>>();
  * curriculum bugs, so they stay a warning; this keeps the duplication visible instead of silently
  * shipping two identically titled topics in the same roadmap.
  */
+function sourceFilesWithoutHeading(): string[] {
+  const missing: string[] = [];
+  for (const entry of readdirSync(roadmapsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const contentDir = resolve(roadmapsRoot, entry.name, "content");
+    let files: string[] = [];
+    try {
+      files = readdirSync(contentDir).filter((file) => file.endsWith(".md") && file !== "index.md");
+    } catch {
+      continue;
+    }
+    for (const file of files) {
+      const text = readFileSync(resolve(contentDir, file), "utf8");
+      if (!/^#\s+(.+)$/m.test(text)) missing.push(`${entry.name}/${file}`);
+    }
+  }
+  return missing.sort();
+}
+
 function duplicateSourceTitleGroups(): string[] {
   const groups = new Map<string, Map<string, string>>();
   for (const entry of readdirSync(roadmapsRoot, { withFileTypes: true })) {
@@ -84,7 +103,7 @@ function duplicateSourceTitleGroups(): string[] {
     const contentDir = resolve(roadmapsRoot, entry.name, "content");
     let files: string[] = [];
     try {
-      files = readdirSync(contentDir).filter((file) => file.endsWith(".md"));
+      files = readdirSync(contentDir).filter((file) => file.endsWith(".md") && file !== "index.md");
     } catch {
       continue;
     }
@@ -259,6 +278,18 @@ for (const curriculum of curricula) {
         );
       }
 
+      for (const resource of item.resources ?? []) {
+        let parsed: URL | null = null;
+        try {
+          parsed = new URL(resource.url);
+        } catch {
+          addError(topicWhere, `invalid resource URL: “${resource.url}”`);
+        }
+        if (parsed && parsed.protocol !== "https:") {
+          addError(topicWhere, `resource URL must use https: “${resource.url}”`);
+        }
+      }
+
       for (const text of [
         summary,
         why,
@@ -292,6 +323,13 @@ const totalTopics = curricula.reduce(
 console.log(
   `\n${curricula.length} guided paths, ${totalTopics} curated topics, ${summaryOwners.size} unique summaries.`,
 );
+
+const missingHeadings = sourceFilesWithoutHeading();
+if (missingHeadings.length > 0) {
+  warnings.push(
+    `${missingHeadings.length} source file(s) without an H1: ${missingHeadings.slice(0, 6).join(", ")}${missingHeadings.length > 6 ? " …" : ""}`,
+  );
+}
 
 const duplicateTitles = duplicateSourceTitleGroups();
 if (duplicateTitles.length > 0) {
