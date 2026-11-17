@@ -7,4 +7,4 @@ Visit the following resources to learn more:
 - [@official@sflow](https://sflow.org/)
 - [@article@What is NetFlow?](https://www.ibm.com/think/topics/netflow)
 - [@video@MicroNugget: What is Netflow?](https://www.youtube.com/watch?v=aqTpUmUibB8)
-- [@video@Network Flow Monitoring Explained | Concepts and protocols](http://youtube.com/watch?v=5i9sgB7CprM&t=182s)
+- [@video@Network Flow Monitoring Explained | Concepts and protocols](https://youtube.com/watch?v=5i9sgB7CprM&t=182s)

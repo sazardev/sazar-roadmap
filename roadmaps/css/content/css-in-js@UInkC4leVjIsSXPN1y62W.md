@@ -4,4 +4,4 @@ CSS-in-JS is a technique where CSS styles are written with JavaScript instead of
 
 Visit the following resources to learn more:
 
-- [@article@A Thorough Analysis of CSS-in-JS](http://css-tricks.com/a-thorough-analysis-of-css-in-js/)
+- [@article@A Thorough Analysis of CSS-in-JS](https://css-tricks.com/a-thorough-analysis-of-css-in-js/)

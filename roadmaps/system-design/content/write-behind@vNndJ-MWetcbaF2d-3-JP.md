@@ -4,4 +4,4 @@ In the write-behind, or write-back, caching strategy, data is written to the cac
 
 Visit the following resources to learn more:
 
-- [@article@Scalability, availability, stability, patterns](http://www.slideshare.net/jboner/scalability-availability-stability-patterns/)
+- [@article@Scalability, availability, stability, patterns](https://www.slideshare.net/jboner/scalability-availability-stability-patterns/)

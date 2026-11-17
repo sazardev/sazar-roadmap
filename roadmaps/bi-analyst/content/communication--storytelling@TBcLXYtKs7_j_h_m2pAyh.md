@@ -4,6 +4,6 @@ Communication and storytelling involve conveying insights and findings from data
 
 Visit the following resources to learn more:
 
-- [@article@What is data storytelling?](http://microsoft.com/en-us/power-platform/products/power-bi/topics/data-storytelling)
+- [@article@What is data storytelling?](https://microsoft.com/en-us/power-platform/products/power-bi/topics/data-storytelling)
 - [@article@Data Storytelling: How to Effectively Tell a Story with Data](https://online.hbs.edu/blog/post/data-storytelling)
 - [@video@Telling Stories with Data in 3 Steps (Quick Study)](https://www.youtube.com/watch?v=r5_34YnCmMY)

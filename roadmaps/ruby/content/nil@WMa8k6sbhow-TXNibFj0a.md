@@ -4,7 +4,7 @@
 
 Visit the following resources to learn more:
 
-- [@article@Nothingness and the truth](http://ruby-for-beginners.rubymonstas.org/conditionals/nothing_and_truth.html)
+- [@article@Nothingness and the truth](https://ruby-for-beginners.rubymonstas.org/conditionals/nothing_and_truth.html)
 - [@article@Everything You Need to Know About Nil](https://www.rubyguides.com/2018/01/ruby-nil/)
 - [@article@True, False, and Nil](https://ruby-for-beginners.rubymonstas.org/built_in_classes/true_false_nil.html)
 - [@video@Ruby Nil Explained](https://www.youtube.com/watch?v=mBJrQ84f6-4)

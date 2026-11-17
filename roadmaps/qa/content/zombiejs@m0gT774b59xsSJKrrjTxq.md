@@ -4,5 +4,5 @@ Zombie.js allows you to run Unit or Integration tests without a real web browser
 
 Visit the following resources to learn more:
 
-- [@official@Zombie.js](http://zombie.js.org/)
+- [@official@Zombie.js](https://zombie.js.org/)
 - [@article@Getting Started with Zombie.js](https://www.packt.com/getting-started-zombiejs/)

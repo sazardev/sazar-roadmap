@@ -5,5 +5,5 @@ Setting up C means installing a compiler, choosing an editor, and confirming tha
 Visit the following resources to learn more:
 
 - [@article@C Get Started](https://www.w3schools.com/c/c_getstarted.php)
-- [@article@C - Environment Setup](http://tutorialspoint.com/cprogramming/c_environment_setup.htm)
+- [@article@C - Environment Setup](https://tutorialspoint.com/cprogramming/c_environment_setup.htm)
 - [@video@Start C programming in 15 minutes! ⚙️](https://www.youtube.com/watch?v=2ciUcosJFBc)

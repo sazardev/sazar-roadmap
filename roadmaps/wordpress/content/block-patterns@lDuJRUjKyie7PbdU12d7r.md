@@ -6,5 +6,5 @@ Visit the following resources to learn more:
 
 - [@official@Use block patterns](https://wordpress.com/support/wordpress-editor/block-pattern/)
 - [@official@Block patterns](https://developer.wordpress.com/docs/guides/block-patterns/)
-- [@official@Patterns](http://wordpress.org/patterns/)
+- [@official@Patterns](https://wordpress.org/patterns/)
 - [@article@What is a block pattern?](https://fullsiteediting.com/lessons/introduction-to-block-patterns/)

@@ -4,5 +4,5 @@ Data analytics and BI in manufacturing involves using data to understand and imp
 
 Visit the following resources to learn more:
 
-- [@article@What Is Manufacturing Analytics?](http://oracle.com/au/scm/manufacturing/manufacturing-analytics/)
+- [@article@What Is Manufacturing Analytics?](https://oracle.com/au/scm/manufacturing/manufacturing-analytics/)
 - [@article@The future of manufacturing is powered by data and analytics. Here's why](https://www.weforum.org/stories/2022/09/manufacturing-data-advanced-analytics/)

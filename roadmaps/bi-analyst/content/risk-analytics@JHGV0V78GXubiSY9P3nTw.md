@@ -4,5 +4,5 @@ Risk analytics involves identifying, assessing, and mitigating potential risks t
 
 Visit the following resources to learn more:
 
-- [@article@What are financial risk analytics?](http://stripe.com/en-es/resources/more/what-are-financial-risk-analytics-what-businesses-need-to-know)
+- [@article@What are financial risk analytics?](https://stripe.com/en-es/resources/more/what-are-financial-risk-analytics-what-businesses-need-to-know)
 - [@article@Risk Analysis: Definition, Types, Limitations, and Examples](https://www.investopedia.com/terms/r/risk-analysis.asp)

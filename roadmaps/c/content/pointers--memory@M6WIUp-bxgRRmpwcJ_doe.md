@@ -5,6 +5,6 @@ Pointers and memory concepts cover how C represents and manages memory directly,
 Visit the following resources to learn more:
 
 - [@course@Pointers](https://www.learn-c.org/en/Pointers)
-- [@article@C pointers](http://tutorialspoint.com/cprogramming/c_pointers.htm)
+- [@article@C pointers](https://tutorialspoint.com/cprogramming/c_pointers.htm)
 - [@video@Pointers: you will never ask about pointers again after watching this video](https://www.youtube.com/watch?v=2ybLD6_2gKM&t=438s)
 - [@video@C pointers explained👉](https://www.youtube.com/watch?v=DplxIq0mc_Y)

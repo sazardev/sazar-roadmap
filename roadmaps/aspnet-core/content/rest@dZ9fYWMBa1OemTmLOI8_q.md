@@ -1,6 +1,6 @@
 # REST
 
-REST (Representational State Transfer) is an architectural style for building web services. In the context of .NET, RESTful web services can be created using the [ASP.NET](http://ASP.NET) Web API framework, which allows developers to create HTTP-based services that can be consumed by a wide range of clients, including web browsers and mobile devices. The Web API framework provides a set of tools and libraries for creating RESTful services, including routing, request/response handling, and support for a variety of data formats, such as JSON and XML.
+REST (Representational State Transfer) is an architectural style for building web services. In the context of .NET, RESTful web services can be created using the [ASP.NET](https://ASP.NET) Web API framework, which allows developers to create HTTP-based services that can be consumed by a wide range of clients, including web browsers and mobile devices. The Web API framework provides a set of tools and libraries for creating RESTful services, including routing, request/response handling, and support for a variety of data formats, such as JSON and XML.
 
 Visit the following resources to learn more:
 

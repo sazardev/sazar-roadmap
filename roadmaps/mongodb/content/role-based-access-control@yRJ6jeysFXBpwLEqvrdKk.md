@@ -4,5 +4,5 @@ Role-Based Access Control (RBAC) in MongoDB is a security framework that manages
 
 Visit the following resources to learn more:
 
-- [@official@Role-Based Access Control](http://www.mongodb.com/docs/manual/core/authorization/)
+- [@official@Role-Based Access Control](https://www.mongodb.com/docs/manual/core/authorization/)
 - [@article@Understanding MongoDB Role-based Access Control](https://medium.com/mongodb/understanding-mongodb-role-based-access-control-rbac-in-action-a-step-by-step-guide-8c679241f8b6)

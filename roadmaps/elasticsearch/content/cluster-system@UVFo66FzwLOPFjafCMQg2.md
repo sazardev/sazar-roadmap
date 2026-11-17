@@ -4,8 +4,8 @@ A cluster is a collection of one or more Elasticsearch nodes that work together 
 
 Visit the following resources to learn more:
 
-- [@official@Deploy an Elasticsearch cluster](http://elastic.co/docs/deploy-manage/deploy/self-managed/installing-elasticsearch)
+- [@official@Deploy an Elasticsearch cluster](https://elastic.co/docs/deploy-manage/deploy/self-managed/installing-elasticsearch)
 - [@official@Clusters, nodes, and shards](https://www.elastic.co/docs/deploy-manage/distributed-architecture/clusters-nodes-shards)
-- [@article@How to setup and install Elasticsearch: From a single node to a cluster of nodes](http://severalnines.com/blog/how-to-setup-and-install-elasticsearch-cluster/)
+- [@article@How to setup and install Elasticsearch: From a single node to a cluster of nodes](https://severalnines.com/blog/how-to-setup-and-install-elasticsearch-cluster/)
 - [@article@Mastering the Art of Elasticsearch Cluster Setup](https://opster.com/guides/elasticsearch/operations/elasticsearch-cluster-setup/)
 - [@video@Elasticsearch basic concepts | cluster, shards, nodes | Elasticsearch tutorial for beginners](https://www.youtube.com/watch?v=GH6hO2L4LR0)

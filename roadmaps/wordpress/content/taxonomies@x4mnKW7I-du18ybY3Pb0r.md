@@ -4,7 +4,7 @@ Taxonomies are ways to group content. Think of them as organizational tools that
 
 Visit the following resources to learn more:
 
-- [@official@Taxonomies](http://wordpress.org/documentation/article/taxonomies/)
+- [@official@Taxonomies](https://wordpress.org/documentation/article/taxonomies/)
 - [@article@Categories, Tags, & Custom Taxonomies](https://developer.wordpress.org/themes/classic-themes/basics/categories-tags-custom-taxonomies/)
 - [@article@What is a Taxonomy? WordPress Taxonomies Explained](https://kinsta.com/blog/what-is-taxonomy/)
 - [@video@WordPress taxonomies](https://www.youtube.com/watch?v=TPbMiwuoMtU)

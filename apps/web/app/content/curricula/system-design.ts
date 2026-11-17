@@ -1598,7 +1598,7 @@ export const systemDesign: Curriculum = {
               },
               {
                 title: "Brendan Gregg — The USE method",
-                url: "http://www.brendangregg.com/usemethod.html",
+                url: "https://www.brendangregg.com/usemethod.html",
                 kind: "docs",
               },
               {

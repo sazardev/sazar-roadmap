@@ -6,5 +6,5 @@ Visit the following resources to learn more:
 
 - [@article@Reverse Proxy vs Load Balancer](https://www.nginx.com/resources/glossary/reverse-proxy-vs-load-balancer/)
 - [@article@NGINX Architecture](https://blog.nginx.org/blog/inside-nginx-how-we-designed-for-performance-scale)
-- [@article@HAProxy Architecture Guide](http://www.haproxy.org/download/1.2/doc/architecture.txt)
+- [@article@HAProxy Architecture Guide](https://www.haproxy.org/download/1.2/doc/architecture.txt)
 - [@article@Reverse Proxy](https://en.wikipedia.org/wiki/Reverse_proxy)

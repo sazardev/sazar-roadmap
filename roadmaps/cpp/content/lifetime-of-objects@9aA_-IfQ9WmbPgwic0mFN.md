@@ -5,4 +5,4 @@ Object lifetime in C++ dictates when an object comes into existence and when it 
 Visit the following resources to learn more:
 
 - [@article@Lifetime](https://en.cppreference.com/w/cpp/language/lifetime.html)
-- [@article@Object Lifetime in C++ (Stack/Scope Lifetimes)](http://youtube.com/watch?v=iNuTwvD6ciI)
+- [@article@Object Lifetime in C++ (Stack/Scope Lifetimes)](https://youtube.com/watch?v=iNuTwvD6ciI)

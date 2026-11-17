@@ -5,4 +5,4 @@ The Physical layer is the first and lowest layer of the OSI model, responsible f
 Visit the following resources to learn more:
 
 - [@article@What Is the Physical Layer: A Beginner’s Guide](https://www.coursera.org/articles/physical-layer)
-- [@video@Networking Fundamentals: OSI 7 - Layer 1 - the physical layer](http://youtube.com/watch?v=a5SMTyhn0U8)
+- [@video@Networking Fundamentals: OSI 7 - Layer 1 - the physical layer](https://youtube.com/watch?v=a5SMTyhn0U8)

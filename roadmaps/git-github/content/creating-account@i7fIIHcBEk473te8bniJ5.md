@@ -1,6 +1,6 @@
 # Creating Account
 
-To get started with GitHub, you'll need to create a free personal account on [GitHub.com](http://GitHub.com) and verify your email address. Every person who uses [GitHub.com](http://GitHub.com) signs in to a personal account. Your personal account is your identity on [GitHub.com](http://GitHub.com) and has a username and profile.
+To get started with GitHub, you'll need to create a free personal account on [GitHub.com](https://GitHub.com) and verify your email address. Every person who uses [GitHub.com](https://GitHub.com) signs in to a personal account. Your personal account is your identity on [GitHub.com](https://GitHub.com) and has a username and profile.
 
 Visit the following resources to learn more:
 

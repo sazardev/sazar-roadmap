@@ -4,7 +4,7 @@ Facades provide a "static" interface to classes that are available in the applic
 
 Visit the following resources to learn more:
 
-- [@official@Facades](http://laravel.com/docs/facades#main-content)
+- [@official@Facades](https://laravel.com/docs/facades#main-content)
 - [@article@Learn how to create custom Facades in Laravel](https://laravel-news.com/laravel-facades)
 - [@article@Laravel - Facades](https://www.tutorialspoint.com/laravel/laravel_facades.htm)
 - [@video@What in the world is a Facade?](https://www.youtube.com/watch?v=gpn_4tWz1w8)

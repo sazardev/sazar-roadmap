@@ -4,6 +4,6 @@ Define contracts through method signatures. Types automatically satisfy interfac
 
 Visit the following resources to learn more:
 
-- [@article@Understanding Interfaces in Go](https://golang.ntxm.org/docs/structs-and-interfaces/understanding-interfaces-in-go/)
+- [@article@Understanding Interfaces in Go](https://go.dev/tour/methods/9)
 - [@article@Interfaces - Go by Example](https://gobyexample.com/interfaces)
 - [@article@Mastering Go Interfaces: From Basics to Best Practices](https://abubakardev0.medium.com/mastering-go-interfaces-from-basics-to-best-practices-36912b65aa3d)

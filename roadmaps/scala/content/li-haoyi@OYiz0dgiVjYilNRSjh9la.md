@@ -4,7 +4,7 @@ The Li Haoyi ecosystem is centered around making Scala easy to use and productiv
 
 Visit the following resources to learn more:
 
-- [@official@Li Haoyi's Programming Blog](http://www.lihaoyi.com/)
+- [@official@Li Haoyi's Programming Blog](https://www.lihaoyi.com/)
 - [@opensource@com-lihaoyi GitHub Repository](https://github.com/com-lihaoyi)
 - [@article@12 Years of the com.lihaoyi Scala Platform](https://www.lihaoyi.com/post/12yearsofthecomlihaoyiScalaPlatform.html)
 - [@article@Hands-on Scala Programming](https://www.handsonscala.com/)

@@ -1,6 +1,6 @@
 # C#
 
-C# is Microsoft's modern, object-oriented language combining C++ power with Visual Basic simplicity. Used for Windows apps, [ASP.NET](http://ASP.NET) web development, Unity games, and Xamarin mobile apps. Features garbage collection, type safety, and strong .NET ecosystem integration.
+C# is Microsoft's modern, object-oriented language combining C++ power with Visual Basic simplicity. Used for Windows apps, [ASP.NET](https://ASP.NET) web development, Unity games, and Xamarin mobile apps. Features garbage collection, type safety, and strong .NET ecosystem integration.
 
 Visit the following resources to learn more:
 

@@ -6,4 +6,4 @@ Visit the following resources to learn more:
 
 - [@article@What is a firewall?](https://www.cisco.com/site/us/en/learn/topics/security/what-is-a-firewall.html)
 - [@article@What is a firewall? How network firewalls work](https://www.cloudflare.com/en-gb/learning/security/what-is-a-firewall/)
-- [@video@What is a Firewall?](http://youtube.com/watch?v=kDEX1HXybrU)
+- [@video@What is a Firewall?](https://youtube.com/watch?v=kDEX1HXybrU)

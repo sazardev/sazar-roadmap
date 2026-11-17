@@ -6,5 +6,5 @@ Visit the following resources to learn more:
 
 - [@official@Celery Docs](https://docs.celeryq.dev/en/v5.5.3/index.html)
 - [@official@Using Celery with Django](https://docs.celeryq.dev/en/v5.5.3/django/first-steps-with-django.html)
-- [@article@The Definitive Guide to Celery and Django](http://testdriven.io/courses/django-celery/getting-started/)
+- [@article@The Definitive Guide to Celery and Django](https://testdriven.io/courses/django-celery/getting-started/)
 - [@video@Python Django Celery Introduction](https://www.youtube.com/watch?v=AQYnKn-i0q8&list=PLOLrQ9Pn6cayGytG1fgUPEsUp3Onol8V7)

@@ -4,5 +4,5 @@ HSRP, or Hot Standby Router Protocol, is a Cisco proprietary protocol that provi
 
 Visit the following resources to learn more:
 
-- [@article@Hot Standby Router Protocol (HSRP)](http://networklessons.com/ip-services/hot-standby-router-protocol-hsrp)
+- [@article@Hot Standby Router Protocol (HSRP)](https://networklessons.com/ip-services/hot-standby-router-protocol-hsrp)
 - [@video@Understanding (and Configuring) HSRP](https://www.youtube.com/watch?v=-IaUa4-6ZeI&pp=ygUESFNSUA%3D%3D)

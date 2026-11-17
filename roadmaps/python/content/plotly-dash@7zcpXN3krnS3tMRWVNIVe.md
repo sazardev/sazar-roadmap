@@ -5,4 +5,4 @@ Plotly Dash is a Python framework that allows you to build analytical web applic
 Visit the following resources to learn more:
 
 - [@official@Plotly Dash Documentation](https://dash.plotly.com/)
-- [@official@20 Minutes Tutorial](http://dash.plotly.com/tutorial)
+- [@official@20 Minutes Tutorial](https://dash.plotly.com/tutorial)

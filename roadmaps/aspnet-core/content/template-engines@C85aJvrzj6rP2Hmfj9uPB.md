@@ -1,6 +1,6 @@
 # Template Engines
 
-Template engines in [ASP.NET](http://ASP.NET) are libraries that allow developers to embed dynamic data in HTML templates. These engines are used to separate the logic of the application from the presentation of the data, making it easy to change the appearance of the application without having to change the underlying code.
+Template engines in [ASP.NET](https://ASP.NET) are libraries that allow developers to embed dynamic data in HTML templates. These engines are used to separate the logic of the application from the presentation of the data, making it easy to change the appearance of the application without having to change the underlying code.
 
 Visit the following resources to learn more:
 

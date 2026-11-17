@@ -1,6 +1,6 @@
 # Community Engagement
 
-Building a positive developer experience through community engagement is an ongoing process that requires dedication, empathy, and a genuine commitment to your users. By investing in a welcoming environment, facilitating knowledge sharing, and leveraging AI-powered tools like [Doc-E.ai](http://Doc-E.ai), you can create a thriving community that not only supports your product but also becomes a source of innovation, loyalty, and growth.
+Building a positive developer experience through community engagement is an ongoing process that requires dedication, empathy, and a genuine commitment to your users. By investing in a welcoming environment, facilitating knowledge sharing, and leveraging AI-powered tools like [Doc-E.ai](https://Doc-E.ai), you can create a thriving community that not only supports your product but also becomes a source of innovation, loyalty, and growth.
 
 Visit the following resources to learn more:
 

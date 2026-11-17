@@ -4,6 +4,6 @@ Data fabric is an architectural concept that aims to provide a unified layer for
 
 Visit the following resources to learn more:
 
-- [@article@What is a data fabric?](http://ibm.com/think/topics/data-fabric)
+- [@article@What is a data fabric?](https://ibm.com/think/topics/data-fabric)
 - [@article@Data Fabric defined](https://www.jamesserra.com/archive/2021/06/data-fabric-defined/)
 - [@article@How Data Fabric Can Optimize Data Delivery](https://www.gartner.com/en/data-analytics/topics/data-fabric)

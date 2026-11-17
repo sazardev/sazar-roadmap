@@ -4,4 +4,4 @@ Acceleration is the rate of change of velocity over time, produced by a net forc
 
 Visit the following resources to learn more:
 
-- [@article@Simple Acceleration in Games](http://earok.net/sections/articles/game-dev/theory/simplified-acceleration-games)
+- [@article@Simple Acceleration in Games](https://earok.net/sections/articles/game-dev/theory/simplified-acceleration-games)

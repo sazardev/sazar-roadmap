@@ -4,4 +4,4 @@ In the write-through caching strategy, data is written to the cache and the data
 
 Visit the following resources to learn more:
 
-- [@article@Scalability, availability, stability, patterns](http://www.slideshare.net/jboner/scalability-availability-stability-patterns/)
+- [@article@Scalability, availability, stability, patterns](https://www.slideshare.net/jboner/scalability-availability-stability-patterns/)

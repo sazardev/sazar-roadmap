@@ -5,5 +5,5 @@ Cluster computing is a model where multiple computers are networked together to 
 Visit the following resources to learn more:
 
 - [@article@What is cluster computing? - IBM](https://www.ibm.com/think/topics/cluster-computing)
-- [@article@Computer cluster - Wikipedia](http://en.wikipedia.org/wiki/Computer_cluster)
+- [@article@Computer cluster - Wikipedia](https://en.wikipedia.org/wiki/Computer_cluster)
 - [@video@WUnderstand the Basic Cluster Concepts](https://www.youtube.com/watch?v=8BBDxzJL6fY)

@@ -6,4 +6,4 @@ Visit the following resources to learn more:
 
 - [@article@Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
 - [@video@Binary Tree Level Order Traversal | Live Coding with Explanation](https://www.youtube.com/watch?v=vQrggrFMyp8)
-- [@video@Binary Tree Level Order Traversal (BFS)](http://youtube.com/watch?v=2_tm34ZtYT4)
+- [@video@Binary Tree Level Order Traversal (BFS)](https://youtube.com/watch?v=2_tm34ZtYT4)

@@ -4,6 +4,6 @@ gevent is a Python library that provides a high-level interface to the event loo
 
 Visit the following resources to learn more:
 
-- [@official@gevent Website](http://www.gevent.org/)
+- [@official@gevent Website](https://www.gevent.org/)
 - [@opensource@gevent/gevent](https://github.com/gevent/gevent)
 - [@article@gevent For the Working Python Developer](https://sdiehl.github.io/gevent-tutorial/)

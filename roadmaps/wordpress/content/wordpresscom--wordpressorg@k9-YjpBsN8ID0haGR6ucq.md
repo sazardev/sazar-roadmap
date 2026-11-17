@@ -1,6 +1,6 @@
 # WordPress.com vs. WordPress.org
 
-WordPress offers two distinct platforms: [WordPress.com](http://WordPress.com) and [WordPress.org](http://WordPress.org). [WordPress.com](http://WordPress.com) is a hosted platform where WordPress handles the server and software, offering varying plans with different features. [WordPress.org](http://WordPress.org), on the other hand, is the self-hosted version of WordPress, requiring you to download the software and manage your own hosting, giving you complete control and flexibility.
+WordPress offers two distinct platforms: [WordPress.com](https://WordPress.com) and [WordPress.org](https://WordPress.org). [WordPress.com](https://WordPress.com) is a hosted platform where WordPress handles the server and software, offering varying plans with different features. [WordPress.org](https://WordPress.org), on the other hand, is the self-hosted version of WordPress, requiring you to download the software and manage your own hosting, giving you complete control and flexibility.
 
 Visit the following resources to learn more:
 

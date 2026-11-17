@@ -6,4 +6,4 @@ Visit the following resources to learn more:
 
 - [@official@Functions with Multiple Return Values](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/functions/#Defining-and-Calling-Functions)
 - [@article@Use Function Return Types in Swift](https://www.kodeco.com/books/swift-cookbook/v1.0/chapters/2-use-function-return-types-in-swift)
-- [@video@How to use Functions in Swift | Swift Basics #5](http://youtube.com/watch?v=kr3SSplrJlw)
+- [@video@How to use Functions in Swift | Swift Basics #5](https://youtube.com/watch?v=kr3SSplrJlw)

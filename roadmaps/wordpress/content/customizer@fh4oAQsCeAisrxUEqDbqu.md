@@ -6,5 +6,5 @@ Visit the following resources to learn more:
 
 - [@official@Customizer](https://wordpress.com/support/customizer/)
 - [@official@Customizer Docs](https://wordpress.org/documentation/article/customizer/)
-- [@article@How to Use WordPress Theme Customizer Like a Pro (Ultimate Guide)](http://wpbeginner.com/beginners-guide/how-to-use-wordpress-theme-customizer/)
+- [@article@How to Use WordPress Theme Customizer Like a Pro (Ultimate Guide)](https://wpbeginner.com/beginners-guide/how-to-use-wordpress-theme-customizer/)
 - [@video@How to Use the WordPress Customizer](https://www.youtube.com/watch?v=PhmbXAlDP34)

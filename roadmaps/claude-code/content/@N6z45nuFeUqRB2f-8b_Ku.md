@@ -5,4 +5,4 @@ Multiline input allows you to format complex instructions across several lines w
 Visit the following resources to learn more:
 
 - [@official@Multiline input](https://code.claude.com/docs/en/interactive-mode#multiline-input)
-- [@official@Line breaks](http://code.claude.com/docs/en/terminal-config#line-breaks)
+- [@official@Line breaks](https://code.claude.com/docs/en/terminal-config#line-breaks)

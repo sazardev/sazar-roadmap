@@ -6,4 +6,4 @@ Visit the following resources to learn more:
 
 - [@article@Scala Tutorial - Collect Function](https://allaboutscala.com/tutorials/chapter-8-beginner-tutorial-using-scala-collection-functions/scala-collect-function/)
 - [@article@collect vs collectFirst - why the return values are of different type - Scala - Stack Overflow](https://stackoverflow.com/questions/40773529/collect-vs-collectfirst-why-the-return-values-are-of-different-type-scala)
-- [@article@tech: Scala : collectFirst example](http://thushw.blogspot.com/2015/09/scala-collectfirst-example.html)
+- [@article@tech: Scala : collectFirst example](https://thushw.blogspot.com/2015/09/scala-collectfirst-example.html)

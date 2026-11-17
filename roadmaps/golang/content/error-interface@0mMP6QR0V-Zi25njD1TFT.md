@@ -5,6 +5,6 @@ Built-in interface with single `Error() string` method. Any type implementing th
 Visit the following resources to learn more:
 
 - [@official@Error Handling and Go](https://go.dev/blog/error-handling-and-go)
-- [@article@The Error Interface](https://golang.ntxm.org/docs/error-handling-in-go/the-error-interface/)
+- [@article@The Error Interface](https://go.dev/blog/error-handling-and-go)
 - [@article@Mastering Error Handling in Go: A Comprehensive Guide](https://medium.com/hprog99/mastering-error-handling-in-go-a-comprehensive-guide-fac34079833f)
 - [@article@Errors and Exception Handling in Golang](https://golangdocs.com/errors-exception-handling-in-golang)

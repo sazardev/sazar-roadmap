@@ -4,6 +4,6 @@ Network design best practices are a set of proven principles that engineers foll
 
 Visit the following resources to learn more:
 
-- [@article@Network Design and Best Practices](http://auvik.com/franklyit/blog/network-design-best-practices/)
+- [@article@Network Design and Best Practices](https://auvik.com/franklyit/blog/network-design-best-practices/)
 - [@article@Network Design Best Practices](https://haptic-networks.com/networks/network-design-best-practices/)
 - [@video@DO NOT design your network like this!!](https://www.youtube.com/watch?v=wwwAXlE4OtU)

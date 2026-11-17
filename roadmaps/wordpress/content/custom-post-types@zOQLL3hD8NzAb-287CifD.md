@@ -6,5 +6,5 @@ Visit the following resources to learn more:
 
 - [@official@Custom post types](https://learn.wordpress.org/lesson/custom-post-types/)
 - [@official@How to Use WordPress Custom Post Types to Create a Specialty Website](https://wordpress.com/go/tutorials/wordpress-custom-post-types)
-- [@article@WordPress Custom Post Types: The All-In-One Guide to Create and Use Them](http://kinsta.com/blog/wordpress-custom-post-types/)
+- [@article@WordPress Custom Post Types: The All-In-One Guide to Create and Use Them](https://kinsta.com/blog/wordpress-custom-post-types/)
 - [@video@Creating custom post types and taxonomies](https://www.youtube.com/watch?v=WB7BKQdcP9w)

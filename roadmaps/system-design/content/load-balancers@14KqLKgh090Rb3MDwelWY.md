@@ -6,4 +6,4 @@ Visit the following resources to learn more:
 
 - [@article@Scalability](https://cs.fyi/guide/scalability-for-dummies)
 - [@article@NGINX Architecture](https://blog.nginx.org/blog/inside-nginx-how-we-designed-for-performance-scale)
-- [@article@HAProxy Architecture Guide](http://www.haproxy.org/download/1.2/doc/architecture.txt)
+- [@article@HAProxy Architecture Guide](https://www.haproxy.org/download/1.2/doc/architecture.txt)

@@ -9,4 +9,4 @@ Visit the following resources to learn more:
 - [@article@Building Ruby on Rails engines](https://www.honeybadger.io/blog/rails-engines/)
 - [@article@A Guide to Rails Engines in the Wild: Real World Examples of Rails Engines in Action](https://www.toptal.com/developers/ruby-on-rails/rails-engines-in-the-wild-real-world-examples-of-rails-engines-in-action)
 - [@video@Creating A Private Ruby Gem for Ruby on Rails 7](https://www.youtube.com/watch?v=H4j2vUwZgEk)
-- [@video@Your First Rails Engine | Ruby on Rails 7 Gem Tutorial](http://youtube.com/watch?v=7AVb4mJuIWA)
+- [@video@Your First Rails Engine | Ruby on Rails 7 Gem Tutorial](https://youtube.com/watch?v=7AVb4mJuIWA)

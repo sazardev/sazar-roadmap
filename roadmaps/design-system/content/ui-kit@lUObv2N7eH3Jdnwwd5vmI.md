@@ -4,4 +4,4 @@ As it relates to a design system, a UI Kit is a representation of coded componen
 
 Visit the following resources to learn more:
 
-- [@article@Your sketch library is not a design system](http://bradfrost.com/blog/post/your-sketch-library-is-not-a-design-system/)
+- [@article@Your sketch library is not a design system](https://bradfrost.com/blog/post/your-sketch-library-is-not-a-design-system/)

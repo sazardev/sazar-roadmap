@@ -72,6 +72,43 @@ const warnings: string[] = [];
 const summaryOwners = new Map<string, string>();
 const resourceCache = new Map<string, Map<string, number>>();
 
+/**
+ * Upstream sources often ship two files about the same topic with the same H1. They are not
+ * curriculum bugs, so they stay a warning; this keeps the duplication visible instead of silently
+ * shipping two identically titled topics in the same roadmap.
+ */
+function duplicateSourceTitleGroups(): string[] {
+  const groups = new Map<string, Map<string, string>>();
+  for (const entry of readdirSync(roadmapsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const contentDir = resolve(roadmapsRoot, entry.name, "content");
+    let files: string[] = [];
+    try {
+      files = readdirSync(contentDir).filter((file) => file.endsWith(".md"));
+    } catch {
+      continue;
+    }
+    for (const file of files) {
+      const text = readFileSync(resolve(contentDir, file), "utf8");
+      const title = text.match(/^#\s+(.+)$/m)?.[1]?.trim();
+      if (!title) continue;
+      const separator = file.indexOf("@");
+      const slug = (separator === -1 ? file.replace(/\.md$/, "") : file.slice(0, separator)).trim();
+      const key = `${entry.name}\u0000${title.toLowerCase()}`;
+      const slugs = groups.get(key) ?? new Map<string, string>();
+      slugs.set(slug, title);
+      groups.set(key, slugs);
+    }
+  }
+  return [...groups.entries()]
+    .filter(([, slugs]) => slugs.size > 1)
+    .map(([key, slugs]) => {
+      const [roadmap] = key.split("\u0000");
+      return `${roadmap}: “${slugs.values().next().value}” [${[...slugs.keys()].join(", ")}]`;
+    })
+    .sort();
+}
+
 function resourcesFor(slug: string): Map<string, number> {
   let counts = resourceCache.get(slug);
   if (!counts) {
@@ -255,6 +292,14 @@ const totalTopics = curricula.reduce(
 console.log(
   `\n${curricula.length} guided paths, ${totalTopics} curated topics, ${summaryOwners.size} unique summaries.`,
 );
+
+const duplicateTitles = duplicateSourceTitleGroups();
+if (duplicateTitles.length > 0) {
+  warnings.push(
+    `${duplicateTitles.length} duplicate source-title groups in the fork (same H1, different slug): ` +
+      `${duplicateTitles.slice(0, 8).join(" | ")}${duplicateTitles.length > 8 ? " …" : ""}`,
+  );
+}
 
 if (warnings.length > 0) {
   console.log(`\n${warnings.length} warning(s):`);

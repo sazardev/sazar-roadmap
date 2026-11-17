@@ -7,4 +7,4 @@ Visit the following resources to learn more:
 - [@official@Relationships](https://docs.djangoproject.com/en/6.0/topics/db/models/#relationships)
 - [@official@Examples of model relationship API usage](https://docs.djangoproject.com/en/6.0/topics/db/examples/)
 - [@article@How to Define Relationships Between Django Models](https://www.freecodecamp.org/news/django-model-relationships/)
-- [@video@Understanding Django Model Relationships](http://youtube.com/watch?v=2KqhBkMv7aM)
+- [@video@Understanding Django Model Relationships](https://youtube.com/watch?v=2KqhBkMv7aM)

@@ -6,6 +6,6 @@ Visit the following resources to learn more:
 
 - [@official@Task Scheduling](https://laravel.com/docs/12.x/scheduling)
 - [@article@Streamlining Application Automation with Laravel's Task Scheduler](https://laravel-news.com/task-scheduler)
-- [@article@A Complete Guide to Task Scheduling in Laravel](http://betterstack.com/community/guides/scaling-php/laravel-task-scheduling/)
+- [@article@A Complete Guide to Task Scheduling in Laravel](https://betterstack.com/community/guides/scaling-php/laravel-task-scheduling/)
 - [@video@Laravel Task Scheduling: Run Artisan Command Hourly](https://www.youtube.com/watch?v=r-KrsQ0dN80)
 - [@video@Laravel Scheduler: 5 "Tricks" You May Not Know](https://www.youtube.com/watch?v=KBAIWP8wfyQ)

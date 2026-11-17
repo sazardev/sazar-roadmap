@@ -4,5 +4,5 @@ Refresh-ahead is a caching strategy where the system automatically refreshes a c
 
 Visit the following resources to learn more:
 
-- [@article@From cache to in-memory data grid](http://www.slideshare.net/tmatyashovsky/from-cache-to-in-memory-data-grid-introduction-to-hazelcast)
+- [@article@From cache to in-memory data grid](https://www.slideshare.net/tmatyashovsky/from-cache-to-in-memory-data-grid-introduction-to-hazelcast)
 - [@article@Caching Strategy: Refresh Ahead Pattern](https://www.enjoyalgorithms.com/blog/refresh-ahead-caching-pattern)

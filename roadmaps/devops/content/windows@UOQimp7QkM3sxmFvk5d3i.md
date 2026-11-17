@@ -4,6 +4,6 @@ Windows is a series of operating systems developed by Microsoft, widely used acr
 
 Visit the following resources to learn more:
 
-- [@official@Microsoft Windows](http://microsoft.com/windows)
+- [@official@Microsoft Windows](https://microsoft.com/windows)
 - [@official@Windows Documentation for Developers](https://learn.microsoft.com/en-us/windows/)
 - [@video@40 Windows Commands you NEED to know](https://www.youtube.com/watch?v=Jfvg3CS1X3A&)

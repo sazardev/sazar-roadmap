@@ -6,4 +6,4 @@ Visit the following resources to learn more:
 
 - [@article@Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
 - [@video@Median of Two Sorted Arrays Python Solution - LeetCode #4](https://www.youtube.com/watch?v=BhxyUWR_Efc)
-- [@video@Median of Two Sorted Arrays](http://youtube.com/watch?v=eUvfNcHhi5o)
+- [@video@Median of Two Sorted Arrays](https://youtube.com/watch?v=eUvfNcHhi5o)

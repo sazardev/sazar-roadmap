@@ -5,4 +5,4 @@ Data lineage is the process of understanding and documenting the journey of data
 Visit the following resources to learn more:
 
 - [@article@What Is Data Lineage?](https://www.ibm.com/think/topics/data-lineage)
-- [@article@The Ultimate Guide To Data Lineage](http://montecarlodata.com/blog-data-lineage/)
+- [@article@The Ultimate Guide To Data Lineage](https://montecarlodata.com/blog-data-lineage/)

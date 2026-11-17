@@ -4,4 +4,4 @@ The application layer is where the core business logic of a system runs, separat
 
 Visit the following resources to learn more:
 
-- [@article@Intro to architecting systems for scale](http://lethain.com/introduction-to-architecting-systems-for-scale/#platform_layer)
+- [@article@Intro to architecting systems for scale](https://lethain.com/introduction-to-architecting-systems-for-scale/#platform_layer)

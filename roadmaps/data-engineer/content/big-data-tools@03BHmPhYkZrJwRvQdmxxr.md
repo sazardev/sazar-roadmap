@@ -5,4 +5,4 @@ Big data tools are designed to process and analyze datasets too large to handle 
 Visit the following resources to learn more:
 
 - [@article@What is Big Data?](https://cloud.google.com/learn/what-is-big-data?hl=en)
-- [@video@Introduction to Big Data with Spark and Hadoop](http://youtube.com/watch?v=vHlwg4ciCsI&t=80s&ab_channel=freeCodeAcademy)
+- [@video@Introduction to Big Data with Spark and Hadoop](https://youtube.com/watch?v=vHlwg4ciCsI&t=80s&ab_channel=freeCodeAcademy)

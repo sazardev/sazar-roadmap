@@ -4,6 +4,6 @@ Pgpool-II, HAProxy, and Odyssey are prominent tools for enhancing PostgreSQL per
 
 Visit the following resources to learn more:
 
-- [@official@HAProxy Website](http://www.haproxy.org/)
+- [@official@HAProxy Website](https://www.haproxy.org/)
 - [@official@PGPool Website](https://www.pgpool.net/mediawiki/index.php/Main_Page)
 - [@opensource@yandex/odyssey](https://github.com/yandex/odyssey)
