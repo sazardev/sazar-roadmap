@@ -71,7 +71,7 @@ export function Sidebar({ dueReviews, streak }: { dueReviews: number; streak: nu
           </span>
           <span className="sr-only">sazardev Roadmap home</span>
           <span className="hidden min-w-0 lg:block">
-            <span className="block font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
+            <span className="block font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
               sazardev
             </span>
             <span className="block text-lg font-semibold leading-tight tracking-tight">
@@ -90,7 +90,7 @@ export function Sidebar({ dueReviews, streak }: { dueReviews: number; streak: nu
             key={group.label}
             className={cn(groupIndex > 0 && "mt-3 border-t border-line/70 pt-3 lg:mt-6 lg:pt-5")}
           >
-            <p className="mb-2 hidden px-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted lg:block">
+            <p className="mb-2 hidden px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted lg:block">
               {group.label}
             </p>
             <ul className="space-y-1.5 lg:space-y-1">
@@ -164,8 +164,8 @@ export function Sidebar({ dueReviews, streak }: { dueReviews: number; streak: nu
           </span>
           <AppSwitcher />
         </div>
-        <p className="mt-1 hidden text-center font-mono text-[10px] text-muted lg:block">
-          Private workspace · v0.5.5
+        <p className="mt-1 hidden text-center font-mono text-[11px] text-muted lg:block">
+          Private workspace · v0.5.6
         </p>
       </div>
     </aside>

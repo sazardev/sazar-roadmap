@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.6 — 2026-11-17
+
+- Added confirmation before deleting notes, goals, people, coach conversations, and before signing
+  out (which clears saved pages and drafts).
+- The "New note", "New goal", "Add person" and "Ask a question" buttons now open their collapsed
+  forms instead of only scrolling to them.
+- External links consistently open in a new tab with safe `rel`, and the smallest visible labels were
+  raised to 11px.
+- Removed a duplicated hint line and normalized link attributes on the practice page.
+
 ## 0.5.5 — 2026-11-17
 
 - Added an audit warning that surfaces 109 duplicate source-title groups in the fork instead of
