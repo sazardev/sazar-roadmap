@@ -5,3 +5,4 @@ Go functions can return multiple values, commonly used for returning result and 
 Visit the following resources to learn more:
 
 - [@article@How to manage Go function multiple returns](https://labex.io/tutorials/go-how-to-manage-go-function-multiple-returns-419825)
+- [@official@Multiple results](https://go.dev/tour/basics/6)

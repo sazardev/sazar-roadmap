@@ -4,5 +4,5 @@ Two types: `float32` (single precision) and `float64` (double precision, default
 
 Visit the following resources to learn more:
 
-- [@official@Floating Points](https://golangdocs.com/floating-point-numbers-in-golang)
+- [@official@Numeric types](https://go.dev/ref/spec#Numeric_types)
 - [@article@How to Perform Float Point Calculations](https://labex.io/tutorials/go-how-to-perform-float-point-calculations-419745)

@@ -5,5 +5,5 @@ Multiplexer for channel operations. Waits on multiple channel operations simulta
 Visit the following resources to learn more:
 
 - [@official@Select Statement](https://go.dev/tour/concurrency/5)
-- [@article@Select Statement in Go (Golang)](https://golangbyexamples.com/select-statement-golang/)
+- [@article@Select Statement in Go (Golang)](https://go.dev/tour/concurrency/4)
 - [@article@Go (Golang) Select Tutorial with Practical Examples](https://golangbot.com/select/)

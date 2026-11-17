@@ -6,3 +6,5 @@ Visit the following resources to learn more:
 
 - [@official@pprof package](https://pkg.go.dev/runtime/pprof)
 - [@article@Go Profiling with pprof: A Step-by-Step Guide](https://medium.com/@jhathnagoda/go-profiling-with-pprof-a-step-by-step-guide-a62323915cb0)
+- [@docs@Profiling Go programs](https://go.dev/blog/pprof)
+- [@official@net/http/pprof](https://pkg.go.dev/net/http/pprof)

@@ -6,3 +6,5 @@ Visit the following resources to learn more:
 
 - [@official@pgx package](https://pkg.go.dev/github.com/jackc/pgx)
 - [@article@Getting Started with PostgreSQL in Go using PGX](https://betterstack.com/community/guides/scaling-go/postgresql-pgx-golang/)
+- [@opensource@jackc/pgx](https://github.com/jackc/pgx)
+- [@official@pgx/v5 package](https://pkg.go.dev/github.com/jackc/pgx/v5)

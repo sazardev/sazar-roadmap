@@ -5,3 +5,4 @@ Variables storing memory addresses of other variables. Declared with `*Type`, de
 Visit the following resources to learn more:
 
 - [@official@Pointers](https://go.dev/tour/moretypes/1)
+- [@official@Pointers](https://go.dev/blog/maps)

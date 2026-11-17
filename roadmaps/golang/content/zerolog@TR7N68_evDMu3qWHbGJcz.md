@@ -7,3 +7,4 @@ Visit the following resources to learn more:
 - [@official@zerolog package](https://pkg.go.dev/github.com/rs/zerolog)
 - [@article@A Complete Guide to Logging in Go with Zerolog](https://betterstack.com/community/guides/logging/zerolog/)
 - [@article@Zerolog Golang - Complete Guide to Logging](https://signoz.io/guides/zerolog-golang/)
+- [@opensource@rs/zerolog](https://github.com/rs/zerolog)

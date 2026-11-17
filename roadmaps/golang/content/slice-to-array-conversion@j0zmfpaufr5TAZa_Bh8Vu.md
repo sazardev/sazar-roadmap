@@ -4,5 +4,5 @@ Convert slice to array using `[N]T(slice)` (Go 1.17+). Copies data from slice to
 
 Visit the following resources to learn more:
 
-- [@article@Slice Arrays Correctly](https://labex.io/tutorials/go-how-to-slice-arrays-correctly-418936)
+- [@official@Conversions](https://go.dev/ref/spec#Conversions)
 - [@article@Go - Create Slice From Array - 3 Examples](https://www.tutorialkart.com/golang-tutorial/golang-create-slice-from-array/)

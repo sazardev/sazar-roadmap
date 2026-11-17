@@ -7,7 +7,7 @@ export const golang: Curriculum = {
   tagline: "Small language. Explicit systems. Serious concurrency.",
   description:
     "A guided path through Go's deliberately small language and the habits that make it dependable in production: values and composition, interfaces, concurrency and cancellation, errors, tests, the standard library, and the tools that ship a service. Every stage ends with code you can run and inspect.",
-  level: "beginner",
+  level: "intermediate",
   icon: "code",
   estimatedHours: 72,
   stages: [
@@ -151,7 +151,7 @@ export const golang: Curriculum = {
             "Adding, upgrading and removing dependencies",
             "Vendoring and the module proxy",
           ],
-          "Add one dependency, inspect the go.mod/go.sum diff, then remove it and verify the build is clean.",
+          "Exercise: 1) Add one small dependency and inspect the `go.mod`/`go.sum` diff. 2) Remove it and verify the build is still clean. 3) Explain what `go mod tidy` changed and why a deprecated indirect dependency may still appear.",
           {
             summary:
               "Modules define a versioned unit of source code and its dependency graph. `go.mod` records requirements, `go.sum` records checksums, and the module proxy makes builds reproducible.",
@@ -243,7 +243,7 @@ export const golang: Curriculum = {
             "Nil slices, maps, pointers, channels and interfaces",
             "Designing types that are useful at zero",
           ],
-          "Find three nil-related bugs in a small program, then fix one by making the zero value useful.",
+          "Exercise: 1) Find three nil-related bugs in a small program: a map, a slice and a pointer receiver. 2) Fix one by designing the zero value to be useful. 3) Write a test that constructs the type with `var x T` and proves it works without explicit initialization.",
           {
             summary:
               "Every Go type has a defined zero value. That removes uninitialized state, but nil maps, nil slices, nil interfaces and zero structs still require deliberate handling.",
@@ -264,7 +264,7 @@ export const golang: Curriculum = {
             "Boolean expressions and short-circuiting",
             "Guard clauses and early returns",
           ],
-          "Refactor a deeply nested function into guard clauses with the same behavior and a smaller diff.",
+          "Exercise: 1) Refactor a deeply nested function into guard clauses without changing behavior. 2) Add a table test that covers the original branches. 3) Compare the diff and explain which early return made the largest readability difference.",
           {
             summary:
               "`if` supports an initialization statement and requires braces. Guard clauses keep control flow flat; the interesting part is the condition, not the syntax.",
@@ -431,7 +431,7 @@ export const golang: Curriculum = {
             "Struct tags for JSON, validation and databases",
             "Constructors and invariants",
           ],
-          "Model a small domain with structs, add JSON tags and test the round trip with a zero-value field.",
+          "Exercise: 1) Model a small domain with structs and JSON tags, including a field with a meaningful zero value. 2) Round-trip it through `encoding/json` and assert the zero-value field survives. 3) Explain which fields should be pointers and what that changes for API clients.",
           {
             summary:
               "Structs group named fields into a value type. Field order, visibility and tags are part of the API, the memory layout and the wire format.",
@@ -515,7 +515,7 @@ export const golang: Curriculum = {
             "Method promotion and ambiguity",
             "Composition at the API boundary",
           ],
-          "Build a type that embeds a logger, then replace it with a named field and compare the call sites.",
+          "Exercise: 1) Build a type that embeds a logger and call its methods. 2) Replace it with a named field and compare the call sites. 3) Decide which form you would keep for a public API and explain the method-set difference in one sentence.",
           {
             summary:
               "Embedding promotes fields and methods from another type. It is composition, not inheritance: the embedded type's API becomes part of the outer type's surface.",
@@ -645,7 +645,7 @@ export const golang: Curriculum = {
             "Passing a WaitGroup safely",
             "Combining WaitGroup with error collection",
           ],
-          "Fan out five jobs with a WaitGroup, collect errors through a channel and wait for all of them.",
+          "Exercise: 1) Fan out five jobs with a `sync.WaitGroup` and collect errors through a buffered channel. 2) Close the channel only after `Wait` returns and verify no send blocks. 3) Add a cancellation path and explain what happens to jobs already running.",
           {
             summary:
               "A `sync.WaitGroup` waits for a known set of goroutines. Add before starting, Done when finishing, Wait to block; misuse usually means a race or a deadlock.",
@@ -687,7 +687,7 @@ export const golang: Curriculum = {
             "Deadlines, cancellation and Done",
             "Values versus explicit parameters",
           ],
-          "Make a function respect context cancellation, then add a deadline and test the early-return path.",
+          "Exercise: 1) Make a function respect `ctx.Done()` during simulated work. 2) Add a deadline shorter than the work and test the early return. 3) Explain why you must not store `context.Context` in a struct field.",
           {
             summary:
               "`context.Context` carries cancellation, deadlines and request-scoped values across API boundaries. It is the standard way to stop work when the caller goes away.",
@@ -708,7 +708,7 @@ export const golang: Curriculum = {
             "Result collection and shutdown",
             "Limits, queue size and cancellation",
           ],
-          "Build a pool of four workers over a finite queue, then measure behavior when the queue is full.",
+          "Exercise: 1) Build a pool of four workers over a finite queue and collect results. 2) Fill the queue past capacity and observe where backpressure appears. 3) Add a bounded timeout for job submission and measure how many jobs are dropped.",
           {
             summary:
               "A worker pool bounds how many jobs run at once. It turns unbounded concurrency into a queue with explicit capacity, backpressure and shutdown.",
@@ -737,7 +737,7 @@ export const golang: Curriculum = {
             "Wrapping with %w and errors.Is/As",
             "Sentinels, custom types and context",
           ],
-          "Write a function with three failure modes, wrap each with context and test them with errors.Is.",
+          "Exercise: 1) Write a function with three distinct failure modes and wrap each with context. 2) Test them with `errors.Is` and `errors.As` rather than string matching. 3) Add one sentinel error and explain when a custom type is better than a sentinel.",
           {
             summary:
               "Errors are values returned by functions, usually as the last result. The caller decides whether to handle, wrap, retry or return them; there are no exceptions for expected failures.",
@@ -796,7 +796,7 @@ export const golang: Curriculum = {
             "Subtests, t.Run and t.Cleanup",
             "Test helpers and failure messages",
           ],
-          "Write a test with two subtests and a t.Cleanup, then run it with -run and -v.",
+          "Exercise: 1) Write a table of three cases for a small pure function, with subtests named by case. 2) Add `t.Cleanup` that closes a fake resource and assert it runs for every case. 3) Run `go test -run=... -v` and explain what the verbose output tells you about test isolation.",
           {
             summary:
               "Go tests are ordinary functions named `TestXxx` in `_test.go` files. `go test` compiles and runs them; `*testing.T` reports failures and manages subtests and cleanup.",
@@ -817,7 +817,7 @@ export const golang: Curriculum = {
             "Expected errors and zero values",
             "Avoiding shared mutable state",
           ],
-          "Convert three copy-pasted tests into a table with named cases and one assertion block.",
+          "Exercise: 1) Convert three copy-pasted tests into one table with named cases and expected errors. 2) Add `t.Parallel()` only where the case has no shared state and prove the choice with a race-detector run. 3) Report how the failure message changed when one case broke.",
           {
             summary:
               "Table-driven tests put inputs, expected outputs and errors in a slice of cases. Named subtests make failures readable and new cases cheap to add.",
@@ -972,7 +972,7 @@ export const golang: Curriculum = {
             "Defaults, usage and validation",
             "Flags versus environment configuration",
           ],
-          "Add two flags to a small CLI, validate them and print a useful usage message on failure.",
+          "Exercise: 1) Add two flags to a small CLI, one required and one optional with a default. 2) Validate the combination and print a useful usage message on failure. 3) Test valid and invalid invocations and explain why a non-zero exit matters for scripts.",
           {
             summary:
               "`flag` parses typed command-line options with defaults and generated usage text. It is enough for most internal tools; frameworks add subcommands and completion.",
@@ -993,7 +993,7 @@ export const golang: Curriculum = {
             "Formatting, parsing and UTC",
             "Timers, tickers and timeouts",
           ],
-          "Parse an RFC3339 timestamp in two zones, store UTC and render it back in the user's zone.",
+          "Exercise: 1) Parse an RFC3339 timestamp from two different zones. 2) Normalize to UTC for storage and render it back in the user's zone for display. 3) Write a test around a DST boundary and explain why storing local time would break it.",
           {
             summary:
               "`time.Time` represents an instant, `time.Duration` a span, and `time.Location` a time zone. Store UTC, format at the edge and use monotonic time for elapsed measurements.",
@@ -1014,7 +1014,7 @@ export const golang: Curriculum = {
             "Levels and request context",
             "JSON output and redaction",
           ],
-          "Add request-scoped structured logging with a request ID and one redacted field.",
+          "Exercise: 1) Add a request ID to a handler logger with `slog.With`. 2) Log one sensitive field and verify a custom handler redacts it. 3) Write a test that captures the JSON output and assert the level, message and redacted value.",
           {
             summary:
               "`log/slog` provides structured, leveled logging with pluggable handlers. Log attributes, not formatted prose, so production logs stay searchable and machine-readable.",
@@ -1035,7 +1035,7 @@ export const golang: Curriculum = {
             "Common printf, lock and struct-tag findings",
             "Integrating vet into CI",
           ],
-          "Introduce a printf mismatch and a copied lock, then fix both after running go vet.",
+          "Exercise: 1) Introduce a printf format mismatch and a copied mutex in a small program. 2) Run `go vet ./...` and read both diagnostics. 3) Fix them, then add a CI step that runs vet and explain why these bugs survive compilation.",
           {
             summary:
               "`go vet` reports suspicious constructs the compiler accepts: bad printf verbs, copied locks, malformed struct tags and unreachable code. It is a floor, not a full static analyzer.",
@@ -1056,7 +1056,7 @@ export const golang: Curriculum = {
             "Build tags and platform-specific files",
             "Reproducible release artifacts",
           ],
-          "Build a Linux amd64 binary from your machine and inspect it with file and ldd.",
+          "Exercise: 1) Build your service for `linux/amd64` from your development machine. 2) Inspect the binary with `file` and `ldd` and explain why it is static or dynamic. 3) Boot it in a minimal container, record one missing runtime dependency, and describe how you would bake it into the release.",
           {
             summary:
               "`GOOS` and `GOARCH` select the target platform at build time. A static Go binary can ship without a runtime, but CGO and platform-specific files change the result.",
@@ -1085,7 +1085,7 @@ export const golang: Curriculum = {
             "Exit codes, stdout and stderr",
             "Configuration, secrets and dry runs",
           ],
-          "Build a two-command CLI with a help screen, a non-zero exit on failure and a dry-run mode.",
+          "Exercise: 1) Define the command contract first: two commands, flags, exit codes and help text. 2) Implement it with a dry-run mode that prints but does not mutate. 3) Test a failure path and explain why errors belong on stderr and results on stdout.",
           {
             summary:
               "A CLI is an interface for humans and scripts. Commands, flags, exit codes, stdout/stderr and help text are the contract; the implementation language is secondary.",
@@ -1106,7 +1106,7 @@ export const golang: Curriculum = {
             "Persistent flags and configuration",
             "Help, completion and testing",
           ],
-          "Build a Cobra command tree with one persistent flag and a test that executes a subcommand.",
+          "Exercise: 1) Build a Cobra tree with one persistent flag and one subcommand. 2) Execute the subcommand from a test with args and capture its output. 3) Replace package-level flag variables with a command-local config struct and explain what bug that prevents.",
           {
             summary:
               "Cobra builds command trees with flags, help and shell completion. It is a good fit when a CLI grows beyond a single command and a handful of flags.",
@@ -1127,7 +1127,7 @@ export const golang: Curriculum = {
             "Binding, validation and error responses",
             "Testing handlers without a live server",
           ],
-          "Build a small JSON API with Gin, validate one payload and test the 400 and 200 paths.",
+          "Exercise: 1) Build a small Gin JSON API with a POST route that binds and validates a payload. 2) Test the 400 and 200 paths with `httptest`. 3) Replace one `gin.Context` value with a domain request type and explain why that boundary matters for testing.",
           {
             summary:
               "Gin is a fast HTTP framework with routing groups, middleware and binding. It reduces boilerplate but introduces a framework-specific context and dependency.",
@@ -1169,7 +1169,7 @@ export const golang: Curriculum = {
             "Queries, scanning and types",
             "Transactions and PostgreSQL-specific features",
           ],
-          "Write a parameterized query with pgx, scan into a struct and test the context cancellation path.",
+          "Exercise: 1) Write a parameterized query with pgx and scan the row into a struct. 2) Add a context with a short deadline and test the cancellation path. 3) Inspect the connection pool settings and explain how you would size them for ten concurrent requests.",
           {
             summary:
               "pgx is a native PostgreSQL driver with connection pooling, typed scanning and PostgreSQL-specific features. It gives more control than a generic ORM at the cost of writing SQL.",
@@ -1232,7 +1232,7 @@ export const golang: Curriculum = {
             "Connection lifecycle and fan-out",
             "Reconnect, auth and rate limits",
           ],
-          "Build a small SSE endpoint with heartbeats and test reconnect behavior behind a buffering proxy.",
+          "Exercise: 1) Build a small SSE endpoint that sends heartbeats and one event. 2) Connect with a client that disconnects and reconnects, then verify replay or gap handling. 3) Put a buffering proxy in front and record which header or behavior broke streaming.",
           {
             summary:
               "Real-time Go services keep many connections open and fan out updates. WebSockets, SSE and long polling have different lifecycle, proxy and backpressure behavior.",
@@ -1242,6 +1242,621 @@ export const golang: Curriculum = {
               "Fanning out without a bound on slow consumers.",
               "Having no reconnect or replay strategy.",
               "Authenticating only at connection time and never revalidating.",
+            ],
+          },
+        ),
+      ],
+    },
+    {
+      slug: "frameworks-and-operations",
+      title: "Frameworks, testing and operations",
+      description:
+        "Choose libraries deliberately, test at the right boundary, and make a Go service operable, secure and shippable.",
+      topics: [
+        topic(
+          "chi",
+          "Chi keeps routing explicit and middleware composable, so you keep control of HTTP behavior instead of inheriting a framework's opinions.",
+          [
+            "Router composition, route groups and middleware chains",
+            "Request context, URL params and typed handlers",
+            "Testing routes with httptest and middleware ordering",
+          ],
+          "Exercise: 1) Build a small Chi router with one grouped route and two middleware functions (request ID and logging). 2) Write an httptest that asserts middleware order and a 404 path. 3) Explain one trade-off of a small router versus a full framework and name the signal you would watch for middleware overhead.",
+          {
+            summary:
+              "Chi is a small router for Go HTTP services. It composes handlers and middleware through the standard `http.Handler` interface, which keeps routing explicit and testable without owning the rest of your application.",
+            difficulty: "core",
+            minutes: 45,
+            pitfalls: [
+              "Letting middleware mutate shared state across requests instead of using request context.",
+              "Registering routes after middleware in the wrong order and losing headers on 404 paths.",
+              "Assuming the router validates request bodies; Chi only routes, it does not bind payloads.",
+            ],
+            resources: [
+              {
+                title: "Chi repository and examples",
+                url: "https://github.com/go-chi/chi",
+                kind: "repo",
+              },
+              {
+                title: "Chi package documentation",
+                url: "https://pkg.go.dev/github.com/go-chi/chi/v5",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "echo",
+          "Echo offers batteries-included HTTP handling; the gain is speed of construction, the cost is a framework-specific context you must keep out of domain code.",
+          [
+            "Echo instance, routes and middleware stack",
+            "Binding, validators and centralized error handlers",
+            "Testing handlers with the built-in request recorder",
+          ],
+          "Exercise: 1) Build an Echo service with one POST route that binds and validates a payload. 2) Add a centralized error handler and test both a 422 and a 200 response. 3) Show where you would convert `echo.Context` into a domain request so handlers do not leak the framework inward.",
+          {
+            summary:
+              "Echo is a full-featured HTTP framework with routing, binding, validation and a large middleware set. It reduces boilerplate quickly, but its context type and error model become part of your handler signatures.",
+            difficulty: "core",
+            minutes: 45,
+            pitfalls: [
+              "Passing `echo.Context` into service and repository layers instead of mapping it to domain types.",
+              "Returning raw framework errors with internal details to clients.",
+              "Forgetting to set request timeouts because the framework does not apply them for you.",
+            ],
+            resources: [
+              { title: "Echo documentation", url: "https://echo.labstack.com/", kind: "docs" },
+              {
+                title: "Echo package documentation",
+                url: "https://pkg.go.dev/github.com/labstack/echo/v4",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "fiber",
+          "Fiber presents a familiar Express-like API on top of fasthttp; it is productive, but it diverges from `net/http` in ways that affect middleware and tooling.",
+          [
+            "Fiber app, routes and middleware",
+            "Differences from `net/http` and adapter layers",
+            "Request lifecycle, bodies and error handling",
+          ],
+          "Exercise: 1) Implement the same JSON endpoint with `net/http` and Fiber. 2) Add one middleware in each and document a behavior that differs between them. 3) Decide which one you would ship for a team that already relies on `net/http` tooling, and justify it with one concrete constraint.",
+          {
+            summary:
+              "Fiber is an Express-inspired framework built on fasthttp. Its API is compact and fast to learn, but fasthttp is not `net/http`, so standard middleware, clients and test helpers may need adapters.",
+            difficulty: "core",
+            minutes: 45,
+            pitfalls: [
+              "Assuming `http.Handler` middleware drops into Fiber without an adapter.",
+              "Reusing `net/http` request-body assumptions when fasthttp reuses buffers.",
+              "Choosing the framework for benchmark numbers instead of ecosystem fit.",
+            ],
+            resources: [
+              { title: "Fiber documentation", url: "https://docs.gofiber.io/", kind: "docs" },
+              { title: "Fiber repository", url: "https://github.com/gofiber/fiber", kind: "repo" },
+            ],
+          },
+        ),
+        topic(
+          "sqlc",
+          "sqlc turns SQL into typed Go code, so queries stay reviewable while the compiler catches column and argument mismatches before runtime.",
+          [
+            "Query annotations and generated types",
+            "Schema changes and code regeneration",
+            "Transactions, nullable columns and custom types",
+          ],
+          "Exercise: 1) Write a schema and two parameterized queries, then generate code with sqlc. 2) Call both queries from a small program and handle one nullable column. 3) Change a column type, regenerate, and explain which compile errors caught the change and which checks you still need at runtime.",
+          {
+            summary:
+              "sqlc reads your SQL schema and queries and emits type-safe Go code. It keeps SQL visible and reviewable while removing hand-written scanning code, at the cost of a generation step in the build.",
+            difficulty: "advanced",
+            minutes: 50,
+            pitfalls: [
+              "Editing generated files instead of changing the queries and regenerating.",
+              "Forgetting to regenerate after a schema migration, leaving types out of sync.",
+              "Treating generated types as validation of business rules; sqlc checks SQL shape, not meaning.",
+            ],
+            resources: [
+              { title: "sqlc documentation", url: "https://docs.sqlc.dev/", kind: "docs" },
+              { title: "sqlc repository", url: "https://github.com/sqlc-dev/sqlc", kind: "repo" },
+            ],
+          },
+        ),
+        topic(
+          "ent",
+          "Ent generates a typed entity graph and query builder; it works best when the schema is explicit and migrations stay under your control.",
+          [
+            "Schema definitions and code generation",
+            "Typed queries, eager loading and predicates",
+            "Migrations, transactions and generated hooks",
+          ],
+          "Exercise: 1) Define two related entities and generate the client. 2) Write one query that loads the relation with a predicate and a transaction that updates both entities. 3) Inspect the generated SQL and decide where you would drop to raw SQL for performance.",
+          {
+            summary:
+              "Ent is a code-generated entity framework for Go. It provides typed queries, relationships and hooks from a schema definition, which improves safety but adds a generation step and an opinionated data model.",
+            difficulty: "advanced",
+            minutes: 55,
+            pitfalls: [
+              "Letting automatic migration change production schema without a reviewed plan.",
+              "Loading deep relation graphs into memory without measuring query cost.",
+              "Fighting the generated model instead of modelling the domain explicitly.",
+            ],
+            resources: [
+              {
+                title: "Ent documentation",
+                url: "https://entgo.io/docs/getting-started",
+                kind: "docs",
+              },
+              { title: "Ent repository", url: "https://github.com/ent/ent", kind: "repo" },
+            ],
+          },
+        ),
+        topic(
+          "configuration",
+          "Configuration is part of the deployment contract: parse it once at startup, validate it, and keep secrets out of binaries and logs.",
+          [
+            "Environment variables, flags and config structs",
+            "Validation and fail-fast startup",
+            "Secret handling and per-environment defaults",
+          ],
+          "Exercise: 1) Define a typed config struct loaded from flags and environment variables. 2) Add validation that exits with a clear message on a missing required value. 3) Write a test that proves a secret is redacted from logs and explain how you would rotate it without a rebuild.",
+          {
+            summary:
+              "Go services usually take configuration from flags and environment variables. Parsing into a validated struct once at startup makes behavior predictable and keeps configuration errors visible before traffic arrives.",
+            difficulty: "core",
+            minutes: 40,
+            pitfalls: [
+              "Reading environment variables throughout the request path instead of once at startup.",
+              "Logging the whole config struct, including credentials.",
+              "Silently defaulting a required value in production.",
+            ],
+            resources: [
+              {
+                title: "The Twelve-Factor App: Config",
+                url: "https://12factor.net/config",
+                kind: "article",
+              },
+              {
+                title: "os package documentation",
+                url: "https://pkg.go.dev/os#LookupEnv",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "graceful-shutdown",
+          "Shutdown is a protocol with your orchestrator: stop accepting work, drain in-flight requests, then exit before the platform kills the process.",
+          [
+            "Signal handling and `http.Server.Shutdown`",
+            "Draining requests, workers and background jobs",
+            "Shutdown deadlines and exit codes",
+          ],
+          "Exercise: 1) Add signal handling to an HTTP server and call `Shutdown` with a bounded context. 2) Write a test that holds one request open and asserts shutdown waits for it. 3) Describe what happens to a background job when the deadline expires and what you would measure to choose that deadline.",
+          {
+            summary:
+              "Graceful shutdown stops new work, waits for in-flight requests and then exits. `http.Server.Shutdown`, signal handling and a deadline turn a process kill into a controlled handover.",
+            difficulty: "advanced",
+            minutes: 45,
+            pitfalls: [
+              "Calling `Close` instead of `Shutdown` and dropping active connections.",
+              "Waiting forever for a stuck handler with no deadline.",
+              "Forgetting to stop background workers before the process exits.",
+            ],
+            resources: [
+              {
+                title: "http.Server.Shutdown documentation",
+                url: "https://pkg.go.dev/net/http#Server.Shutdown",
+                kind: "docs",
+              },
+              {
+                title: "os/signal documentation",
+                url: "https://pkg.go.dev/os/signal",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "health-checks",
+          "Health endpoints are for the orchestrator, not for humans: liveness, readiness and startup answer different questions and must not depend on each other.",
+          [
+            "Liveness, readiness and startup semantics",
+            "Dependency checks and failure blast radius",
+            "Timeouts, caching and safe response bodies",
+          ],
+          "Exercise: 1) Add separate `/livez` and `/readyz` handlers with different checks. 2) Make readiness fail when a required dependency is unavailable while liveness stays up. 3) Write a test for each state and explain why checking the database in liveness would make outages worse.",
+          {
+            summary:
+              "Health endpoints tell an orchestrator whether to restart or route traffic to a service. Liveness, readiness and startup have different jobs, and coupling them turns a dependency hiccup into a restart storm.",
+            difficulty: "core",
+            minutes: 40,
+            pitfalls: [
+              "Checking external dependencies in the liveness probe.",
+              "Returning detailed internal errors that leak information to callers.",
+              "Letting a health check hang because it has no timeout.",
+            ],
+            resources: [
+              {
+                title: "Kubernetes probe documentation",
+                url: "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+                kind: "docs",
+              },
+              { title: "net/http documentation", url: "https://pkg.go.dev/net/http", kind: "docs" },
+            ],
+          },
+        ),
+        topic(
+          "prometheus-metrics",
+          "Metrics answer what changed and when; instrument a small set of signals with stable labels before building dashboards around them.",
+          [
+            "Counters, gauges and histograms",
+            "Label cardinality and naming",
+            "Exposing an endpoint and querying it",
+          ],
+          "Exercise: 1) Instrument an HTTP handler with a request counter and a latency histogram. 2) Expose the metrics endpoint and scrape it once locally. 3) Write a PromQL query for the p95 latency and explain why an unbounded label such as user ID would make the series set explode.",
+          {
+            summary:
+              "Prometheus collects numeric time series by scraping an HTTP endpoint. Counters, gauges and histograms cover most service signals, but stable names and bounded label values determine whether the data stays useful.",
+            difficulty: "advanced",
+            minutes: 50,
+            pitfalls: [
+              "Using high-cardinality labels such as request IDs or user IDs.",
+              "Counting errors without also counting total requests.",
+              "Exposing metrics publicly without considering what they reveal.",
+            ],
+            resources: [
+              {
+                title: "Prometheus Go client guide",
+                url: "https://prometheus.io/docs/guides/go-application/",
+                kind: "docs",
+              },
+              {
+                title: "client_golang documentation",
+                url: "https://pkg.go.dev/github.com/prometheus/client_golang/prometheus",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "opentelemetry-tracing",
+          "Traces connect one request across services; propagate context and sample deliberately or the trace breaks at the first boundary.",
+          [
+            "Traces, spans and context propagation",
+            "Instrumenting HTTP and database calls",
+            "Sampling, exporters and correlation with logs",
+          ],
+          "Exercise: 1) Instrument an HTTP service with one root span and a child span around a database call. 2) Propagate the trace context through an outgoing HTTP request. 3) Configure head sampling and explain the trade-off between cost and the chance of capturing a rare error.",
+          {
+            summary:
+              "OpenTelemetry provides APIs and SDKs for traces, metrics and logs. For tracing, the important parts are span structure, context propagation and sampling; without them a trace is a collection of unrelated events.",
+            difficulty: "advanced",
+            minutes: 55,
+            pitfalls: [
+              "Starting spans without passing context, losing the parent relationship.",
+              "Sampling only successful requests and missing the errors you need.",
+              "Adding sensitive attributes to spans without a redaction policy.",
+            ],
+            resources: [
+              {
+                title: "OpenTelemetry Go documentation",
+                url: "https://opentelemetry.io/docs/languages/go/",
+                kind: "docs",
+              },
+              {
+                title: "OpenTelemetry Go API",
+                url: "https://pkg.go.dev/go.opentelemetry.io/otel",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "fuzzing",
+          "Fuzzing explores inputs your table tests never imagined, and Go's coverage-guided engine is built into `go test`.",
+          [
+            "A `FuzzXxx(*testing.F)` target with seed corpus entries from `f.Add`",
+            "Coverage guidance grows the corpus; failures are minimized into `testdata/fuzz`",
+            "Targets must be fast, deterministic and free of shared mutable state",
+          ],
+          "Exercise: 1) Write `FuzzParseConfig` with three seed inputs and a target that calls your parser. 2) Run `go test -fuzz=FuzzParseConfig -fuzztime=30s` and open the failing input written to `testdata/fuzz`. 3) Fix the bug, then confirm a plain `go test` now passes with that input as a permanent regression case.",
+          {
+            summary:
+              "Go's fuzzing engine extends the test binary with coverage-guided random inputs. Seeds come from `f.Add`, failures are minimized to a file you commit, and the generated corpus stays out of source control.",
+            difficulty: "advanced",
+            minutes: 45,
+            pitfalls: [
+              "A slow or stateful fuzz target that times out or produces unreproducible failures.",
+              "Fuzzing argument types outside the supported set of strings, bytes and numbers.",
+              "Committing the cache corpus instead of the minimized `testdata/fuzz` case.",
+            ],
+            resources: [
+              {
+                title: "Go fuzzing documentation",
+                url: "https://go.dev/doc/security/fuzz/",
+                kind: "docs",
+              },
+              {
+                title: "Tutorial: Fuzzing with Go",
+                url: "https://go.dev/doc/tutorial/fuzz",
+                kind: "docs",
+              },
+              {
+                title: "testing package — fuzzing",
+                url: "https://pkg.go.dev/testing#hdr-Fuzzing",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "httptest--for-http-tests",
+          "HTTP handlers should be tested as handlers, without binding a port or booting the whole service.",
+          [
+            "`httptest.ResponseRecorder` captures status, headers and body from a handler",
+            "`httptest.Server` stands in for an external dependency in client tests",
+            "Tests exercise the real `http.Handler` contract, including middleware chains",
+          ],
+          "Exercise: 1) Wrap a JSON handler in two middleware and assert status, header and body with `ResponseRecorder`. 2) Stand up an `httptest.Server` that returns a fake upstream response and point your client at its URL. 3) Close the server with `t.Cleanup` and run the package with `-race`.",
+          {
+            summary:
+              "The `net/http/httptest` package gives you a recorder for handler unit tests and a real in-memory server for client tests. Both keep HTTP tests fast and avoid fixed ports.",
+            difficulty: "core",
+            minutes: 40,
+            pitfalls: [
+              "Starting a real listener on a fixed port in parallel tests.",
+              "Forgetting to close an `httptest.Server` and leaking connections.",
+              "Testing through a framework context instead of the `http.Handler` contract.",
+            ],
+            resources: [
+              {
+                title: "net/http/httptest",
+                url: "https://pkg.go.dev/net/http/httptest",
+                kind: "docs",
+              },
+              {
+                title: "net/http Handler",
+                url: "https://pkg.go.dev/net/http#Handler",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "errgroup",
+          "Fan-out that must cancel its siblings on the first failure is a first-class pattern, not a hand-rolled WaitGroup wrapper.",
+          [
+            "`errgroup.Group` couples a WaitGroup with a first-error channel",
+            "`WithContext` derives a context cancelled by the first error or by the caller",
+            "`SetLimit` bounds concurrency without a separate semaphore",
+          ],
+          "Exercise: 1) Fetch three URLs concurrently with errgroup and make one return an error. 2) With `WithContext`, verify the other goroutines observe `ctx.Done()` and stop. 3) Add `SetLimit(2)` and measure peak in-flight requests to confirm the bound.",
+          {
+            summary:
+              "golang.org/x/sync/errgroup runs a group of goroutines, returns the first error and can cancel the rest through a derived context. It replaces the common combination of WaitGroup, error channel and context plumbing.",
+            difficulty: "advanced",
+            minutes: 40,
+            pitfalls: [
+              "Returning the last error instead of the first and hiding the real cause.",
+              "Forgetting to pass the derived context into I/O calls.",
+              "Wrapping an unbounded number of goroutines in a plain Group.",
+            ],
+            resources: [
+              {
+                title: "x/sync/errgroup",
+                url: "https://pkg.go.dev/golang.org/x/sync/errgroup",
+                kind: "docs",
+              },
+              {
+                title: "Go pipelines and cancellation",
+                url: "https://go.dev/blog/pipelines",
+                kind: "article",
+              },
+            ],
+          },
+        ),
+        topic(
+          "concurrency-patterns",
+          "Fan-in, fan-out and pipelines turn ad-hoc goroutines into a design with bounded stages and explicit cancellation.",
+          [
+            "Fan-out distributes jobs; fan-in merges results without losing errors",
+            "Pipelines chain stages with their own ownership and close rule",
+            "Cancellation must reach every stage or the slowest one leaks",
+          ],
+          "Exercise: 1) Build a three-stage pipeline (generate, transform, collect) with two workers in the middle. 2) Cancel through context mid-run and prove every stage exits. 3) Replace your WaitGroup with errgroup and show the first error reaching `main`.",
+          {
+            summary:
+              "Pipelines and fan-out/fan-in are the compositional patterns behind most concurrent Go services. Their correctness depends on who closes each channel and how cancellation reaches every stage.",
+            difficulty: "advanced",
+            minutes: 55,
+            pitfalls: [
+              "An unbounded fan-out that turns a traffic spike into an outage.",
+              "A stage that never closes its output, leaving downstream `range` loops blocked.",
+              "Cancelling only the first stage while later stages keep buffering.",
+            ],
+            resources: [
+              {
+                title: "Pipelines and cancellation",
+                url: "https://go.dev/blog/pipelines",
+                kind: "article",
+              },
+              {
+                title: "Go concurrency patterns (talk)",
+                url: "https://go.dev/talks/2012/concurrency.slide",
+                kind: "docs",
+              },
+              {
+                title: "x/sync/errgroup",
+                url: "https://pkg.go.dev/golang.org/x/sync/errgroup",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "containers-and-images",
+          "The binary is the deliverable; a reproducible, minimal image is how it reaches production unchanged.",
+          [
+            "Multi-stage builds separate the toolchain from the runtime image",
+            "`CGO_ENABLED=0` with a distroless base yields a small static image",
+            "Non-root user, read-only filesystem and a healthcheck are part of the contract",
+          ],
+          "Exercise: 1) Write a two-stage Dockerfile that builds with `CGO_ENABLED=0 go build -trimpath` and copies only the binary. 2) Build the image, run as a non-root user and check that `ldd` reports no dynamic executable. 3) Add a healthcheck hitting `/healthz` and verify a restart when it fails.",
+          {
+            summary:
+              "A Go service ships best as a static binary inside a minimal runtime image. Multi-stage builds keep the compiler out of the final layer, and pinning the base image makes the artifact reproducible.",
+            difficulty: "core",
+            minutes: 50,
+            pitfalls: [
+              "Shipping the build toolchain and source inside the final image.",
+              "A cgo-enabled binary linked against glibc inside a `scratch` image.",
+              "Running as root with a writable filesystem and no healthcheck.",
+            ],
+            resources: [
+              {
+                title: "Multi-stage builds",
+                url: "https://docs.docker.com/build/building/multi-stage/",
+                kind: "docs",
+              },
+              {
+                title: "Distroless images",
+                url: "https://github.com/GoogleContainerTools/distroless",
+                kind: "repo",
+              },
+              { title: "Official Go image", url: "https://hub.docker.com/_/golang", kind: "docs" },
+            ],
+          },
+        ),
+        topic(
+          "ci-for-go",
+          "A Go CI pipeline should be short and deterministic: one toolchain, a dependency cache and the same checks developers run locally.",
+          [
+            "`setup-go` reads the version from `go.mod` and caches by `go.sum`",
+            "Run `go build ./...`, `go test -race ./...`, `go vet` and optionally govulncheck",
+            "Use a matrix only when you truly support multiple versions or platforms",
+          ],
+          "Exercise: 1) Add a workflow that checks out, sets up Go from `go.mod`, builds and runs `go test -race ./...`. 2) Add a govulncheck job and confirm the cache is reused on the second run. 3) Break a test deliberately and verify the pipeline fails before merge.",
+          {
+            summary:
+              "CI for Go is mostly configuration discipline: derive the toolchain version from the module, cache downloads, and run every package with the race detector. Extra checks belong only when a human owns their output.",
+            difficulty: "core",
+            minutes: 45,
+            pitfalls: [
+              "A Go version pinned in YAML that drifts from `go.mod`.",
+              "Running only the root package instead of `./...`.",
+              "Enabling every linter at once until CI becomes noise nobody reads.",
+            ],
+            resources: [
+              {
+                title: "Building and testing Go with Actions",
+                url: "https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-go",
+                kind: "docs",
+              },
+              {
+                title: "actions/setup-go",
+                url: "https://github.com/actions/setup-go",
+                kind: "repo",
+              },
+            ],
+          },
+        ),
+        topic(
+          "database-migrations",
+          "Schema changes are deployments: versioned, reviewable, reversible and applied exactly once.",
+          [
+            "Numbered up/down migrations with a table tracking applied versions",
+            "Expand then contract for zero-downtime changes on large tables",
+            "Migrations run as an explicit deploy step, never from application startup",
+          ],
+          "Exercise: 1) Add `001_create_users.up.sql` and `.down.sql` with goose and apply them locally. 2) Rename a column through expand, backfill and contract across three migrations and test each step. 3) Run the same migration set twice and prove the second run is a no-op.",
+          {
+            summary:
+              "Tools such as goose and golang-migrate apply ordered SQL files and record which versions ran. Safe production changes separate additive expansion from later contraction so old and new code can coexist during a rollout.",
+            difficulty: "core",
+            minutes: 45,
+            pitfalls: [
+              "Calling AutoMigrate from `main` on every service start.",
+              "Editing an already-applied migration instead of adding a new one.",
+              "Assuming a down migration exists and works against production data.",
+            ],
+            resources: [
+              { title: "goose", url: "https://github.com/pressly/goose", kind: "repo" },
+              {
+                title: "golang-migrate",
+                url: "https://github.com/golang-migrate/migrate",
+                kind: "repo",
+              },
+            ],
+          },
+        ),
+        topic(
+          "openapi-and-codegen",
+          "A machine-readable API contract lets servers, clients and docs be generated and checked instead of hand-maintained.",
+          [
+            "An OpenAPI document as the source of truth for paths, schemas and error responses",
+            "Server interfaces and typed clients generated with `oapi-codegen`",
+            "Contract tests catch drift between handler behavior and the spec",
+          ],
+          "Exercise: 1) Write an OpenAPI document for a create-user endpoint including a 400 schema. 2) Generate the server interface and client, implement the interface and serve the spec. 3) Change a required field, regenerate and show the build failure until the handler is updated.",
+          {
+            summary:
+              "Contract-first APIs keep the specification in version control and generate code from it. The value is not the generated boilerplate but the build failure when implementation and contract diverge.",
+            difficulty: "advanced",
+            minutes: 50,
+            pitfalls: [
+              "Hand-editing generated handlers so regeneration overwrites business logic.",
+              "Letting the spec and implementation drift because nothing validates them.",
+              "Modeling every field as optional and losing the contract's value.",
+            ],
+            resources: [
+              {
+                title: "OpenAPI Specification 3.1",
+                url: "https://spec.openapis.org/oas/v3.1.0",
+                kind: "docs",
+              },
+              {
+                title: "oapi-codegen",
+                url: "https://github.com/deepmap/oapi-codegen",
+                kind: "repo",
+              },
+            ],
+          },
+        ),
+        topic(
+          "api-authentication",
+          "Authentication code is security code: use vetted primitives, short-lived tokens and explicit boundaries.",
+          [
+            "Password hashing with bcrypt, never home-grown or reversible storage",
+            "JWT verification checks signature, issuer, audience and expiry, not just decoding",
+            "Rotation, revocation and least privilege at the handler boundary",
+          ],
+          "Exercise: 1) Hash and verify a password with `golang.org/x/crypto/bcrypt` and store only the hash. 2) Issue a short-lived JWT, then write middleware rejecting an expired token and a token with the wrong audience. 3) Add a refresh path that rotates the token and prove an old refresh token is rejected.",
+          {
+            summary:
+              "Most authentication failures in services come from trusting decoded tokens, logging credentials or keeping tokens alive forever. Vetted libraries and explicit claim checks remove the common mistakes.",
+            difficulty: "advanced",
+            minutes: 55,
+            pitfalls: [
+              "Accepting a JWT because it decodes, without verifying signature and claims.",
+              "Logging tokens or placing them in URLs where access logs capture them.",
+              "Long-lived access tokens with no rotation or revocation strategy.",
+            ],
+            resources: [
+              {
+                title: "x/crypto/bcrypt",
+                url: "https://pkg.go.dev/golang.org/x/crypto/bcrypt",
+                kind: "docs",
+              },
+              { title: "x/oauth2", url: "https://pkg.go.dev/golang.org/x/oauth2", kind: "docs" },
+              {
+                title: "RFC 7519 — JWT",
+                url: "https://datatracker.ietf.org/doc/html/rfc7519",
+                kind: "docs",
+              },
             ],
           },
         ),
@@ -1303,7 +1918,7 @@ export const golang: Curriculum = {
             "Reading `-gcflags=-m` output",
             "Pointers, interfaces and compiler limits",
           ],
-          "Run `go build -gcflags=-m` on a small function and explain which values escape and why.",
+          "Exercise: 1) Run `go build -gcflags=-m` on a small function and mark which values escape. 2) Change one signature so a value stays on the stack and verify the new compiler output. 3) Benchmark both versions and decide whether the change was worth it, naming the measurement you used.",
           {
             summary:
               "Escape analysis decides whether a value can stay on the stack or must be allocated on the heap. `-gcflags=-m` explains the decision, but allocation is only a problem when measured.",
@@ -1345,7 +1960,7 @@ export const golang: Curriculum = {
             "Call-graph reachability",
             "Triaging, upgrading and documenting decisions",
           ],
-          "Run govulncheck on a module, triage one finding by reachability, and document the decision.",
+          "Exercise: 1) Run `govulncheck ./...` on a module and record one finding. 2) Trace whether your code reaches the vulnerable function and document the evidence. 3) Decide whether to upgrade, pin or accept the risk, and write the decision in a short note.",
           {
             summary:
               "`govulncheck` reports known vulnerabilities that your code can actually reach. It combines module scanning with call-graph analysis, reducing noise from unused dependencies.",
@@ -1408,7 +2023,7 @@ export const golang: Curriculum = {
             "go.mod hygiene and consumer testing",
             "Major-version strategy",
           ],
-          "Tag a small module v1.0.0, install it from a clean module, and document its compatibility policy.",
+          "Exercise: 1) Tag a small module `v1.0.0` and install it from a clean consumer module. 2) Make a backward-compatible change and tag `v1.1.0`. 3) Write a short compatibility policy and explain what would force a `v2` import path.",
           {
             summary:
               "Publishing a Go module means a semantic version tag, a clean `go.mod`, and an import path that consumers can resolve. Major versions and API compatibility are part of the contract.",
@@ -1594,6 +2209,138 @@ export const golang: Curriculum = {
               "Returning pointers to large values from a hot path without measuring escape.",
               "Copying a GOGC setting from a blog post instead of reading the allocation profile.",
               "Using finalizers for deterministic cleanup that a defer or explicit Close should own.",
+            ],
+          },
+        ),
+      ],
+    },
+    {
+      slug: "ship-a-service",
+      title: "Ship a service",
+      description:
+        "Four integrated exercises turn isolated techniques into one deliverable you can run, test, observe and release.",
+      topics: [
+        topic(
+          "capstone-api",
+          "An integrated API is where routing, typed SQL, configuration and logging stop being isolated exercises.",
+          [
+            "A Chi router with grouped routes, typed config and request-scoped slog fields",
+            "sqlc-generated queries called through a small repository boundary",
+            "Error translation at the HTTP edge without leaking implementation details",
+          ],
+          "Exercise: 1) Build a `/v1/items` service with Chi, sqlc queries and config loaded once at startup. 2) Add a request ID with `slog.With` and return a safe error body for a failed query. 3) Write a test that proves a missing required config value fails startup before the listener opens.",
+          {
+            summary:
+              "The first capstone assembles a small service from parts already learned. The goal is not new syntax but a clear boundary between transport, data access and configuration.",
+            difficulty: "advanced",
+            minutes: 90,
+            pitfalls: [
+              "Letting framework or generated types spread into the domain layer.",
+              "Parsing configuration on each request instead of once at startup.",
+              "Returning raw database errors to clients with paths and SQL text.",
+            ],
+            resources: [
+              {
+                title: "Chi package documentation",
+                url: "https://pkg.go.dev/github.com/go-chi/chi/v5",
+                kind: "docs",
+              },
+              { title: "sqlc documentation", url: "https://docs.sqlc.dev/", kind: "docs" },
+            ],
+          },
+        ),
+        topic(
+          "capstone-observability",
+          "A service is not finished until you can tell whether it is healthy, where time goes and how it stops safely.",
+          [
+            "Readiness and liveness endpoints with explicit dependency checks",
+            "A counter, a latency histogram and a traced request sharing the same IDs",
+            "Signal handling and a bounded drain on shutdown",
+          ],
+          "Exercise: 1) Add `/livez` and `/readyz`, a request counter and a duration histogram. 2) Create a trace span in the handler and confirm the request ID appears in the log line. 3) Send SIGTERM during an in-flight request and verify the response completes before exit.",
+          {
+            summary:
+              "Operability is a feature you build in, not a dashboard you add later. This capstone combines health, metrics, traces and graceful shutdown on the service from the previous exercise.",
+            difficulty: "advanced",
+            minutes: 90,
+            pitfalls: [
+              "Checking external dependencies in the liveness probe.",
+              "Using unbounded labels that make metrics expensive and useless.",
+              "Dropping in-flight requests because shutdown only calls `Close`.",
+            ],
+            resources: [
+              {
+                title: "Prometheus Go client guide",
+                url: "https://prometheus.io/docs/guides/go-application/",
+                kind: "docs",
+              },
+              {
+                title: "http.Server.Shutdown",
+                url: "https://pkg.go.dev/net/http#Server.Shutdown",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "capstone-tests",
+          "Confidence comes from layers of tests that fail for different reasons, not from one large suite.",
+          [
+            "Table tests for logic, `httptest` for handlers and `t.Cleanup` for resources",
+            "A fuzz target for the parser or input boundary",
+            "Race detector and benchmarks on the paths that matter",
+          ],
+          "Exercise: 1) Add a table test for validation, a handler test with `ResponseRecorder` and one fuzz target for an input parser. 2) Run `go test -race ./...` and fix any data race you find. 3) Benchmark one hot path with `-benchmem` and decide whether its allocation count is acceptable.",
+          {
+            summary:
+              "This capstone layers fast deterministic tests, HTTP-level tests, fuzzing and race detection over the service. Each layer catches a different class of bug and should be runnable locally.",
+            difficulty: "advanced",
+            minutes: 90,
+            pitfalls: [
+              "Testing only happy paths and relying on fuzzing to find basic mistakes.",
+              "Starting real listeners on fixed ports in parallel tests.",
+              "Reading benchmark results from a noisy machine without repeating them.",
+            ],
+            resources: [
+              { title: "Go testing package", url: "https://pkg.go.dev/testing", kind: "docs" },
+              {
+                title: "Go fuzzing documentation",
+                url: "https://go.dev/doc/security/fuzz/",
+                kind: "docs",
+              },
+            ],
+          },
+        ),
+        topic(
+          "capstone-release",
+          "The last mile is reproducibility: a small image, a deterministic pipeline and a short runbook.",
+          [
+            "A multi-stage image with a static non-root binary and a healthcheck",
+            "CI running build, race tests, vet and vulnerability checks from `go.mod`",
+            "A runbook covering config, secrets, rollback and the first alert to investigate",
+          ],
+          "Exercise: 1) Build the multi-stage image and run it as a non-root user. 2) Add a CI workflow using the toolchain from `go.mod` and a cached module directory. 3) Write a one-page runbook with three commands: health check, log query and rollback, then deploy a trivial change and follow it.",
+          {
+            summary:
+              "The final capstone treats the deploy as part of the exercise. A reproducible image, a deterministic pipeline and a short runbook are what make the earlier work usable by someone else.",
+            difficulty: "advanced",
+            minutes: 90,
+            pitfalls: [
+              "Building the image from a mutable `latest` base tag.",
+              "A pipeline that passes locally but skips `./...` or the race detector in CI.",
+              "A runbook that assumes the author is always available.",
+            ],
+            resources: [
+              {
+                title: "Multi-stage builds",
+                url: "https://docs.docker.com/build/building/multi-stage/",
+                kind: "docs",
+              },
+              {
+                title: "Building and testing Go with Actions",
+                url: "https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-go",
+                kind: "docs",
+              },
             ],
           },
         ),

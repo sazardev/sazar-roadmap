@@ -6,4 +6,4 @@ Visit the following resources to learn more:
 
 - [@official@go mod](https://go.dev/doc/tutorial/create-module)
 - [@article@go mod commands](https://blog.devtrovert.com/p/go-get-go-mod-tidy-commands)
-- [@article@What does go mod tidy do?](https://golangbyexamples.com/go-mod-tidy/)
+- [@article@What does go mod tidy do?](https://go.dev/ref/mod#go-mod-tidy)

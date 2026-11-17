@@ -5,3 +5,5 @@ Go provides built-in documentation tools including `go doc` for terminal documen
 Visit the following resources to learn more:
 
 - [@article@A Guide to Effective Go Documentation](https://nirdoshgautam.medium.com/a-guide-to-effective-go-documentation-952f346d073f)
+- [@official@go command](https://pkg.go.dev/cmd/go)
+- [@official@Effective Go](https://go.dev/doc/effective_go)

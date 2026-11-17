@@ -5,4 +5,4 @@ Write functions working with multiple types using type parameters in square brac
 Visit the following resources to learn more:
 
 - [@official@Generic Functions](https://go.dev/doc/tutorial/generics)
-- [@article@Generic Functions Comprehensive Guide](https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html)
+- [@article@Introducing Generics in Go](https://go.dev/blog/intro-generics)

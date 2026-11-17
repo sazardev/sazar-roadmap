@@ -6,3 +6,4 @@ Visit the following resources to learn more:
 
 - [@official@govulncheck](https://go.dev/doc/tutorial/govulncheck)
 - [@article@Using govulncheck to Detect Vulnerable Dependencies in Go](https://medium.com/@caring_smitten_gerbil_914/%EF%B8%8F-using-govulncheck-to-detect-vulnerable-dependencies-in-go-627a634f1edd)
+- [@official@govulncheck](https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck)
