@@ -16,6 +16,7 @@ import {
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
 import { getEnv } from "~/lib/db.server";
 import { useDraft } from "~/lib/use-draft";
+import { useOpenHashDetails } from "~/lib/use-hash-details";
 import { relativeDay } from "~/lib/utils";
 import type { Route } from "./+types/notes";
 
@@ -101,6 +102,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 export default function NotesPage({ loaderData }: Route.ComponentProps) {
   const { notes, topic, topics, reading, learning, q, edit } = loaderData;
   const navigation = useNavigation();
+  useOpenHashDetails();
   const busy = navigation.state !== "idle";
   const editing = notes.find((note) => note.id === edit) ?? null;
   const online = useOnlineStatus();
@@ -116,6 +118,8 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
           <>
             <LinkButton
               to="https://notes.sazardev.stream"
+              target="_blank"
+              rel="noreferrer noopener"
               variant="secondary"
               icon={<ArrowUpRight size={15} />}
             >
@@ -297,6 +301,8 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
               )}
               <a
                 href="https://learn.sazardev.stream"
+                target="_blank"
+                rel="noreferrer noopener"
                 className="inline-flex min-h-10 items-center gap-1 text-sm text-muted underline"
               >
                 Open Learn <ExternalLink size={12} />
@@ -314,6 +320,8 @@ export default function NotesPage({ loaderData }: Route.ComponentProps) {
               </p>
               <a
                 href="https://notes.sazardev.stream"
+                target="_blank"
+                rel="noreferrer noopener"
                 className="inline-flex min-h-10 items-center gap-1 underline"
               >
                 notes.sazardev.stream <ExternalLink size={12} />
@@ -356,7 +364,14 @@ function NoteCard({ note, busy }: { note: NoteItem; busy: boolean }) {
             >
               Edit
             </Link>
-            <Form method="post">
+            <Form
+              method="post"
+              onSubmit={(event) => {
+                if (!window.confirm(`Delete “${note.title}”? This cannot be undone.`)) {
+                  event.preventDefault();
+                }
+              }}
+            >
               <input type="hidden" name="intent" value="delete" />
               <input type="hidden" name="noteId" value={note.id} />
               <button

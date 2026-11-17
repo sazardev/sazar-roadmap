@@ -99,7 +99,15 @@ export default function CoachHistoryPage({ loaderData }: Route.ComponentProps) {
                     className="hidden shrink-0 text-muted opacity-40 transition-opacity group-hover:opacity-100 sm:block"
                   />
                 </Link>
-                <Form method="post" className="shrink-0">
+                <Form
+                  method="post"
+                  className="shrink-0"
+                  onSubmit={(event) => {
+                    if (!window.confirm(`Delete “${thread.title}”? This cannot be undone.`)) {
+                      event.preventDefault();
+                    }
+                  }}
+                >
                   <input type="hidden" name="intent" value="delete" />
                   <input type="hidden" name="threadId" value={thread.id} />
                   <button

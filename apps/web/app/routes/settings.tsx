@@ -496,7 +496,12 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
                   <Badge tone={connected ? "success" : "outline"}>
                     {connected ? "Connected" : "Unavailable"}
                   </Badge>
-                  <a href={String(href)} className="text-[10px] text-muted underline">
+                  <a
+                    href={String(href)}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-[11px] text-muted underline"
+                  >
                     Open
                   </a>
                 </div>

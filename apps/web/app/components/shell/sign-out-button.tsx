@@ -9,6 +9,7 @@ export function SignOutButton() {
   const [busy, setBusy] = useState(false);
 
   const signOut = async () => {
+    if (!window.confirm("Sign out and clear saved pages and drafts from this device?")) return;
     setBusy(true);
     clearLocalDrafts();
     await clearOfflinePages();

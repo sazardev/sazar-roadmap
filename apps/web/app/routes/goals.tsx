@@ -18,6 +18,7 @@ import {
 import { getLearningStats } from "~/features/progress/progress.server";
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
 import { getEnv } from "~/lib/db.server";
+import { useOpenHashDetails } from "~/lib/use-hash-details";
 import { formatMinutes, isoDate, percent } from "~/lib/utils";
 import type { Route } from "./+types/goals";
 
@@ -125,6 +126,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 export default function GoalsPage({ loaderData }: Route.ComponentProps) {
   const { goals, stats, weeklyGoal, newGoal } = loaderData;
   const navigation = useNavigation();
+  useOpenHashDetails();
   const busy = navigation.state !== "idle";
   const active = goals.filter((goal) => goal.status === "active");
   const completed = goals.filter((goal) => goal.status !== "active");
@@ -395,7 +397,15 @@ function GoalCard({
                   Archive
                 </Button>
               </Form>
-              <Form method="post" className="ml-auto">
+              <Form
+                method="post"
+                className="ml-auto"
+                onSubmit={(event) => {
+                  if (!window.confirm(`Delete “${goal.title}”? This cannot be undone.`)) {
+                    event.preventDefault();
+                  }
+                }}
+              >
                 <input type="hidden" name="intent" value="delete" />
                 <input type="hidden" name="goalId" value={goal.id} />
                 <button

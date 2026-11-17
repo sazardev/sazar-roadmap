@@ -23,6 +23,7 @@ import {
 } from "~/features/people/people.server";
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
 import { getEnv } from "~/lib/db.server";
+import { useOpenHashDetails } from "~/lib/use-hash-details";
 import { relativeDay } from "~/lib/utils";
 import type { Route } from "./+types/people";
 
@@ -109,6 +110,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 export default function PeoplePage({ loaderData }: Route.ComponentProps) {
   const { people, questions, topics } = loaderData;
   const navigation = useNavigation();
+  useOpenHashDetails();
   const busy = navigation.state !== "idle";
   const openQuestions = questions.filter((question) => question.status === "open");
   const answered = questions.filter((question) => question.status !== "open");
@@ -292,7 +294,16 @@ export default function PeoplePage({ loaderData }: Route.ComponentProps) {
                               Mark contacted
                             </button>
                           </Form>
-                          <Form method="post">
+                          <Form
+                            method="post"
+                            onSubmit={(event) => {
+                              if (
+                                !window.confirm(`Delete ${person.name}? This cannot be undone.`)
+                              ) {
+                                event.preventDefault();
+                              }
+                            }}
+                          >
                             <input type="hidden" name="intent" value="delete-person" />
                             <input type="hidden" name="personId" value={person.id} />
                             <button

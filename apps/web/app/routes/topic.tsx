@@ -515,7 +515,7 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
 
       <p className="max-w-3xl text-xs leading-relaxed text-muted">
         Content is a personal-use copy of the roadmap.sh fork. Source:{" "}
-        <a href={sourceUrl} className="underline">
+        <a href={sourceUrl} target="_blank" rel="noreferrer noopener" className="underline">
           roadmap.sh/{topic.roadmapSlug}
         </a>
         .

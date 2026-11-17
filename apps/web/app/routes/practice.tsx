@@ -313,7 +313,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
         <AnswerOutline />
         {topic.keyConcepts.length > 0 ? (
           <div className="mt-4 border-t border-line/80 pt-3">
-            <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
               A strong answer covers
             </p>
             <ul className="mt-2 space-y-2">
@@ -410,7 +410,7 @@ export default function PracticePage({ loaderData }: Route.ComponentProps) {
 function AnswerOutline() {
   return (
     <div className="mt-4 rounded-md border border-line/80 bg-surface/50 px-4 py-3">
-      <p className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+      <p className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
         <ListChecks size={13} /> A good answer usually
       </p>
       <ol className="mt-2 space-y-1.5 text-sm leading-relaxed text-muted">
@@ -461,7 +461,6 @@ function PracticeHints({
             <StudyLinks resources={resources} />
           </div>
         ) : null}
-        <p className="text-xs">You can answer in English or Spanish.</p>
       </div>
     </details>
   );
@@ -477,7 +476,7 @@ function StudyLinks({ resources, limit = 3 }: { resources: TopicResource[]; limi
           <a
             href={resource.url}
             target="_blank"
-            rel="noreferrer"
+            rel="noreferrer noopener"
             className="inline-flex items-start gap-1.5 text-sm underline decoration-line-strong underline-offset-2 transition-colors hover:text-ink"
           >
             <ExternalLink size={13} className="mt-1 shrink-0" />
@@ -607,7 +606,7 @@ function ReviewPanel({
       <p className="text-base leading-relaxed">{attempt.feedback}</p>
       {attempt.strengths.length > 0 ? (
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
             What worked
           </p>
           <ul className="mt-2 space-y-1.5">
@@ -621,7 +620,7 @@ function ReviewPanel({
       ) : null}
       {attempt.gaps.length > 0 ? (
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
             What to fix
           </p>
           <ul className="mt-2 space-y-1.5">
@@ -640,7 +639,7 @@ function ReviewPanel({
       ) : null}
       {!passed ? (
         <div className="border-t border-line/80 pt-3">
-          <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted">
             Where to study next
           </p>
           {resources.length > 0 ? (

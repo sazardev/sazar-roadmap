@@ -687,6 +687,8 @@ function IntegrationCard({
         action={
           <a
             href={href}
+            target="_blank"
+            rel="noreferrer noopener"
             className="flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-hover hover:text-ink"
             aria-label={`Open ${title}`}
           >
