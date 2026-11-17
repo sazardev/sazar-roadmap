@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.5 — 2026-11-17
+
+- Added an audit warning that surfaces 109 duplicate source-title groups in the fork instead of
+  silently shipping identically titled topics.
+- Replaced a dead Go documentation domain with official `go.dev` links and upgraded 94 resource URLs
+  from `http` to `https`; 14 links that do not support HTTPS were left untouched.
+- No topic IDs were changed and no content was deleted.
+
 ## 0.5.4 — 2026-11-16
 
 - Expanded every generated reference topic with a rationale, a three-step guided exercise and three
