@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.8 — 2026-11-17
+
+- The offline page now lists saved pages from every cache version, not only the newest one.
+- The content audit now flags source files without an H1 and validates authored resource URLs.
+- `index.md` files are no longer parsed as topics; three junk "Index" topics were removed with the
+  guarded migration 0006.
+- Added H1 headings to three source files that lacked one.
+
 ## 0.5.7 — 2026-11-17
 
 - The topic "Actions" popover now closes on Escape or an outside click.

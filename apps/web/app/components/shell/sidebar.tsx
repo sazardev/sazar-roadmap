@@ -165,7 +165,7 @@ export function Sidebar({ dueReviews, streak }: { dueReviews: number; streak: nu
           <AppSwitcher />
         </div>
         <p className="mt-1 hidden text-center font-mono text-[11px] text-muted lg:block">
-          Private workspace · v0.5.7
+          Private workspace · v0.5.8
         </p>
       </div>
     </aside>
