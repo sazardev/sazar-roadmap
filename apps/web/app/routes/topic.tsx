@@ -29,6 +29,7 @@ import { getTopicDetail } from "~/features/roadmaps/roadmaps.server";
 import { assertSameOrigin, requireUser } from "~/lib/auth/auth.server";
 import { getEnv } from "~/lib/db.server";
 import { pageMeta } from "~/lib/meta";
+import { useDismissableDetails } from "~/lib/use-dismissable-details";
 import { relativeDay } from "~/lib/utils";
 import type { Route } from "./+types/topic";
 
@@ -172,6 +173,7 @@ const errors: Record<string, string> = {
 export default function TopicPage({ loaderData }: Route.ComponentProps) {
   const { detail, notice, error } = loaderData;
   const navigation = useNavigation();
+  const actionsRef = useDismissableDetails();
   const busy = navigation.state !== "idle";
   const { topic, progress, resources, notes, cards, previous, next } = detail;
   const passed = progress.status === "practiced" || progress.status === "mastered";
@@ -188,7 +190,7 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
         >
           <ArrowLeft size={15} /> {topic.roadmapTitle}
         </Link>
-        <details className="relative">
+        <details ref={actionsRef} className="relative">
           <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border border-line bg-raised px-4 text-sm font-medium text-muted shadow-sm transition-colors hover:border-line-strong hover:bg-hover hover:text-ink [&::-webkit-details-marker]:hidden">
             <MoreHorizontal size={17} /> Actions
           </summary>
@@ -238,12 +240,18 @@ export default function TopicPage({ loaderData }: Route.ComponentProps) {
       </div>
 
       {notice && notices[notice] ? (
-        <div className="rounded-lg border border-success/25 bg-success-soft px-4 py-3 text-sm">
+        <div
+          role="status"
+          className="rounded-lg border border-success/25 bg-success-soft px-4 py-3 text-sm"
+        >
           {notices[notice]}
         </div>
       ) : null}
       {error && errors[error] ? (
-        <div className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger">
+        <div
+          role="alert"
+          className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger"
+        >
           {errors[error]}
         </div>
       ) : null}

@@ -266,12 +266,18 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
       />
 
       {notice && notices[notice] ? (
-        <div className="rounded-lg border border-success/25 bg-success-soft px-4 py-3 text-sm">
+        <div
+          role="status"
+          className="rounded-lg border border-success/25 bg-success-soft px-4 py-3 text-sm"
+        >
           {notices[notice]}
         </div>
       ) : null}
       {error && errors[error] ? (
-        <div className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger">
+        <div
+          role="alert"
+          className="rounded-lg border border-danger/25 bg-danger-soft px-4 py-3 text-sm text-danger"
+        >
           {errors[error]}
         </div>
       ) : null}
