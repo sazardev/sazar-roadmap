@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.9 — 2026-11-17
+
+- Rebuilt the Go path into 11 guided stages and 95 curated topics: added frameworks, testing,
+  operations and a four-part "Ship a service" capstone.
+- Added 23 new topics with official resources, concrete pitfalls and three-step exercises; rewrote the
+  24 shortest practice prompts into guided exercises.
+- Added source notes for every new topic, repaired dead or mislabeled Go resource links, and added
+  official documentation to frameworks, gRPC, SQL, testing and observability topics.
+- Set the Go path level to intermediate and aligned its estimated hours with the curated minutes.
+
 ## 0.5.8 — 2026-11-17
 
 - The offline page now lists saved pages from every cache version, not only the newest one.
